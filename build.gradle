@@ -20,7 +20,15 @@ configurations {
 
 dependencies {
     implementation ('org.springframework.boot:spring-boot-starter',
-            group: 'log4j', name: 'log4j', version: '1.2.17')
+            'org.springframework.boot:spring-boot-starter-data-jpa',
+            'org.springframework.boot:spring-boot-starter-thymeleaf',
+            'log4j:log4j:1.2.17',
+            'org.liquibase:liquibase-core',
+            'org.hibernate.validator:hibernate-validator')
+    
+    runtime('org.postgresql:postgresql')
+
+    compileOnly 'org.projectlombok:lombok:1.18.6'
 
     testImplementation(
             'org.springframework.boot:spring-boot-starter-test',
@@ -38,8 +46,9 @@ allprojects {
     apply plugin: 'idea'
     idea {
         module {
-            outputDir file('build/idea/main')
-            testOutputDir file('build/idea/test')
+            inheritOutputDirs = false
+            outputDir = file("$buildDir/classes/main/")
+            testOutputDir file("$buildDir/classes/test")
         }
     }
 }
