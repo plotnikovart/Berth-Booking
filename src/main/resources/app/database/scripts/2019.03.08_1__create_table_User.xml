@@ -5,19 +5,22 @@
             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
     <changeSet id="2019.03.08_1_1" author="aplotnikov">
-        <createTable tableName="User">
+        <createTable tableName="user_">
             <column name="id" type="bigint">
-                <constraints primaryKey="true" primaryKeyName="PK_Users"/>
+                <constraints primaryKey="true" primaryKeyName="pk_user"/>
             </column>
             <column name="name" type="varchar(30)"/>
             <column name="surname" type="varchar(40)"/>
+            <column name="phone_num" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
             <column name="email" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="password" type="varchar(255)">
+            <column name="password_hash" type="varchar(60)">
                 <constraints nullable="false"/>
             </column>
-            <column name="phoneNum" type="varchar(20)">
+            <column name="salt" type="varchar(16)">
                 <constraints nullable="false"/>
             </column>
             <column name="photo" type="blob"/>
@@ -25,7 +28,7 @@
     </changeSet>
 
     <changeSet id="2019.03.08_1_2" author="aplotnikov">
-        <addAutoIncrement tableName="User"
+        <addAutoIncrement tableName="user_"
                           columnName="id"
                           columnDataType="bigint"
                           startWith="0"
@@ -33,8 +36,26 @@
     </changeSet>
 
     <changeSet id="2019.03.08_1_3" author="aplotnikov">
-        <addUniqueConstraint tableName="User" columnNames="email"/>
-        <addUniqueConstraint tableName="User" columnNames="phoneNum"/>
+        <addUniqueConstraint tableName="user_" columnNames="email"/>
+        <addUniqueConstraint tableName="user_" columnNames="phone_num"/>
+    </changeSet>
+
+    <changeSet id="2019.03.08_1_4" author="aplotnikov">
+        <createTable tableName="user_to_role">
+            <column name="user_id" type="bigint"/>
+            <column name="role" type="varchar(20)"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="user_to_role"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_user_to_role_user"
+                                 referencedTableName="user_"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+
+        <addUniqueConstraint tableName="user_to_role"
+                             columnNames="user_id, role"
+                             constraintName="uc_user_to_role"/>
     </changeSet>
 
 </databaseChangeLog>
