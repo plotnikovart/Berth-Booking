@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api")
@@ -22,8 +24,9 @@ public class AuthorizationController {
         this.authorizationService = authorizationService;
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody User user) {
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public ResponseEntity<Void> register(User user, @RequestPart(required = false) MultipartFile photoFile) throws IOException {
+        user.setPhoto(photoFile.getBytes());
         authorizationService.register(user);
         return new ResponseEntity<>(HttpStatus.OK);
     }

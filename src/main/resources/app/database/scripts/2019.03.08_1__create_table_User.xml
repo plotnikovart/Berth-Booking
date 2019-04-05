@@ -23,7 +23,7 @@
             <column name="salt" type="varchar(16)">
                 <constraints nullable="false"/>
             </column>
-            <column name="photo" type="blob"/>
+            <column name="photo" type="bytea"/>
         </createTable>
     </changeSet>
 

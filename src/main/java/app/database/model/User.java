@@ -3,6 +3,7 @@ package app.database.model;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -42,7 +43,8 @@ public class User {
     @NotNull
     private String salt;
     @Lob
-    @Column(columnDefinition = "BLOB")
+    @Column
+    @Type(type = "org.hibernate.type.BinaryType")
     private byte[] photo;
 
     @ElementCollection(targetClass = Role.class)
