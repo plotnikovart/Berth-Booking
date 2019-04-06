@@ -10,8 +10,13 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import static javax.persistence.CascadeType.DETACH;
+import static javax.persistence.CascadeType.PERSIST;
 
 @Getter
 @Setter
@@ -43,6 +48,7 @@ public class User {
     @NotNull
     private String salt;
     @Lob
+    @Basic(fetch = FetchType.LAZY)
     @Column
     @Type(type = "org.hibernate.type.BinaryType")
     private byte[] photo;
@@ -51,6 +57,9 @@ public class User {
     @CollectionTable(name = "user_to_role", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role")
     private Set<Role> roles = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = {PERSIST, DETACH}, orphanRemoval = true)
+    private List<Ship> ships = new ArrayList<>();
 
     public User() {
         salt = new String(new SecureRandom().generateSeed(16), StandardCharsets.US_ASCII);

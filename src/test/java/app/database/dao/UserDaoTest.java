@@ -2,6 +2,7 @@ package app.database.dao;
 
 import app.ApplicationTest;
 import app.database.model.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -11,6 +12,11 @@ class UserDaoTest extends ApplicationTest {
 
     @Autowired
     private UserDao userDao;
+
+    @BeforeEach
+    void setUp() {
+        userDao.deleteAll();
+    }
 
     @Test
     void testPassword() {

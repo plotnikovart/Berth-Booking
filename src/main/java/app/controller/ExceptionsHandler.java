@@ -2,6 +2,7 @@ package app.controller;
 
 import app.common.ServiceException;
 import lombok.Data;
+import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -14,8 +15,11 @@ import java.time.LocalDateTime;
 @ControllerAdvice
 public class ExceptionsHandler extends ResponseEntityExceptionHandler {
 
+    private final static Logger LOGGER = Logger.getRootLogger();
+
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<ErrorDetails> handleUnexpectedException(Exception ex, WebRequest request) {
+        LOGGER.error(ex.getMessage(), ex);
         ErrorDetails errorDetails = new ErrorDetails(ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }
