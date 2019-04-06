@@ -26,7 +26,6 @@ public class AuthenticationFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
-        res.setHeader("Access-Control-Allow-Origin", "*");  // todo мб в другом месте
 
         if (!openUri.contains(req.getRequestURI())) {
             var tokenCookie = req.getCookies() != null ? Arrays.stream(req.getCookies()).filter(cook -> cook.getName().equals(AuthorizationService.AUTH_TOKEN)).findFirst().orElse(null) : null;

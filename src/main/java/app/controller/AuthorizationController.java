@@ -24,7 +24,7 @@ public class AuthorizationController {
         this.authorizationService = authorizationService;
     }
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @PostMapping("/register")
     public ResponseEntity<Void> register(User user, @RequestPart(required = false) MultipartFile photoFile) throws IOException {
         user.setPhoto(photoFile.getBytes());
         authorizationService.register(user);
