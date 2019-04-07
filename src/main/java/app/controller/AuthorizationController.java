@@ -2,7 +2,9 @@ package app.controller;
 
 import app.database.model.User;
 import app.service.AuthorizationService;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
@@ -17,6 +20,7 @@ import java.io.IOException;
 @RequestMapping("/api")
 public class AuthorizationController {
 
+    private static final Logger LOGGER = Logger.getRootLogger();
     private AuthorizationService authorizationService;
 
     @Autowired
@@ -32,14 +36,18 @@ public class AuthorizationController {
     }
 
     @PostMapping("/login")
-    public void login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response, HttpServletRequest request) {
         var tokenOpt = authorizationService.login(loginRequest.getLogin(), loginRequest.getPassword());
         if (tokenOpt.isPresent()) {
             var cookie = new Cookie(AuthorizationService.AUTH_TOKEN, tokenOpt.get());
+            cookie.setMaxAge(AuthorizationService.TOKEN_MAX_AGE);
             response.addCookie(cookie);
             response.setStatus(HttpServletResponse.SC_OK);
+
+            return ResponseEntity.ok(new LoginResponse(tokenOpt.get()));    // todo разобраться с cookie
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).build();  // todo разобраться с cookie
         }
     }
 
@@ -53,5 +61,11 @@ public class AuthorizationController {
     private static class LoginRequest {
         private String login;
         private String password;
+    }
+
+    @Data
+    @AllArgsConstructor
+    private static class LoginResponse {
+        private String token;
     }
 }

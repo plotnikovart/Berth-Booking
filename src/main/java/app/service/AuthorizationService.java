@@ -20,6 +20,7 @@ import java.util.Set;
 public class AuthorizationService {
 
     public final static String AUTH_TOKEN = "auth_token";
+    public final static Integer TOKEN_MAX_AGE = 30 * 24 * 60 * 60;    // 30 days in seconds
 
     @Value("${secretKey}")
     private String secretKey;
@@ -70,8 +71,7 @@ public class AuthorizationService {
         var claims = Jwts.claims().setSubject(user.getEmail());
 
         var now = new Date();
-        var validityMillis = 30L * 24L * 60L * 60L * 1000L;    // 30 days
-        var validity = new Date(now.getTime() + validityMillis);
+        var validity = new Date(now.getTime() + 1000L * TOKEN_MAX_AGE);
 
         return Jwts.builder()
                 .setClaims(claims)

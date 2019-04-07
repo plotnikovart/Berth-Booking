@@ -1,4 +1,4 @@
-package app.controller;
+package app.config;
 
 import app.service.AuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;

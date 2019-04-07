@@ -1,4 +1,4 @@
-package app.controller;
+package app.config;
 
 import app.common.ServiceException;
 import lombok.Data;
