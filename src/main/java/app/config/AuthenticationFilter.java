@@ -1,7 +1,8 @@
-package app.controller;
+package app.config;
 
 import app.service.AuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
@@ -12,6 +13,7 @@ import java.util.Arrays;
 import java.util.Set;
 
 @Component
+@Order(2)
 public class AuthenticationFilter implements Filter {
 
     private AuthorizationService authorizationService;
@@ -27,7 +29,7 @@ public class AuthenticationFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
 
-        if (!openUri.contains(req.getRequestURI())) {
+        if (!openUri.contains(req.getRequestURI()) && !req.getMethod().equals("OPTIONS")) {
             var tokenCookie = req.getCookies() != null ? Arrays.stream(req.getCookies()).filter(cook -> cook.getName().equals(AuthorizationService.AUTH_TOKEN)).findFirst().orElse(null) : null;
             if (tokenCookie == null || !authorizationService.authenticate(tokenCookie.getValue())) {
                 res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Пользователь неавторизован, выполните повторный вход");
