@@ -15,20 +15,19 @@ public class ShipPhoto {
 
     @EmbeddedId
     private ShipPhotoPK id = new ShipPhotoPK();
-    @Lob
-    @Column
-    @Type(type = "org.hibernate.type.BinaryType")
-    private byte[] photo;
 
-    public ShipPhoto(Ship ship, int num, byte[] photo) {
+    @Column
+    private String fileName;
+
+    public ShipPhoto(Ship ship, int num, String fileName) {
         id.ship = ship;
         id.num = num;
-        this.photo = photo;
+        this.fileName = fileName;
     }
 
     @Embeddable
     @Getter
-    static class ShipPhotoPK implements Serializable {
+    public static class ShipPhotoPK implements Serializable {
         @ManyToOne
         @JoinColumn(name = "ship_id")
         private Ship ship;
