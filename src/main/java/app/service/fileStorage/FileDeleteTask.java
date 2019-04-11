@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TimerTask;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 class FileDeleteTask extends TimerTask {
@@ -33,7 +34,11 @@ class FileDeleteTask extends TimerTask {
     @Transactional(readOnly = true)
     public void run() {
         try {
-            Set<String> usedFiles = StreamSupport.stream(shipPhotoDao.findAll().spliterator(), false).map(ShipPhoto::getFileName).collect(Collectors.toSet());
+            Stream<String> userFiles = Stream.empty();
+            Stream<String> shipFiles = StreamSupport.stream(shipPhotoDao.findAll().spliterator(), false).map(ShipPhoto::getFileName);
+            Stream<String> berthFiles = Stream.empty();
+
+            var usedFiles = Stream.of(userFiles, shipFiles, berthFiles).flatMap(s -> s).collect(Collectors.toSet());
 
             var foundFiles = new LinkedList<File>();
             var startDir = new File(AppConfig.FILES_FOLDER_PATH);

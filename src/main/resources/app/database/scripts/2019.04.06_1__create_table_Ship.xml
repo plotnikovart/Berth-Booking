@@ -13,13 +13,13 @@
             <column name="name" type="varchar(40)">
                 <constraints nullable="false"/>
             </column>
-            <column name="length" type="int">
+            <column name="length" type="double">
                 <constraints nullable="false"/>
             </column>
-            <column name="draft" type="int">
+            <column name="draft" type="double">
                 <constraints nullable="false"/>
             </column>
-            <column name="width" type="int"/>
+            <column name="width" type="double"/>
         </createTable>
 
         <addForeignKeyConstraint baseTableName="ship"
@@ -40,7 +40,9 @@
         <createTable tableName="ship_photo">
             <column name="ship_id" type="bigint"/>
             <column name="num" type="int"/>
-            <column name="photo" type="bytea"/>
+            <column name="photoFile" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
 
         <addPrimaryKey tableName="ship_photo"

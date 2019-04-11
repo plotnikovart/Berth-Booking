@@ -30,12 +30,12 @@ public class Ship {
     private String name;
     @Column
     @NotNull(message = "Длина судна является обязательным параметром")
-    private Integer length;
+    private Double length;
     @Column
     @NotNull(message = "Оснастка судна является обязательным параметром")
-    private Integer draft;
+    private Double draft;
     @Column
-    private Integer width;
+    private Double width;
     @OneToMany(mappedBy = "id.ship", cascade = {PERSIST, DETACH}, orphanRemoval = true)
     @OrderBy("id.num")
     private List<ShipPhoto> photos = new ArrayList<>();

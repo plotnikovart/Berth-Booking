@@ -15,8 +15,8 @@ public class ShipPhoto {
 
     @EmbeddedId
     private ShipPhotoPK id = new ShipPhotoPK();
-
     @Column
+    @NotNull
     private String fileName;
 
     public ShipPhoto(Ship ship, int num, String fileName) {
