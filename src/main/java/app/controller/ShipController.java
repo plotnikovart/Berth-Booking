@@ -54,7 +54,6 @@ public class ShipController {
             convertToShip(shipDTO, ship);
 
             ValidationUtils.validateEntity(ship);
-            // shipPhotoDao.save(ship.getPhotos().get(0)); todo
             shipDao.save(ship);
             return new ResponseEntity<>(new IdResponse<>(id), HttpStatus.OK);
         }

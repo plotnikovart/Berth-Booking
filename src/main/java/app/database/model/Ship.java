@@ -9,8 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static javax.persistence.CascadeType.DETACH;
-import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.*;
 
 @Getter
 @Setter
@@ -36,7 +35,7 @@ public class Ship {
     private Double draft;
     @Column
     private Double width;
-    @OneToMany(mappedBy = "id.ship", cascade = {PERSIST, DETACH}, orphanRemoval = true)
+    @OneToMany(mappedBy = "id.ship", cascade = {PERSIST, DETACH, MERGE}, orphanRemoval = true)
     @OrderBy("id.num")
     private List<ShipPhoto> photos = new ArrayList<>();
 
