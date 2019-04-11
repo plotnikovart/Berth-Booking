@@ -1,8 +1,7 @@
 package app.database.dao;
 
-import app.common.CrudRepositoryWithValidation;
 import app.database.model.Ship;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ShipDao extends CrudRepositoryWithValidation<Ship, Long> {
+public interface ShipDao extends JpaRepository<Ship, Long> {
 }

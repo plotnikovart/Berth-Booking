@@ -4,6 +4,7 @@ import app.database.model.User;
 import app.service.AuthorizationService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,15 +19,11 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class AuthorizationController {
 
     private static final Logger LOGGER = Logger.getRootLogger();
-    private AuthorizationService authorizationService;
-
-    @Autowired
-    public void setAuthorizationService(AuthorizationService authorizationService) {
-        this.authorizationService = authorizationService;
-    }
+    private final AuthorizationService authorizationService;
 
     @PostMapping("/register")
     public ResponseEntity<Void> register(User user, @RequestPart(required = false) MultipartFile photoFile) throws IOException {

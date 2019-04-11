@@ -38,9 +38,13 @@
 
     <changeSet id="2019.04.06_1_2" author="aplotnikov">
         <createTable tableName="ship_photo">
-            <column name="ship_id" type="bigint"/>
-            <column name="num" type="int"/>
-            <column name="photoFile" type="varchar(50)">
+            <column name="ship_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="num" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="file_name" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
         </createTable>

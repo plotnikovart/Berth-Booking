@@ -7,6 +7,7 @@ import app.database.dao.UserDao;
 import app.database.model.Role;
 import app.database.model.User;
 import io.jsonwebtoken.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
 public class AuthorizationService {
 
     public final static String AUTH_TOKEN = "auth_token";
@@ -25,18 +27,8 @@ public class AuthorizationService {
     @Value("${secretKey}")
     private String secretKey;
 
-    private UserDao userDao;
-    private OperationContext operationContext;
-
-    @Autowired
-    public void setUserDao(UserDao userDao) {
-        this.userDao = userDao;
-    }
-
-    @Autowired
-    public void setOperationContext(OperationContext operationContext) {
-        this.operationContext = operationContext;
-    }
+    private final UserDao userDao;
+    private final OperationContext operationContext;
 
     @Transactional
     public void register(User user) {

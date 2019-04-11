@@ -6,6 +6,7 @@ import app.config.AppConfig;
 import app.database.dao.ShipPhotoDao;
 import app.database.dao.UserDao;
 import app.database.model.ShipPhoto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,27 +21,13 @@ import java.util.Timer;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class FileStorageService {
 
-    private UserDao userDao;
-    private ShipPhotoDao shipPhotoDao;
-    private OperationContext operationContext;
-    private Timer timer;
-
-    @Autowired
-    public void setUserDao(UserDao userDao) {
-        this.userDao = userDao;
-    }
-
-    @Autowired
-    public void setShipPhotoDao(ShipPhotoDao shipPhotoDao) {
-        this.shipPhotoDao = shipPhotoDao;
-    }
-
-    @Autowired
-    public void setOperationContext(OperationContext operationContext) {
-        this.operationContext = operationContext;
-    }
+    private final UserDao userDao;
+    private final ShipPhotoDao shipPhotoDao;
+    private final OperationContext operationContext;
+    private Timer timer = new Timer();
 
     public String saveImage(byte[] imageBytes, String fileNameOriginal, ImageKind imageKind) throws IOException {
         var fileName = UUID.randomUUID().toString() + getExtension(fileNameOriginal);

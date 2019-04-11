@@ -27,12 +27,12 @@ class ShipDaoTest extends AbstractUserTest {
         var ship = new Ship();
         ship.setUser(user);
         ship.setName("Судно 1");
-        ship.setLength(12);
-        ship.setDraft(4);
-        ship.setWidth(1);
+        ship.setLength(12.0);
+        ship.setDraft(4.0);
+        ship.setWidth(1.0);
 
-        var photo1 = new ShipPhoto(ship, 1, "asdasdd".getBytes());
-        var photo2 = new ShipPhoto(ship, 2, "assdd".getBytes());
+        var photo1 = new ShipPhoto(ship, 1, "asdasdd");
+        var photo2 = new ShipPhoto(ship, 2, "assdd");
         ship.setPhotos(List.of(photo1, photo2));
 
         shipDao.save(ship);

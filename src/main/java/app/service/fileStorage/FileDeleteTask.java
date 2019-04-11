@@ -58,7 +58,7 @@ class FileDeleteTask extends TimerTask {
     private void findFiles(File startDir, List<File> foundFiles) throws IOException {
         for (var file : startDir.listFiles()) {
             if (file.isDirectory()) {
-                findFiles(startDir, foundFiles);
+                findFiles(file, foundFiles);
             }
 
             if (file.isFile()) {

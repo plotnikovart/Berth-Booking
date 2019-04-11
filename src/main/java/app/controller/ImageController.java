@@ -6,6 +6,7 @@ import app.common.ServiceException;
 import app.service.fileStorage.FileStorageService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.ResponseEntity;
@@ -16,14 +17,10 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/images")
+@RequiredArgsConstructor
 public class ImageController {
 
-    private FileStorageService fileStorageService;
-
-    @Autowired
-    public void setFileStorageService(FileStorageService fileStorageService) {
-        this.fileStorageService = fileStorageService;
-    }
+    private final FileStorageService fileStorageService;
 
     @PostMapping("/{imageKind}")
     public ResponseEntity<LoadResponse> loadImage(@PathVariable String imageKind, @RequestPart MultipartFile file) throws IOException {

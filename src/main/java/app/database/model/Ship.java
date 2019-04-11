@@ -39,4 +39,9 @@ public class Ship {
     @OneToMany(mappedBy = "id.ship", cascade = {PERSIST, DETACH}, orphanRemoval = true)
     @OrderBy("id.num")
     private List<ShipPhoto> photos = new ArrayList<>();
+
+    public void setPhotos(List<ShipPhoto> newPhotos) {
+        photos.clear();
+        photos.addAll(newPhotos);
+    }
 }
