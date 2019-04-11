@@ -16,6 +16,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebMvc
 public class AppConfig implements WebMvcConfigurer {
 
+    public static final String FILES_FOLDER_PATH = System.getProperty("user.dir") + "/files";
+
     @Bean
     @Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
     public OperationContext operationContext() {
