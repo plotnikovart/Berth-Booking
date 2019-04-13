@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class AbstractUserTest extends ApplicationTest {
 
     @Autowired
-    UserDao userDao;
-    User user;
+    protected UserDao userDao;
+    protected User user;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         userDao.deleteAll();
 
         user = new User();

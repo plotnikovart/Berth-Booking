@@ -4,13 +4,11 @@ import app.common.IdResponse;
 import app.common.OperationContext;
 import app.common.ValidationUtils;
 import app.database.dao.ShipDao;
-import app.database.dao.ShipPhotoDao;
 import app.database.dao.UserDao;
 import app.database.model.Ship;
 import app.database.model.ShipPhoto;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +27,6 @@ public class ShipController {
     private final OperationContext operationContext;
     private final UserDao userDao;
     private final ShipDao shipDao;
-    private final ShipPhotoDao shipPhotoDao;
 
     @PostMapping
     @Transactional(rollbackFor = Exception.class)
@@ -112,7 +109,7 @@ public class ShipController {
         ship.setPhotos(dto.getFileNames().stream().map(fileName -> new ShipPhoto(ship, i.getAndIncrement(), fileName)).collect(Collectors.toList()));
     }
 
-    private ShipDTO convertToDTO(Ship ship) {
+    protected ShipDTO convertToDTO(Ship ship) {
         var dto = new ShipDTO();
         dto.setId(ship.getId());
         dto.setName(ship.getName());
