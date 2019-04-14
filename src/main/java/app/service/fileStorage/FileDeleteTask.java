@@ -4,6 +4,7 @@ import app.config.AppConfig;
 import app.database.dao.ShipPhotoDao;
 import app.database.dao.UserDao;
 import app.database.model.ShipPhoto;
+import lombok.RequiredArgsConstructor;
 import org.apache.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,22 +14,19 @@ import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.TimerTask;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-class FileDeleteTask extends TimerTask {
+@RequiredArgsConstructor
+public class FileDeleteTask extends TimerTask {
 
     private final static Logger LOGGER = Logger.getRootLogger();
-    final static int SURVIVE_TIME = 24 * 60 * 60 * 1000;   // 1 day in millis
-    private UserDao userDao;
-    private ShipPhotoDao shipPhotoDao;
+    final static long SURVIVE_TIME = 24 * 60 * 60 * 1000;   // 1 day in millis
 
-    void setShipPhotoDao(ShipPhotoDao shipPhotoDao) {
-        this.shipPhotoDao = shipPhotoDao;
-    }
+    private final UserDao userDao;
+    private final ShipPhotoDao shipPhotoDao;
 
     @Override
     @Transactional(readOnly = true)
@@ -56,6 +54,10 @@ class FileDeleteTask extends TimerTask {
     }
 
     private void findFiles(File startDir, List<File> foundFiles) throws IOException {
+        if (!startDir.exists()) {
+            return;
+        }
+
         for (var file : startDir.listFiles()) {
             if (file.isDirectory()) {
                 findFiles(file, foundFiles);

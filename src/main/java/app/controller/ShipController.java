@@ -109,7 +109,7 @@ public class ShipController {
         ship.setPhotos(dto.getFileNames().stream().map(fileName -> new ShipPhoto(ship, i.getAndIncrement(), fileName)).collect(Collectors.toList()));
     }
 
-    protected ShipDTO convertToDTO(Ship ship) {
+    ShipDTO convertToDTO(Ship ship) {
         var dto = new ShipDTO();
         dto.setId(ship.getId());
         dto.setName(ship.getName());
@@ -121,7 +121,7 @@ public class ShipController {
     }
 
     @Data
-    private static class ShipDTO {
+    static class ShipDTO {
         private Long id;
         private String name;
         private Double length;

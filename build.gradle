@@ -24,7 +24,7 @@ dependencies {
             'org.hibernate.validator:hibernate-validator',
             'at.favre.lib:bcrypt:0.7.0',
             'io.jsonwebtoken:jjwt:0.9.1')
-            //'com.google.guava:guava:27.1-jre')
+    //'com.google.guava:guava:27.1-jre')
     runtime('org.postgresql:postgresql')
     compileOnly('org.projectlombok:lombok:1.18.6')
     testCompile(
@@ -43,6 +43,7 @@ configurations {
 
 test {
     useJUnitPlatform()
+    systemProperty "user.dir", "$buildDir".toString()
 }
 
 allprojects {
@@ -51,7 +52,7 @@ allprojects {
         module {
             inheritOutputDirs = false
             outputDir = file("$buildDir/classes/main/")
-            testOutputDir file("$buildDir/classes/test")
+            testOutputDir = file("$buildDir/classes/test")
         }
     }
 }

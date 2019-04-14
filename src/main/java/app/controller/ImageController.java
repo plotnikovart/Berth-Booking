@@ -1,13 +1,12 @@
 package app.controller;
 
 
-import app.service.fileStorage.ImageKind;
 import app.common.ServiceException;
 import app.service.fileStorage.FileStorageService;
+import app.service.fileStorage.ImageKind;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +23,8 @@ public class ImageController {
 
     @PostMapping("/{imageKind}")
     public ResponseEntity<LoadResponse> loadImage(@PathVariable String imageKind, @RequestPart MultipartFile file) throws IOException {
-        var fileName = fileStorageService.saveImage(file.getBytes(), file.getResource().getFilename(), ImageKind.get(imageKind));
-        return ResponseEntity.ok(new LoadResponse(fileName));
+        var image = fileStorageService.saveImage(file.getBytes(), file.getResource().getFilename(), ImageKind.get(imageKind));
+        return ResponseEntity.ok(new LoadResponse(image.getName()));
     }
 
     @GetMapping("/{imageKind}/{fileName:.+}")

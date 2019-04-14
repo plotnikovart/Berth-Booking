@@ -5,9 +5,7 @@ import app.common.ServiceException;
 import app.config.AppConfig;
 import app.database.dao.ShipPhotoDao;
 import app.database.dao.UserDao;
-import app.database.model.ShipPhoto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -24,12 +22,13 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class FileStorageService {
 
-    private final UserDao userDao;
-    private final ShipPhotoDao shipPhotoDao;
     private final OperationContext operationContext;
+    private final UserDao userDao;
+
+    private final ShipPhotoDao shipPhotoDao;
     private Timer timer = new Timer();
 
-    public String saveImage(byte[] imageBytes, String fileNameOriginal, ImageKind imageKind) throws IOException {
+    public File saveImage(byte[] imageBytes, String fileNameOriginal, ImageKind imageKind) throws IOException {
         var fileName = UUID.randomUUID().toString() + getExtension(fileNameOriginal);
 
         var dirPath = getImageDirectoryPath(imageKind);
@@ -37,7 +36,7 @@ public class FileStorageService {
         var imagePath = dirPath.resolve(fileName);
 
         Files.write(imagePath, imageBytes);
-        return fileName;
+        return imagePath.toFile();
     }
 
     public byte[] getImage(String fileName, ImageKind imageKind) throws IOException {
@@ -66,8 +65,7 @@ public class FileStorageService {
 
     @PostConstruct
     public void launchFileDeleteTask() {
-        var task = new FileDeleteTask();
-        task.setShipPhotoDao(shipPhotoDao);
+        var task = new FileDeleteTask(userDao, shipPhotoDao);
         timer.scheduleAtFixedRate(task, 1000 * 60, FileDeleteTask.SURVIVE_TIME);
     }
 }

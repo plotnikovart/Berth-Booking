@@ -7,7 +7,7 @@ import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -15,8 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static javax.persistence.CascadeType.DETACH;
-import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.*;
 
 @Getter
 @Setter
@@ -58,7 +57,7 @@ public class User {
     @Column(name = "role")
     private Set<Role> roles = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", cascade = {PERSIST, DETACH}, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = {PERSIST, DETACH, MERGE}, orphanRemoval = true)
     private List<Ship> ships = new ArrayList<>();
 
     public User() {
@@ -76,5 +75,10 @@ public class User {
     public static String createPasswordHash(String password, String salt) {
         byte[] byteArr = BCrypt.withDefaults().hash(6, salt.getBytes(StandardCharsets.US_ASCII), password.getBytes());
         return new String(byteArr, StandardCharsets.US_ASCII);
+    }
+
+    public void setShips(List<Ship> ships) {
+        this.ships.clear();
+        this.ships.addAll(ships);
     }
 }
