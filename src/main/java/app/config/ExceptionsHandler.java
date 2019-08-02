@@ -1,8 +1,10 @@
 package app.config;
 
-import app.common.ServiceException;
-import lombok.Data;
-import org.apache.log4j.Logger;
+import app.common.exception.AccessException;
+import app.common.exception.NotFoundException;
+import app.common.exception.ServiceException;
+import app.common.exception.UnauthorizedException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -10,16 +12,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
+@Slf4j
 @ControllerAdvice
 public class ExceptionsHandler extends ResponseEntityExceptionHandler {
 
-    private final static Logger LOGGER = Logger.getRootLogger();
-
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<ErrorDetails> handleUnexpectedException(Exception ex, WebRequest request) {
-        LOGGER.error(ex.getMessage(), ex);
+        log.error(ex.getMessage(), ex);
         ErrorDetails errorDetails = new ErrorDetails(ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -30,15 +31,32 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.OK);
     }
 
-    @Data
+    @ExceptionHandler(UnauthorizedException.class)
+    public final ResponseEntity<ErrorDetails> handleUnauthorizedException(ServiceException ex, WebRequest request) {
+        ErrorDetails errorDetails = new ErrorDetails(ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(errorDetails, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(AccessException.class)
+    public final ResponseEntity<ErrorDetails> handleAccessException(ServiceException ex, WebRequest request) {
+        ErrorDetails errorDetails = new ErrorDetails(ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(errorDetails, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public final ResponseEntity<ErrorDetails> handleNotFoundException(ServiceException ex, WebRequest request) {
+        ErrorDetails errorDetails = new ErrorDetails(ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    }
+
     private static class ErrorDetails {
 
-        private LocalDateTime dateTime;
+        private Date dateTime;
         private String message;
         private String details;
 
         ErrorDetails(String message, String details) {
-            this.dateTime = LocalDateTime.now();
+            this.dateTime = new Date();
             this.message = message;
             this.details = details;
         }

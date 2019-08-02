@@ -1,9 +1,14 @@
 package app.common;
 
-import lombok.Data;
-
-@Data
 public class OperationContext {
 
-    private String userLogin;
+    private static ThreadLocal<Long> container = new ThreadLocal<>();
+
+    public static Long getAccountId() {
+        return container.get();
+    }
+
+    public static void setAccountId(Long accountId) {
+        container.set(accountId);
+    }
 }

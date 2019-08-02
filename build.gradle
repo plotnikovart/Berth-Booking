@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '2.1.3.RELEASE'
+    id 'org.springframework.boot' version '2.1.6.RELEASE'
     id 'java'
 }
 
@@ -16,15 +16,14 @@ repositories {
 
 dependencies {
     compile(
-            'org.springframework.boot:spring-boot-starter',
-            'org.springframework.boot:spring-boot-starter-data-jpa',
             'org.springframework.boot:spring-boot-starter-web',
-            'log4j:log4j:1.2.17',
+            'org.springframework.boot:spring-boot-starter-data-jpa',
+            'org.slf4j:slf4j-log4j12:1.7.26',
             'org.liquibase:liquibase-core',
             'org.hibernate.validator:hibernate-validator',
             'at.favre.lib:bcrypt:0.7.0',
-            'io.jsonwebtoken:jjwt:0.9.1')
-    //'com.google.guava:guava:27.1-jre')
+            'io.jsonwebtoken:jjwt:0.9.1',
+            'com.google.guava:guava:28.0-jre')
     runtime('org.postgresql:postgresql')
     compileOnly('org.projectlombok:lombok:1.18.6')
     testCompile(
@@ -39,6 +38,7 @@ dependencies {
 
 configurations {
     compile.exclude module: 'spring-boot-starter-logging'
+    compile.exclude module: 'logback-classic'
 }
 
 test {

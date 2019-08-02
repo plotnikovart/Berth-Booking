@@ -19,14 +19,16 @@
             <column name="draft" type="double">
                 <constraints nullable="false"/>
             </column>
-            <column name="width" type="double"/>
+            <column name="width" type="double">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
 
         <addForeignKeyConstraint baseTableName="ship"
                                  baseColumnNames="user_id"
                                  constraintName="fk_ship_user"
                                  referencedTableName="user_"
-                                 referencedColumnNames="id"
+                                 referencedColumnNames="account_id"
                                  onDelete="CASCADE"/>
 
         <addAutoIncrement tableName="ship"
@@ -44,7 +46,7 @@
             <column name="num" type="int">
                 <constraints nullable="false"/>
             </column>
-            <column name="file_name" type="varchar(50)">
+            <column name="file_name" type="varchar(42)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
