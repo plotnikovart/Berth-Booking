@@ -53,7 +53,7 @@ public class AccountService {
     }
 
     public void authenticate(@Nullable Cookie cookie) throws UnauthorizedException {
-        if (cookie == null && !validateToken(cookie.getValue())) {
+        if (!(cookie != null && validateToken(cookie.getValue()))) {
             String message = SMessageSource.get("account.unauthorized");
             throw new UnauthorizedException(message);
         }

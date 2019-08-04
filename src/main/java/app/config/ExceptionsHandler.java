@@ -6,7 +6,9 @@ import app.common.exception.ServiceException;
 import app.common.exception.UnauthorizedException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,31 +25,37 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
     public final ResponseEntity<ErrorDetails> handleUnexpectedException(Exception ex, WebRequest request) {
         log.error(ex.getMessage(), ex);
         ErrorDetails errorDetails = new ErrorDetails(ex.getMessage(), request.getDescription(false));
-        return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+        return createResponse(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(ServiceException.class)
     public final ResponseEntity<ErrorDetails> handleServiceException(ServiceException ex, WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(ex.getMessage(), request.getDescription(false));
-        return new ResponseEntity<>(errorDetails, HttpStatus.OK);
+        return createResponse(errorDetails, HttpStatus.OK);
     }
 
     @ExceptionHandler(UnauthorizedException.class)
-    public final ResponseEntity<ErrorDetails> handleUnauthorizedException(ServiceException ex, WebRequest request) {
+    public final ResponseEntity<ErrorDetails> handleUnauthorizedException(UnauthorizedException ex, WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(ex.getMessage(), request.getDescription(false));
-        return new ResponseEntity<>(errorDetails, HttpStatus.UNAUTHORIZED);
+        return createResponse(errorDetails, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(AccessException.class)
-    public final ResponseEntity<ErrorDetails> handleAccessException(ServiceException ex, WebRequest request) {
+    public final ResponseEntity<ErrorDetails> handleAccessException(AccessException ex, WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(ex.getMessage(), request.getDescription(false));
-        return new ResponseEntity<>(errorDetails, HttpStatus.FORBIDDEN);
+        return createResponse(errorDetails, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public final ResponseEntity<ErrorDetails> handleNotFoundException(ServiceException ex, WebRequest request) {
+    public final ResponseEntity<ErrorDetails> handleNotFoundException(NotFoundException ex, WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(ex.getMessage(), request.getDescription(false));
-        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+        return createResponse(errorDetails, HttpStatus.NOT_FOUND);
+    }
+
+    private ResponseEntity<ErrorDetails> createResponse(ErrorDetails errorDetails, HttpStatus status) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        return new ResponseEntity<>(errorDetails, headers, status);
     }
 
     @Getter
