@@ -5,6 +5,7 @@ import app.web.dto.AccountDto;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
@@ -14,6 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Setter
 @Getter
 @NoArgsConstructor
 public class Account {

@@ -1,13 +1,11 @@
 package app.web.dto;
 
 import app.common.ValidationUtils;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 
-@Setter
-@Getter
+@Data
 public class UserDto {
 
     @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)

@@ -36,7 +36,7 @@
     <changeSet id="2019.03.08_1_4" author="aplotnikov">
         <createTable tableName="account_to_role">
             <column name="account_id" type="bigint"/>
-            <column name="role" type="varchar(20)"/>
+            <column name="role" type="smallint"/>
         </createTable>
 
         <addForeignKeyConstraint baseTableName="account_to_role"

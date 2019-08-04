@@ -4,6 +4,7 @@ import app.common.EntityWithOwner;
 import app.web.dto.ShipDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 
 import static javax.persistence.CascadeType.*;
 
+@Setter
 @Getter
 @Entity
 @NoArgsConstructor
@@ -34,7 +36,7 @@ public class Ship implements EntityWithOwner {
 
     private Double width;
 
-    @OneToMany(mappedBy = "id.ship", cascade = {PERSIST, DETACH, MERGE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "pk.ship", cascade = {PERSIST, DETACH, MERGE}, orphanRemoval = true)
     @OrderBy("id.num")
     private List<ShipPhoto> photos = new ArrayList<>();
 

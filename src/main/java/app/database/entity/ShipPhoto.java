@@ -1,5 +1,6 @@
 package app.database.entity;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,21 +14,22 @@ import java.io.Serializable;
 public class ShipPhoto {
 
     @EmbeddedId
-    private ShipPhotoPK id = new ShipPhotoPK();
+    private PK pk;
 
     @Column
     @NotNull
     private String fileName;
 
     public ShipPhoto(Ship ship, int num, String fileName) {
-        id.ship = ship;
-        id.num = num;
+        pk = new PK();
+        pk.setShip(ship);
+        pk.setNum(num);
         this.fileName = fileName;
     }
 
-    @Getter
+    @Data
     @Embeddable
-    public static class ShipPhotoPK implements Serializable {
+    public static class PK implements Serializable {
 
         @ManyToOne
         @JoinColumn(name = "ship_id")

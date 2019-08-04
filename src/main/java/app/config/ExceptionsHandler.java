@@ -4,6 +4,7 @@ import app.common.exception.AccessException;
 import app.common.exception.NotFoundException;
 import app.common.exception.ServiceException;
 import app.common.exception.UnauthorizedException;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,6 +50,7 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
 
+    @Getter
     private static class ErrorDetails {
 
         private Date dateTime;
