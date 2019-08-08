@@ -1,24 +1,26 @@
 package app.database.repository;
 
 import app.ApplicationTest;
+import app.common.OperationContext;
 import app.database.entity.Account;
-import app.database.entity.User;
+import app.database.entity.UserInfo;
 import app.web.dto.AccountDto;
-import app.web.dto.UserDto;
+import app.web.dto.UserInfoDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.transaction.TestTransaction;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-public class AbstractUserTest extends ApplicationTest {
+public class AbstractAccountTest extends ApplicationTest {
 
     @Autowired
-    protected UserRepository userRepository;
+    protected UserInfoRepository userInfoRepository;
     @Autowired
     protected AccountRepository accountRepository;
 
-    protected User user;
+    protected Account account;
+    protected UserInfo userInfo;
 
     @BeforeEach
     public void setUp() {
@@ -31,16 +33,18 @@ public class AbstractUserTest extends ApplicationTest {
         accountDto.setEmail("artpl98@mail.ru");
         accountDto.setPassword("pass");
 
-        var account = new Account(accountDto);
+        account = new Account(accountDto);
         accountRepository.save(account);
 
-        var userDto = new UserDto();
+        var userDto = new UserInfoDto();
         userDto.setFirstName("Артем");
         userDto.setLastName("Плотников");
         userDto.setPhCode("164");
         userDto.setPhNumber("1238467");
 
-        user = new User(account, userDto);
-        userRepository.save(user);
+        userInfo = new UserInfo(account, userDto);
+        userInfoRepository.save(userInfo);
+
+        OperationContext.setAccountId(userInfo.getAccountId());
     }
 }

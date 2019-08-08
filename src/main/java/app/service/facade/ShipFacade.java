@@ -1,9 +1,10 @@
-package app.service;
+package app.service.facade;
 
 import app.common.exception.NotFoundException;
 import app.database.entity.Ship;
 import app.database.repository.ShipRepository;
-import app.database.repository.UserRepository;
+import app.database.repository.UserInfoRepository;
+import app.service.PermissionService;
 import app.web.dto.ShipDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -16,26 +17,25 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ShipFacade {
 
-    private final UserRepository userRepository;
+    private final UserInfoRepository userInfoRepository;
     private final ShipRepository shipRepository;
     private final PermissionService permissionService;
 
     @Transactional
     public Long createShip(ShipDto shipDto) {
-        var user = userRepository.findCurrent();
-        var ship = new Ship(user, shipDto);
-        ship = shipRepository.save(ship);
-        return ship.getId();
+        var userInfo = userInfoRepository.findCurrent();
+
+        var ship = new Ship(userInfo, shipDto);
+        return shipRepository.save(ship).getId();
     }
 
     @Transactional
-    public Long updateShip(ShipDto.WithId shipDto) {
+    public void updateShip(ShipDto.WithId shipDto) {
         var ship = shipRepository.findById(shipDto.getId()).orElseThrow(NotFoundException::new);
         permissionService.checkPermission(ship);
 
         ship.setDto(shipDto);
         shipRepository.save(ship);
-        return ship.getId();
     }
 
     @Transactional(readOnly = true)
@@ -46,8 +46,8 @@ public class ShipFacade {
 
     @Transactional(readOnly = true)
     public List<ShipDto.WithId> getShips() {
-        var currentUser = userRepository.findCurrent();
-        return shipRepository.findAllByUser(currentUser).stream().map(Ship::getDto).collect(Collectors.toList());
+        var userInfo = userInfoRepository.findCurrent();
+        return userInfo.getShips().stream().map(Ship::getDto).collect(Collectors.toList());
     }
 
     @Transactional

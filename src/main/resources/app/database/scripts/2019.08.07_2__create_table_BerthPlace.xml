@@ -1,0 +1,44 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="2019.08.07_2_1" author="aplotnikov">
+        <createTable tableName="berth_place">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="pk_berth_place"/>
+            </column>
+            <column name="berth_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="length" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="draft" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="width" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="double"/>
+        </createTable>
+
+        <addAutoIncrement tableName="berth_place"
+                          columnName="id"
+                          columnDataType="bigint"
+                          startWith="0"
+                          incrementBy="1"/>
+    </changeSet>
+
+    <changeSet id="2019.08.07_2_2" author="aplotnikov">
+        <addForeignKeyConstraint baseTableName="berth_place"
+                                 baseColumnNames="berth_id"
+                                 constraintName="fk_berth_place_berth"
+                                 referencedTableName="berth"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+
+</databaseChangeLog>

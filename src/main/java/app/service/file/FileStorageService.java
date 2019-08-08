@@ -4,7 +4,7 @@ import app.common.exception.NotFoundException;
 import app.config.AppConfig;
 import app.database.repository.AccountRepository;
 import app.database.repository.ShipPhotoRepository;
-import app.database.repository.UserRepository;
+import app.database.repository.UserInfoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +23,7 @@ import java.util.UUID;
 public class FileStorageService {
 
     private final AccountRepository accountRepository;
-    private final UserRepository userRepository;
+    private final UserInfoRepository userInfoRepository;
     private final ShipPhotoRepository shipPhotoRepository;
 
     private final Timer timer = new Timer();
@@ -65,7 +65,7 @@ public class FileStorageService {
 
     @PostConstruct
     public void launchFileDeleteTask() {
-        var task = new FileDeleteTask(userRepository, shipPhotoRepository);
+        var task = new FileDeleteTask(userInfoRepository, shipPhotoRepository);
         timer.scheduleAtFixedRate(task, 1000 * 60, FileDeleteTask.SURVIVE_TIME);
     }
 }

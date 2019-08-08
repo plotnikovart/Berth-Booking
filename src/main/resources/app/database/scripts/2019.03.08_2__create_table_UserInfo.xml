@@ -5,9 +5,9 @@
             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
     <changeSet id="2019.03.08_2_1" author="aplotnikov">
-        <createTable tableName="user_">
+        <createTable tableName="user_info">
             <column name="account_id" type="bigint">
-                <constraints primaryKey="true" primaryKeyName="pk_user"/>
+                <constraints primaryKey="true" primaryKeyName="pk_user_info"/>
             </column>
             <column name="first_name" type="varchar(30)">
                 <constraints nullable="false"/>
@@ -26,9 +26,9 @@
     </changeSet>
 
     <changeSet id="2019.03.08_2_2" author="aplotnikov">
-        <addForeignKeyConstraint baseTableName="user_"
+        <addForeignKeyConstraint baseTableName="user_info"
                                  baseColumnNames="account_id"
-                                 constraintName="fk_user_account"
+                                 constraintName="fk_user_info_account"
                                  referencedTableName="account"
                                  referencedColumnNames="id"
                                  onDelete="CASCADE"/>

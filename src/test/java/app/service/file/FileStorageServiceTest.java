@@ -3,7 +3,7 @@ package app.service.file;
 import app.common.OperationContext;
 import app.common.exception.NotFoundException;
 import app.config.AppConfig;
-import app.database.repository.AbstractUserTest;
+import app.database.repository.AbstractAccountTest;
 import app.database.repository.ShipPhotoRepository;
 import org.assertj.core.util.Files;
 import org.junit.jupiter.api.Assertions;
@@ -15,7 +15,7 @@ import org.unitils.reflectionassert.ReflectionAssert;
 import java.io.File;
 import java.io.IOException;
 
-class FileStorageServiceTest extends AbstractUserTest {
+class FileStorageServiceTest extends AbstractAccountTest {
 
     @Autowired
     ShipPhotoRepository shipPhotoRepository;
@@ -26,7 +26,7 @@ class FileStorageServiceTest extends AbstractUserTest {
     @BeforeEach
     public void setUp() {
         super.setUp();
-        OperationContext.setAccountId(user.getAccountId());
+        OperationContext.setAccountId(userInfo.getAccountId());
         Files.delete(new File(AppConfig.FILES_FOLDER_PATH));
     }
 

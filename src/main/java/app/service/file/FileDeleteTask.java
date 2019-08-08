@@ -3,9 +3,9 @@ package app.service.file;
 import app.common.SMessageSource;
 import app.config.AppConfig;
 import app.database.entity.ShipPhoto;
-import app.database.entity.User;
+import app.database.entity.UserInfo;
 import app.database.repository.ShipPhotoRepository;
-import app.database.repository.UserRepository;
+import app.database.repository.UserInfoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,14 +26,14 @@ public class FileDeleteTask extends TimerTask {
 
     final static long SURVIVE_TIME = 24 * 60 * 60 * 1000;   // 1 day in millis
 
-    private final UserRepository userRepository;
+    private final UserInfoRepository userInfoRepository;
     private final ShipPhotoRepository shipPhotoRepository;
 
     @Override
     @Transactional(readOnly = true)
     public void run() {
         try {
-            Stream<String> userFiles = userRepository.findAll().stream().map(User::getPhotoName);
+            Stream<String> userFiles = userInfoRepository.findAll().stream().map(UserInfo::getPhotoName);
             Stream<String> shipFiles = shipPhotoRepository.findAll().stream().map(ShipPhoto::getFileName);
             Stream<String> berthFiles = Stream.empty();
 

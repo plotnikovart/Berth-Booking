@@ -1,15 +1,13 @@
 package app.web;
 
 import app.common.OperationContext;
-import app.database.repository.AbstractUserTest;
+import app.database.repository.AbstractAccountTest;
 import app.database.repository.ShipRepository;
 import app.web.dto.ShipDto;
 import app.web.dto.response.IdResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -23,9 +21,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(MockitoJUnitRunner.class)
 @Transactional
-class ShipControllerTest extends AbstractUserTest {
+class ShipControllerTest extends AbstractAccountTest {
 
     private MockMvc mvc;
 
@@ -41,7 +38,7 @@ class ShipControllerTest extends AbstractUserTest {
     public void setUp() {
         super.setUp();
         mvc = MockMvcBuilders.standaloneSetup(shipController).build();
-        OperationContext.setAccountId(user.getAccountId());
+        OperationContext.setAccountId(userInfo.getAccountId());
 
         shipRepository.deleteAll();
     }
@@ -54,7 +51,7 @@ class ShipControllerTest extends AbstractUserTest {
         dto.setLength(12.0);
         dto.setWidth(8.0);
         dto.setDraft(3.0);
-        dto.setFileNames(List.of("photo1"));
+        dto.setPhotoList(List.of("photo1"));
 
         MvcResult result = mvc.perform(post("/api/ships")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -73,7 +70,7 @@ class ShipControllerTest extends AbstractUserTest {
 
         // PUT
         dto.setName("122");
-        dto.setFileNames(List.of("photo1", "photo2"));
+        dto.setPhotoList(List.of("photo1", "photo2"));
         mvc.perform(put("/api/ships/" + dto.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(dto)))

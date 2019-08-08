@@ -9,7 +9,9 @@
             <column name="id" type="bigint">
                 <constraints primaryKey="true" primaryKeyName="pk_ship"/>
             </column>
-            <column name="user_id" type="bigint"/>
+            <column name="account_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
             <column name="name" type="varchar(40)">
                 <constraints nullable="false"/>
             </column>
@@ -25,9 +27,9 @@
         </createTable>
 
         <addForeignKeyConstraint baseTableName="ship"
-                                 baseColumnNames="user_id"
-                                 constraintName="fk_ship_user"
-                                 referencedTableName="user_"
+                                 baseColumnNames="account_id"
+                                 constraintName="fk_ship_user_info"
+                                 referencedTableName="user_info"
                                  referencedColumnNames="account_id"
                                  onDelete="CASCADE"/>
 

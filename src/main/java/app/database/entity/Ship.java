@@ -25,8 +25,8 @@ public class Ship implements EntityWithOwner {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "account_id")
+    private UserInfo userInfo;
 
     private String name;
 
@@ -36,19 +36,14 @@ public class Ship implements EntityWithOwner {
 
     private Double width;
 
-    @OneToMany(mappedBy = "pk.ship", cascade = {PERSIST, DETACH, MERGE}, orphanRemoval = true)
-    @OrderBy("id.num")
+    @OneToMany(mappedBy = "pk.ship", fetch = FetchType.EAGER, cascade = {PERSIST, DETACH, MERGE}, orphanRemoval = true)
+    @OrderBy("pk.num")
     private List<ShipPhoto> photos = new ArrayList<>();
 
 
-    public Ship(User user, ShipDto dto) {
-        this.user = user;
+    public Ship(UserInfo userInfo, ShipDto dto) {
+        this.userInfo = userInfo;
         setDto(dto);
-    }
-
-    @Override
-    public Long getOwnerId() {
-        return user.getAccountId();
     }
 
     public void setDto(ShipDto dto) {
@@ -57,7 +52,7 @@ public class Ship implements EntityWithOwner {
         draft = dto.getDraft();
         width = dto.getWidth();
         var i = new AtomicInteger(0);
-        var newPhotos = dto.getFileNames().stream().map(fileName -> new ShipPhoto(this, i.getAndIncrement(), fileName)).collect(Collectors.toList());
+        var newPhotos = dto.getPhotoList().stream().map(fileName -> new ShipPhoto(this, i.getAndIncrement(), fileName)).collect(Collectors.toList());
 
         photos.clear();
         photos.addAll(newPhotos);
@@ -70,7 +65,17 @@ public class Ship implements EntityWithOwner {
         dto.setLength(length);
         dto.setDraft(draft);
         dto.setWidth(width);
-        dto.setFileNames(getPhotos().stream().map(ShipPhoto::getFileName).collect(Collectors.toList()));
+        dto.setPhotoList(getPhotos().stream().map(ShipPhoto::getFileName).collect(Collectors.toList()));
         return dto;
+    }
+
+    public void setPhotos(List<ShipPhoto> newPhotos) {
+        photos.clear();
+        photos.addAll(newPhotos);
+    }
+
+    @Override
+    public Long getOwnerId() {
+        return userInfo.getAccountId();
     }
 }

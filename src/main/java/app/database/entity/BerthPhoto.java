@@ -10,16 +10,16 @@ import java.io.Serializable;
 @Entity
 @Getter
 @NoArgsConstructor
-public class ShipPhoto {
+public class BerthPhoto {
 
     @EmbeddedId
     private PK pk;
 
     private String fileName;
 
-    public ShipPhoto(Ship ship, int num, String fileName) {
+    public BerthPhoto(Berth berth, int num, String fileName) {
         pk = new PK();
-        pk.setShip(ship);
+        pk.setBerth(berth);
         pk.setNum(num);
         this.fileName = fileName;
     }
@@ -29,8 +29,8 @@ public class ShipPhoto {
     public static class PK implements Serializable {
 
         @ManyToOne
-        @JoinColumn(name = "ship_id")
-        private Ship ship;
+        @JoinColumn(name = "berth_id")
+        private Berth berth;
 
         private Integer num;
     }

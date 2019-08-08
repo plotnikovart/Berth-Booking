@@ -1,7 +1,7 @@
 package app.web;
 
 import app.common.ValidationUtils;
-import app.service.ShipFacade;
+import app.service.facade.ShipFacade;
 import app.web.dto.ShipDto;
 import app.web.dto.response.IdResponse;
 import lombok.RequiredArgsConstructor;
@@ -24,11 +24,10 @@ public class ShipController {
     }
 
     @PutMapping("/{id}")
-    public IdResponse<Long> updateShip(@RequestBody ShipDto.WithId shipDto, @PathVariable Long id) {
+    public void updateShip(@RequestBody ShipDto.WithId shipDto, @PathVariable Long id) {
         shipDto.setId(id);
         ValidationUtils.validateEntity(shipDto);
-        id = shipFacade.updateShip(shipDto);
-        return new IdResponse<>(id);
+        shipFacade.updateShip(shipDto);
     }
 
     @GetMapping

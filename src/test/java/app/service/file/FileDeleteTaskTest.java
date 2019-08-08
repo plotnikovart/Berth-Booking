@@ -25,7 +25,7 @@ class FileDeleteTaskTest extends FileStorageServiceTest {
     @BeforeEach
     public void setUp() {
         super.setUp();
-        fileDeleteTask = new FileDeleteTask(userRepository, shipPhotoRepository);
+        fileDeleteTask = new FileDeleteTask(userInfoRepository, shipPhotoRepository);
     }
 
     @Test
@@ -33,8 +33,8 @@ class FileDeleteTaskTest extends FileStorageServiceTest {
         var userPh1 = fileStorageService.saveImage(new byte[]{1, 3, 4}, "userPh1.jpg", ImageKind.USER);
         var userPhOld = fileStorageService.saveImage(new byte[]{1, 3, 4}, "userPh1.jpg", ImageKind.USER);
 
-        user.setPhotoName(userPh1.getName());
-        userRepository.save(user);
+        userInfo.setPhotoName(userPh1.getName());
+        userInfoRepository.save(userInfo);
 
         var shipPh1 = fileStorageService.saveImage(new byte[]{1, 3, 4}, "ship1.jpg", ImageKind.SHIP);
         var shipPh2 = fileStorageService.saveImage(new byte[]{1, 3, 4}, "ship2.jpg", ImageKind.SHIP);
@@ -48,9 +48,9 @@ class FileDeleteTaskTest extends FileStorageServiceTest {
         shipDto.setDraft(12.0);
         shipDto.setLength(12.0);
         shipDto.setWidth(1.0);
-        shipDto.setFileNames(List.of(shipPh1.getName(), shipPh2.getName()));
+        shipDto.setPhotoList(List.of(shipPh1.getName(), shipPh2.getName()));
 
-        var ship = new Ship(user, shipDto);
+        var ship = new Ship(userInfo, shipDto);
         shipRepository.save(ship);
 
 
