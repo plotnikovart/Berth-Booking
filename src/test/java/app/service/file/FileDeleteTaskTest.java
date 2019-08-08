@@ -25,7 +25,7 @@ class FileDeleteTaskTest extends FileStorageServiceTest {
     @BeforeEach
     public void setUp() {
         super.setUp();
-        fileDeleteTask = new FileDeleteTask(userInfoRepository, shipPhotoRepository);
+        fileDeleteTask = new FileDeleteTask(userInfoRepository, shipPhotoRepository, berthPhotoRepository);
     }
 
     @Test

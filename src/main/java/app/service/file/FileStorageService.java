@@ -3,6 +3,7 @@ package app.service.file;
 import app.common.exception.NotFoundException;
 import app.config.AppConfig;
 import app.database.repository.AccountRepository;
+import app.database.repository.BerthPhotoRepository;
 import app.database.repository.ShipPhotoRepository;
 import app.database.repository.UserInfoRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class FileStorageService {
     private final AccountRepository accountRepository;
     private final UserInfoRepository userInfoRepository;
     private final ShipPhotoRepository shipPhotoRepository;
+    private final BerthPhotoRepository berthPhotoRepository;
 
     private final Timer timer = new Timer();
 
@@ -65,7 +67,7 @@ public class FileStorageService {
 
     @PostConstruct
     public void launchFileDeleteTask() {
-        var task = new FileDeleteTask(userInfoRepository, shipPhotoRepository);
+        var task = new FileDeleteTask(userInfoRepository, shipPhotoRepository, berthPhotoRepository);
         timer.scheduleAtFixedRate(task, 1000 * 60, FileDeleteTask.SURVIVE_TIME);
     }
 }

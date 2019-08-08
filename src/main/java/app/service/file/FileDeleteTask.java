@@ -2,8 +2,10 @@ package app.service.file;
 
 import app.common.SMessageSource;
 import app.config.AppConfig;
+import app.database.entity.BerthPhoto;
 import app.database.entity.ShipPhoto;
 import app.database.entity.UserInfo;
+import app.database.repository.BerthPhotoRepository;
 import app.database.repository.ShipPhotoRepository;
 import app.database.repository.UserInfoRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,7 @@ public class FileDeleteTask extends TimerTask {
 
     private final UserInfoRepository userInfoRepository;
     private final ShipPhotoRepository shipPhotoRepository;
+    private final BerthPhotoRepository berthPhotoRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -35,7 +38,7 @@ public class FileDeleteTask extends TimerTask {
         try {
             Stream<String> userFiles = userInfoRepository.findAll().stream().map(UserInfo::getPhotoName);
             Stream<String> shipFiles = shipPhotoRepository.findAll().stream().map(ShipPhoto::getFileName);
-            Stream<String> berthFiles = Stream.empty();
+            Stream<String> berthFiles = berthPhotoRepository.findAll().stream().map(BerthPhoto::getFileName);
 
             var usedFiles = Stream.of(userFiles, shipFiles, berthFiles).flatMap(s -> s).collect(Collectors.toSet());
 
