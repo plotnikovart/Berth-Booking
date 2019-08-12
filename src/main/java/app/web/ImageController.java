@@ -26,8 +26,8 @@ public class ImageController {
     }
 
     @GetMapping("/{imageKind}/{fileName:.+}")
-    public FileSystemResource getImage(@PathVariable String imageKind, @PathVariable String fileName) {
-        var imageFile = fileStorageService.getImageFile(fileName, ImageKind.get(imageKind)).orElseThrow(NotFoundException::new);
+    public FileSystemResource getImage(@PathVariable String imageKind, @PathVariable String fileName, @RequestParam Long accountId) {
+        var imageFile = fileStorageService.getImageFile(ImageKind.get(imageKind), accountId, fileName).orElseThrow(NotFoundException::new);
         return new FileSystemResource(imageFile);
     }
 }

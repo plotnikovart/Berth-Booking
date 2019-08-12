@@ -20,7 +20,7 @@ public class ValidationUtils {
     public static final String LENGTH_MESSAGE = "Значение строки должно быть не больше, чем {max}";
     public static final String EMAIL_MESSAGE = "Значение почты некорректно";
 
-    private static Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+    private static final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     public static <T> void validateEntity(T entity) {
         Set<ConstraintViolation<T>> constraints = validator.validate(entity);

@@ -40,7 +40,7 @@ class FileStorageServiceTest extends AbstractAccountTest {
         var imageKind = ImageKind.USER;
 
         var file = fileStorageService.saveImage(image, originalFileName, imageKind);
-        var actual = fileStorageService.getImage(file.getName(), imageKind);
+        var actual = fileStorageService.getImage(imageKind, account.getId(), file.getName());
         ReflectionAssert.assertReflectionEquals(actual, image);
 
         image = new byte[]{1, 2};
@@ -48,9 +48,9 @@ class FileStorageServiceTest extends AbstractAccountTest {
         imageKind = ImageKind.SHIP;
 
         file = fileStorageService.saveImage(image, originalFileName, imageKind);
-        actual = fileStorageService.getImage(file.getName(), imageKind);
+        actual = fileStorageService.getImage(imageKind, account.getId(), file.getName());
         ReflectionAssert.assertReflectionEquals(actual, image);
 
-        Assertions.assertThrows(NotFoundException.class, () -> fileStorageService.getImage("1", ImageKind.SHIP));
+        Assertions.assertThrows(NotFoundException.class, () -> fileStorageService.getImage(ImageKind.SHIP, account.getId(), "1"));
     }
 }

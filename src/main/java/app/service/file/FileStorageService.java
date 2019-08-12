@@ -2,7 +2,6 @@ package app.service.file;
 
 import app.common.exception.NotFoundException;
 import app.config.AppConfig;
-import app.database.repository.AccountRepository;
 import app.database.repository.BerthPhotoRepository;
 import app.database.repository.ShipPhotoRepository;
 import app.database.repository.UserInfoRepository;
@@ -23,7 +22,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class FileStorageService {
 
-    private final AccountRepository accountRepository;
     private final UserInfoRepository userInfoRepository;
     private final ShipPhotoRepository shipPhotoRepository;
     private final BerthPhotoRepository berthPhotoRepository;
@@ -33,7 +31,8 @@ public class FileStorageService {
     public File saveImage(byte[] imageBytes, String fileNameOriginal, ImageKind imageKind) throws IOException {
         var fileName = UUID.randomUUID().toString() + getExtension(fileNameOriginal);
 
-        var dirPath = getImageDirectoryPath(imageKind);
+        var userInfo = userInfoRepository.findCurrent();
+        var dirPath = getImageDirectoryPath(imageKind, userInfo.getAccountId());
         Files.createDirectories(dirPath);
         var imagePath = dirPath.resolve(fileName);
 
@@ -41,19 +40,18 @@ public class FileStorageService {
         return imagePath.toFile();
     }
 
-    public byte[] getImage(String fileName, ImageKind imageKind) throws NotFoundException, IOException {
-        var imageFile = getImageFile(fileName, imageKind).orElseThrow(NotFoundException::new);
+    public byte[] getImage(ImageKind imageKind, Long accountId, String fileName) throws NotFoundException, IOException {
+        var imageFile = getImageFile(imageKind, accountId, fileName).orElseThrow(NotFoundException::new);
         return Files.readAllBytes(imageFile.toPath());
     }
 
-    public Optional<File> getImageFile(String fileName, ImageKind imageKind) {
-        var imageFile = new File(getImageDirectoryPath(imageKind).toFile(), fileName);
+    public Optional<File> getImageFile(ImageKind imageKind, Long accountId, String fileName) {
+        var imageFile = new File(getImageDirectoryPath(imageKind, accountId).toFile(), fileName);
         return imageFile.exists() ? Optional.of(imageFile) : Optional.empty();
     }
 
-    private Path getImageDirectoryPath(ImageKind imageKind) {
-        var account = accountRepository.findCurrent();
-        return Paths.get(AppConfig.FILES_FOLDER_PATH + "/" + imageKind.getFolderName() + "/" + account.getId());
+    private Path getImageDirectoryPath(ImageKind imageKind, Long accountId) {
+        return Paths.get(AppConfig.FILES_FOLDER_PATH + "/" + imageKind.getFolderName() + "/" + accountId);
     }
 
     private String getExtension(String fileName) {

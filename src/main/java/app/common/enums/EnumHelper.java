@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class EnumHelper {
 
-    private static Map<Class, Map<?, ?>> container = new HashMap<>();
+    private static final Map<Class, Map<?, ?>> container = new HashMap<>();
 
     @SuppressWarnings("unchecked")
     @Nullable
