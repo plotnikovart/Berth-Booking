@@ -18,6 +18,7 @@ public class ValidationUtils {
     public static final String RANGE_MESSAGE = "Значение параметра должно быть в пределах [{min}, {max}]";
     public static final String SIZE_MESSAGE = "Значение строки должно быть в пределах от {min} до {max}";
     public static final String LENGTH_MESSAGE = "Значение строки должно быть не больше, чем {max}";
+    public static final String EMAIL_MESSAGE = "Значение почты некорректно";
 
     private static Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 

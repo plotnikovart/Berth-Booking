@@ -9,6 +9,8 @@ import javax.validation.constraints.NotNull;
 @Data
 public class BerthPlaceDto {
 
+    private Long berthId;
+
     @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
     @Range(message = ValidationUtils.RANGE_MESSAGE)
     private Double length;

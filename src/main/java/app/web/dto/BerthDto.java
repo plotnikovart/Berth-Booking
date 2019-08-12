@@ -40,6 +40,7 @@ public class BerthDto {
     @Data
     public static class WithId extends BerthDto {
 
+        @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
         private Long id;
     }
 }

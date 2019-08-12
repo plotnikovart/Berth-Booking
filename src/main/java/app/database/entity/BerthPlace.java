@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -30,6 +31,9 @@ public class BerthPlace implements EntityWithOwner {
 
     private Double price;
 
+    @OneToMany(mappedBy = "berthPlace", cascade = CascadeType.DETACH)
+    private List<Booking> bookingList;
+
     public BerthPlace(Berth berth, BerthPlaceDto dto) {
         this.berth = berth;
         setDto(dto);
@@ -44,11 +48,12 @@ public class BerthPlace implements EntityWithOwner {
 
     public BerthPlaceDto.WithId getDto() {
         return (BerthPlaceDto.WithId) new BerthPlaceDto.WithId()
-                .setId(id)
-                .setLength(length)
-                .setDraft(draft)
-                .setWidth(width)
-                .setPrice(price);
+                .setId(getId())
+                .setBerthId(getBerth().getId())
+                .setLength(getLength())
+                .setDraft(getDraft())
+                .setWidth(getWidth())
+                .setPrice(getPrice());
     }
 
 

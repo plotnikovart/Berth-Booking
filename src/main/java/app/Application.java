@@ -10,5 +10,8 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
-    // todo причалы
+    // todo фотографии для других пользователей
+    // todo проверка перед сохранением фотки
+    // todo поиск мест
+    // todo оставление отзыва
 }

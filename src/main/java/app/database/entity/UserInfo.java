@@ -41,6 +41,10 @@ public class UserInfo {
     @OneToMany(mappedBy = "userInfo", cascade = {PERSIST, DETACH, MERGE}, orphanRemoval = true)
     private List<Berth> berths = new ArrayList<>();
 
+    @OneToMany(mappedBy = "renter", cascade = DETACH)
+    @OrderBy("startDate desc")
+    private List<Booking> bookings = new ArrayList<>();
+
     public UserInfo(Account account, UserInfoDto userInfoDto) {
         this.account = account;
         setDto(userInfoDto);
