@@ -3,7 +3,7 @@ package app.web;
 import app.common.ValidationUtils;
 import app.service.facade.BookingFacade;
 import app.web.dto.BookingDto;
-import app.web.dto.BookingReqDto;
+import app.web.dto.request.BookingRequest;
 import app.web.dto.response.IdResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -18,9 +18,9 @@ public class BookingController {
     private final BookingFacade bookingFacade;
 
     @PostMapping
-    public IdResponse<Long> createBooking(@RequestBody BookingReqDto bookingReqDto) {
-        ValidationUtils.validateEntity(bookingReqDto);
-        Long id = bookingFacade.createBooking(bookingReqDto);
+    public IdResponse<Long> createBooking(@RequestBody BookingRequest bookingRequest) {
+        ValidationUtils.validateEntity(bookingRequest);
+        Long id = bookingFacade.createBooking(bookingRequest);
         return new IdResponse<>(id);
     }
 

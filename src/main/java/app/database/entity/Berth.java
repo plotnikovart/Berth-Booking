@@ -5,6 +5,10 @@ import app.web.dto.BerthDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Latitude;
+import org.hibernate.search.annotations.Longitude;
+import org.hibernate.search.annotations.Spatial;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -14,11 +18,17 @@ import java.util.stream.Collectors;
 
 import static javax.persistence.CascadeType.*;
 
+@NamedEntityGraph(name = "berth_eg", attributeNodes = @NamedAttributeNode("berthPlaces"))
 @Getter
 @Setter
+@Indexed
+@Spatial(name = Berth.SPATIAL_FIELD)
 @Entity
 @NoArgsConstructor
 public class Berth implements EntityWithOwner {
+
+    public static final String SPATIAL_FIELD = "location";
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,8 +42,10 @@ public class Berth implements EntityWithOwner {
 
     private String description;
 
+    @Latitude(of = Berth.SPATIAL_FIELD)
     private Double lat;
 
+    @Longitude(of = Berth.SPATIAL_FIELD)
     private Double lng;
 
     private Double standardPrice;
@@ -52,6 +64,7 @@ public class Berth implements EntityWithOwner {
             inverseJoinColumns = @JoinColumn(name = "convenience_id"))
     @OrderBy("id")
     private List<Convenience> conveniences = new ArrayList<>();
+
 
     public Berth(UserInfo userInfo, BerthDto dto) {
         this.userInfo = userInfo;

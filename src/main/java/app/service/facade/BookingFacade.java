@@ -11,7 +11,7 @@ import app.database.repository.*;
 import app.service.BookingSearchService;
 import app.service.PermissionService;
 import app.web.dto.BookingDto;
-import app.web.dto.BookingReqDto;
+import app.web.dto.request.BookingRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,12 +32,12 @@ public class BookingFacade {
     private final PermissionService permissionService;
 
     @Transactional
-    public synchronized Long createBooking(BookingReqDto bookingReqDto) {
-        BerthPlace berthPlace = berthPlaceRepository.findById(bookingReqDto.getBerthPlaceId()).orElseThrow(NotFoundException::new);
-        Ship ship = shipRepository.findById(bookingReqDto.getShipId()).orElseThrow(NotFoundException::new);
+    public synchronized Long createBooking(BookingRequest bookingRequest) {
+        BerthPlace berthPlace = berthPlaceRepository.findById(bookingRequest.getBerthPlaceId()).orElseThrow(NotFoundException::new);
+        Ship ship = shipRepository.findById(bookingRequest.getShipId()).orElseThrow(NotFoundException::new);
 
-        var startDate = DateHelper.convertToLocalDate(bookingReqDto.getStartDate());
-        var endDate = DateHelper.convertToLocalDate(bookingReqDto.getEndDate());
+        var startDate = DateHelper.convertToLocalDate(bookingRequest.getStartDate());
+        var endDate = DateHelper.convertToLocalDate(bookingRequest.getEndDate());
 
         UserInfo owner = userInfoRepository.findById(berthPlace.getOwnerId()).orElseThrow(NotFoundException::new);
         UserInfo renter = userInfoRepository.findCurrent();
@@ -120,10 +120,12 @@ public class BookingFacade {
 
     @Transactional(readOnly = true)
     public List<BookingDto.WithId> getAllBookings() {
-        UserInfo userInfo = userInfoRepository.findCurrent();
-        return userInfo.getBookings().stream()
-                .map(Booking::getDto)
-                .collect(Collectors.toList());
+        bookingSearchService.searchPlaces(null, null);
+        return List.of();
+//        UserInfo userInfo = userInfoRepository.findCurrent();
+//        return userInfo.getBookings().stream()
+//                .map(Booking::getDto)
+//                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
