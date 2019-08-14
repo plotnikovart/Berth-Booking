@@ -1,10 +1,9 @@
 package app.web;
 
+import app.common.HttpHelper;
 import app.common.ValidationUtils;
 import app.service.AccountService;
 import app.web.dto.AccountDto;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,18 +28,9 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public CookieResponse login(@RequestBody AccountDto accountDto, HttpServletResponse response) {
+    public void login(@RequestBody AccountDto accountDto, HttpServletResponse response) {
         ValidationUtils.validateEntity(accountDto);
         var cookie = accountService.login(accountDto);
-        response.addCookie(cookie);
-
-        return new CookieResponse(cookie.getName(), cookie.getValue());
-    }
-
-    @Getter
-    @AllArgsConstructor
-    public static class CookieResponse {        // todo убрать
-        private String name;
-        private String value;
+        HttpHelper.addCookie(response, cookie);
     }
 }
