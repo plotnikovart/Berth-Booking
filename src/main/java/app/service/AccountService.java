@@ -22,7 +22,7 @@ import java.util.Date;
 public class AccountService {
 
     public final static String AUTH_TOKEN_NAME = "auth_token";
-    private final static Integer TOKEN_MAX_AGE = 30 * 24 * 60 * 60;    // 30 days in seconds
+    private final static Integer TOKEN_MAX_AGE = 5 * 24 * 60 * 60;    // 5 days in seconds
 
     @Value("${secretKey}")
     private String secretKey;
@@ -61,9 +61,7 @@ public class AccountService {
 
     public Cookie createUserCookie(Long accountId) {
         var token = createToken(accountId);
-        var cookie = new Cookie(AUTH_TOKEN_NAME, token);
-        cookie.setMaxAge(TOKEN_MAX_AGE);
-        return cookie;
+        return new Cookie(AUTH_TOKEN_NAME, token);
     }
 
     private String createToken(Long accountId) {
