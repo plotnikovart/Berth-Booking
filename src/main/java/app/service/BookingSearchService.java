@@ -6,7 +6,7 @@ import app.database.entity.enums.BookingStatus;
 import app.database.repository.*;
 import app.web.dto.BerthDto;
 import app.web.dto.ConvenienceDto;
-import app.web.dto.request.PlaceSearchRequest;
+import app.web.dto.request.BookingSearchRequest;
 import app.web.dto.request.Sorting;
 import com.google.common.collect.Sets;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +40,7 @@ public class BookingSearchService {
     }
 
     @Transactional(readOnly = true)
-    public List<BerthDto.WithId> searchPlaces(PlaceSearchRequest req, Sorting sorting) {
+    public List<BerthDto.WithId> searchPlaces(BookingSearchRequest req) {
         Ship ship = shipRepository.findById(req.getShipId()).orElseThrow();
         Set<Convenience> requiredConv = extractConveniences(req);
 
@@ -65,11 +65,11 @@ public class BookingSearchService {
         Stream<BerthDto.WithId> result = filtered.entrySet().stream()
                 .map(pair -> convertToBerthDto(pair, berths.get(pair.getKey())));
 
-        if (sorting == Sorting.DISTANCE) {
+        if (req.getSorting() == Sorting.DISTANCE) {
             result = result.sorted(Comparator.comparing(BerthDto::getDistance));
         }
 
-        if (sorting == Sorting.PRICE) {
+        if (req.getSorting() == Sorting.PRICE) {
             result = result.sorted(Comparator.comparing(BerthDto::getMinPrice));
         }
 
@@ -89,14 +89,16 @@ public class BookingSearchService {
                 .setConvenienceList(conveniences);
     }
 
-    private Set<Convenience> extractConveniences(PlaceSearchRequest req) {
+    private Set<Convenience> extractConveniences(BookingSearchRequest req) {
         List<Integer> requiredConvIds = req.getConvenienceList().stream().map(ConvenienceDto::getId).collect(Collectors.toList());
         return Set.copyOf(convenienceRepository.findAllById(requiredConvIds));
     }
 
     private void loadData(Collection<Berth> berths) {
-        berthRepository.loadPlaces(berths);
-        berthRepository.loadConveniences(berths);
-        berthRepository.loadPhotos(berths);
+        if (!berths.isEmpty()) {
+            berthRepository.loadPlaces(berths);
+            berthRepository.loadConveniences(berths);
+            berthRepository.loadPhotos(berths);
+        }
     }
 }

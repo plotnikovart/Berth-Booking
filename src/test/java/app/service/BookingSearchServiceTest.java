@@ -9,8 +9,7 @@ import app.database.entity.enums.BookingStatus;
 import app.database.repository.*;
 import app.web.dto.BerthDto;
 import app.web.dto.ConvenienceDto;
-import app.web.dto.request.PlaceSearchRequest;
-import app.web.dto.request.Sorting;
+import app.web.dto.request.BookingSearchRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -180,7 +179,7 @@ class BookingSearchServiceTest extends AbstractConvenienceTest {
 
         bookingRepository.saveAll(List.of(booking1, booking2));
 
-        var req = new PlaceSearchRequest()
+        var req = new BookingSearchRequest()
                 .setStartDate(DateHelper.convertToDate(LocalDate.of(2019, 6, 21)))
                 .setEndDate(DateHelper.convertToDate(LocalDate.of(2019, 6, 23)))
                 .setLat(LAT)
@@ -189,21 +188,21 @@ class BookingSearchServiceTest extends AbstractConvenienceTest {
                 .setShipId(ship1.getId())
                 .setConvenienceList(List.of(convDto1, convDto2));
 
-        var actual = bookingSearchService.searchPlaces(req, Sorting.DISTANCE);
+        var actual = bookingSearchService.searchPlaces(req);
         Assertions.assertEquals(2, calcPlaces(actual));         // 3, 4
 
         req.setConvenienceList(List.of());
-        actual = bookingSearchService.searchPlaces(req, Sorting.DISTANCE);
+        actual = bookingSearchService.searchPlaces(req);
         Assertions.assertEquals(3, calcPlaces(actual));         // 3, 4, 5
 
         req.setRad(4.0);
-        actual = bookingSearchService.searchPlaces(req, Sorting.DISTANCE);
+        actual = bookingSearchService.searchPlaces(req);
         Assertions.assertEquals(3, calcPlaces(actual));         // 3, 4, 5
 
         req.setRad(10.0);
         req.setShipId(ship2.getId());
         req.setConvenienceList(List.of(convDto1, convDto2, convDto3));
-        actual = bookingSearchService.searchPlaces(req, Sorting.DISTANCE);
+        actual = bookingSearchService.searchPlaces(req);
         Assertions.assertEquals(1, calcPlaces(actual));         // 4
     }
 

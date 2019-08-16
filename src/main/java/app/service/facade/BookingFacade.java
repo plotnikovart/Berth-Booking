@@ -120,12 +120,10 @@ public class BookingFacade {
 
     @Transactional(readOnly = true)
     public List<BookingDto.WithId> getAllBookings() {
-        bookingSearchService.searchPlaces(null, null);
-        return List.of();
-//        UserInfo userInfo = userInfoRepository.findCurrent();
-//        return userInfo.getBookings().stream()
-//                .map(Booking::getDto)
-//                .collect(Collectors.toList());
+        UserInfo userInfo = userInfoRepository.findCurrent();
+        return userInfo.getBookings().stream()
+                .map(Booking::getDto)
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)

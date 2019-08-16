@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-public class PlaceSearchRequest {
+public class BookingSearchRequest {
 
     @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
     @Range(min = -90, max = 90, message = ValidationUtils.RANGE_MESSAGE)
@@ -37,4 +37,6 @@ public class PlaceSearchRequest {
     private Date endDate;
 
     private List<ConvenienceDto> convenienceList = new ArrayList<>();
+
+    private Sorting sorting = Sorting.DISTANCE;
 }

@@ -1,9 +1,12 @@
 package app.web;
 
 import app.common.ValidationUtils;
+import app.service.BookingSearchService;
 import app.service.facade.BookingFacade;
+import app.web.dto.BerthDto;
 import app.web.dto.BookingDto;
 import app.web.dto.request.BookingRequest;
+import app.web.dto.request.BookingSearchRequest;
 import app.web.dto.response.IdResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +19,7 @@ import java.util.List;
 public class BookingController {
 
     private final BookingFacade bookingFacade;
+    private final BookingSearchService bookingSearchService;
 
     @PostMapping
     public IdResponse<Long> createBooking(@RequestBody BookingRequest bookingRequest) {
@@ -52,5 +56,11 @@ public class BookingController {
     @PutMapping("{id}/cancel")
     public void cancelBooking(@PathVariable Long id) {
         bookingFacade.cancelBooking(id);
+    }
+
+    @PostMapping("search")
+    public List<BerthDto.WithId> search(@RequestBody BookingSearchRequest req) {
+        ValidationUtils.validateEntity(req);
+        return bookingSearchService.searchPlaces(req);
     }
 }
