@@ -1,6 +1,7 @@
 package app.service;
 
 import app.common.DateHelper;
+import app.common.exception.NotFoundException;
 import app.database.entity.*;
 import app.database.entity.enums.BookingStatus;
 import app.database.repository.*;
@@ -41,7 +42,7 @@ public class BookingSearchService {
 
     @Transactional(readOnly = true)
     public List<BerthDto.WithId> searchPlaces(BookingSearchRequest req) {
-        Ship ship = shipRepository.findById(req.getShipId()).orElseThrow();
+        Ship ship = shipRepository.findById(req.getShipId()).orElseThrow(NotFoundException::new);
         Set<Convenience> requiredConv = extractConveniences(req);
 
         Map<Berth, Double> berths = berthSearchRepository.findByCoordinates(req.getLat(), req.getLng(), req.getRad());
