@@ -15,10 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -46,7 +43,7 @@ public class BerthFacade {
 
         if (dto.getConvenienceList() != null) {
             List<Integer> ids = dto.getConvenienceList().stream().map(ConvenienceDto::getId).collect(Collectors.toList());
-            List<Convenience> conveniences = convenienceRepository.findAllByIds(ids);
+            List<Convenience> conveniences = convenienceRepository.findAllById(ids);
 
             berth.setConveniences(conveniences);
         }
@@ -63,7 +60,7 @@ public class BerthFacade {
         berthRepository.save(berth);
 
         if (dto.getPlaceList() != null) {
-            List<BerthPlace> places = berth.getBerthPlaces();
+            List<BerthPlace> places = new ArrayList<>(berth.getBerthPlaces());
             List<BerthPlaceDto.WithId> placesDto = dto.getPlaceList();
 
             List<BerthPlace> deleted = getDeleted(places, placesDto);
@@ -77,7 +74,7 @@ public class BerthFacade {
 
         if (dto.getConvenienceList() != null) {
             List<Integer> ids = dto.getConvenienceList().stream().map(ConvenienceDto::getId).collect(Collectors.toList());
-            List<Convenience> conveniences = convenienceRepository.findAllByIds(ids);
+            List<Convenience> conveniences = convenienceRepository.findAllById(ids);
 
             berth.setConveniences(conveniences);
         }
@@ -95,6 +92,11 @@ public class BerthFacade {
     public List<BerthDto.WithId> getBerths() {
         var userInfo = userInfoRepository.findCurrent();
         var berths = userInfo.getBerths();
+
+        berthRepository.loadPhotos(berths);
+        berthRepository.loadConveniences(berths);
+        berthRepository.loadPlaces(berths);
+
         return berths.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 

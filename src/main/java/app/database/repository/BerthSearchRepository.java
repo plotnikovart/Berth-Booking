@@ -9,13 +9,12 @@ import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.hibernate.search.query.dsl.Unit;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @Repository
@@ -25,7 +24,7 @@ public class BerthSearchRepository {
     private final EntityManager entityManager;
 
     @Transactional(readOnly = true)
-    public List<Pair<Double, Berth>> findByCoordinates(Double lat, Double lng, Double rad) {
+    public Map<Berth, Double> findByCoordinates(Double lat, Double lng, Double rad) {
         try {
             FullTextEntityManager em = org.hibernate.search.jpa.Search.getFullTextEntityManager(entityManager);
             QueryBuilder queryBuilder = em.getSearchFactory().buildQueryBuilder().forEntity(Berth.class).get();
@@ -42,10 +41,10 @@ public class BerthSearchRepository {
             hibQuery.setProjection(FullTextQuery.SPATIAL_DISTANCE, FullTextQuery.THIS);
             hibQuery.setSpatialParameters(lat, lng, Berth.SPATIAL_FIELD);
 
-            List<Pair<Double, Berth>> results = new LinkedList<>();
+            Map<Berth, Double> results = new HashMap<>();
             for (var o : hibQuery.getResultList()) {
                 Object[] objects = (Object[]) o;
-                results.add(Pair.of((Double) objects[0], (Berth) objects[1]));
+                results.put((Berth) objects[1], (Double) objects[0]);
             }
 
             return results;

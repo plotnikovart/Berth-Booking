@@ -7,6 +7,7 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -35,5 +36,5 @@ public class PlaceSearchRequest {
     @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
     private Date endDate;
 
-    private List<ConvenienceDto> convenienceList;
+    private List<ConvenienceDto> convenienceList = new ArrayList<>();
 }

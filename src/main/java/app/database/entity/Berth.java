@@ -12,6 +12,7 @@ import org.hibernate.search.annotations.Spatial;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -99,19 +100,22 @@ public class Berth implements EntityWithOwner {
                 .setPhotoList(photos.stream().map(BerthPhoto::getFileName).collect(Collectors.toList()));
     }
 
-    public void setBerthPlaces(List<BerthPlace> newPlaces) {
+    public Berth setBerthPlaces(Collection<BerthPlace> newPlaces) {
         berthPlaces.clear();
         berthPlaces.addAll(newPlaces);
+        return this;
     }
 
-    public void setConveniences(List<Convenience> newConveniences) {
+    public Berth setConveniences(Collection<Convenience> newConveniences) {
         conveniences.clear();
         conveniences.addAll(newConveniences);
+        return this;
     }
 
-    public void setPhotos(List<BerthPhoto> newPhotos) {
+    public Berth setPhotos(Collection<BerthPhoto> newPhotos) {
         photos.clear();
         photos.addAll(newPhotos);
+        return this;
     }
 
     @Override

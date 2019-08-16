@@ -56,6 +56,9 @@ public class BerthPlace implements EntityWithOwner {
                 .setPrice(getPrice());
     }
 
+    public Double getFactPrice() {
+        return getPrice() == null ? getBerth().getStandardPrice() : getPrice();
+    }
 
     @Override
     public Long getOwnerId() {

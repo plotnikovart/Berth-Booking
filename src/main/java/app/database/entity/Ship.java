@@ -36,7 +36,7 @@ public class Ship implements EntityWithOwner {
 
     private Double width;
 
-    @OneToMany(mappedBy = "pk.ship", fetch = FetchType.EAGER, cascade = {PERSIST, DETACH, MERGE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "pk.ship", cascade = {PERSIST, DETACH, MERGE}, orphanRemoval = true)
     @OrderBy("pk.num")
     private List<ShipPhoto> photos = new ArrayList<>();
 

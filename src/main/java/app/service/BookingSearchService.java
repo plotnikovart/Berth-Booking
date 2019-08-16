@@ -1,26 +1,33 @@
 package app.service;
 
 import app.common.DateHelper;
-import app.database.entity.BerthPlace;
-import app.database.entity.Booking;
+import app.database.entity.*;
 import app.database.entity.enums.BookingStatus;
-import app.database.repository.BerthPlaceRepository;
-import app.database.repository.BerthSearchRepository;
+import app.database.repository.*;
+import app.web.dto.BerthDto;
+import app.web.dto.ConvenienceDto;
 import app.web.dto.request.PlaceSearchRequest;
 import app.web.dto.request.Sorting;
+import com.google.common.collect.Sets;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
 public class BookingSearchService {
 
-    private final BerthPlaceRepository berthPlaceRepository;
+    private final ShipRepository shipRepository;
     private final BerthSearchRepository berthSearchRepository;
+    private final BookingRepository bookingRepository;
+    private final BerthRepository berthRepository;
+    private final ConvenienceRepository convenienceRepository;
+
 
     @Transactional(readOnly = true)
     public boolean isReserved(BerthPlace berthPlace, LocalDate startDate, LocalDate endDate) {
@@ -33,9 +40,63 @@ public class BookingSearchService {
     }
 
     @Transactional(readOnly = true)
-    public void searchPlaces(PlaceSearchRequest req, Sorting sorting) {
-        berthSearchRepository.findByCoordinates(12.0, 12.0, 25000.0);
+    public List<BerthDto.WithId> searchPlaces(PlaceSearchRequest req, Sorting sorting) {
+        Ship ship = shipRepository.findById(req.getShipId()).orElseThrow();
+        Set<Convenience> requiredConv = extractConveniences(req);
+
+        Map<Berth, Double> berths = berthSearchRepository.findByCoordinates(req.getLat(), req.getLng(), req.getRad());
+        loadData(berths.keySet());
+
+        Set<BerthPlace> bookedPlaces = bookingRepository.findApprovedPlacesByDates(
+                DateHelper.convertToLocalDate(req.getStartDate()),
+                DateHelper.convertToLocalDate(req.getEndDate()));
+
+        Map<Berth, List<BerthPlace>> filtered = berths.keySet().stream()
+                .filter(berth -> {
+                    var conv = Set.copyOf(berth.getConveniences());
+                    return Sets.intersection(conv, requiredConv).size() == requiredConv.size();
+                })
+                .flatMap(berth -> berth.getBerthPlaces().stream())
+                .filter(place -> !bookedPlaces.contains(place))
+                .filter(place -> place.getLength() >= ship.getLength() && place.getWidth() >= ship.getWidth() && place.getDraft() >= ship.getDraft())
+                .collect(Collectors.groupingBy(BerthPlace::getBerth));
+
+
+        Stream<BerthDto.WithId> result = filtered.entrySet().stream()
+                .map(pair -> convertToBerthDto(pair, berths.get(pair.getKey())));
+
+        if (sorting == Sorting.DISTANCE) {
+            result = result.sorted(Comparator.comparing(BerthDto::getDistance));
+        }
+
+        if (sorting == Sorting.PRICE) {
+            result = result.sorted(Comparator.comparing(BerthDto::getMinPrice));
+        }
+
+        return result.collect(Collectors.toList());
     }
 
+    private BerthDto.WithId convertToBerthDto(Map.Entry<Berth, List<BerthPlace>> pair, Double distance) {
+        var places = pair.getValue().stream().map(BerthPlace::getDto).collect(Collectors.toList());
+        var conveniences = pair.getKey().getConveniences().stream().map(Convenience::getDto).collect(Collectors.toList());
 
+        double minPrice = pair.getValue().stream().mapToDouble(BerthPlace::getFactPrice).min().orElseThrow();
+
+        return (BerthDto.WithId) pair.getKey().getDto()
+                .setDistance(distance)
+                .setMinPrice(minPrice)
+                .setPlaceList(places)
+                .setConvenienceList(conveniences);
+    }
+
+    private Set<Convenience> extractConveniences(PlaceSearchRequest req) {
+        List<Integer> requiredConvIds = req.getConvenienceList().stream().map(ConvenienceDto::getId).collect(Collectors.toList());
+        return Set.copyOf(convenienceRepository.findAllById(requiredConvIds));
+    }
+
+    private void loadData(Collection<Berth> berths) {
+        berthRepository.loadPlaces(berths);
+        berthRepository.loadConveniences(berths);
+        berthRepository.loadPhotos(berths);
+    }
 }

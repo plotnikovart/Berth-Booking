@@ -8,7 +8,7 @@ import java.util.Date;
 public class DateHelper {
 
     public static boolean isIntersect(LocalDate start1, LocalDate end1, LocalDate start2, LocalDate end2) {
-        return !(end1.isBefore(start2) && start1.isAfter(end2));
+        return !(end1.isBefore(start2) || start1.isAfter(end2));
     }
 
     public static LocalDate convertToLocalDate(Date date) {
