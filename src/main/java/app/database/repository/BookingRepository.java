@@ -21,9 +21,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "order by b.id desc")
     List<Booking> findAllByBerth(Berth berth);
 
-    @Query("select bp from Booking b " +
-            "join BerthPlace bp on bp = b.berthPlace " +
-            "join fetch Berth be on be = bp.berth " +       // все равно делает доп запросы!!!
+    @Query("select b.berthPlace from Booking b " +
             "where not (b.startDate > ?2 or b.endDate < ?1) " +
             "and b.status = ?3")
     Set<BerthPlace> findPlacesByDatesAndStatus(LocalDate startDate, LocalDate endDate, BookingStatus status);

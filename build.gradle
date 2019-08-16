@@ -1,9 +1,9 @@
 plugins {
     id 'org.springframework.boot' version '2.1.6.RELEASE'
+    id 'io.spring.dependency-management' version "1.0.8.RELEASE"
     id 'java'
+    id 'idea'
 }
-
-apply plugin: 'io.spring.dependency-management'
 
 group = 'hse.courseWork'
 version = '1.0'
@@ -47,13 +47,10 @@ test {
     systemProperty "user.dir", "$buildDir".toString()
 }
 
-allprojects {
-    apply plugin: 'idea'
-    idea {
-        module {
-            inheritOutputDirs = false
-            outputDir = file("$buildDir/classes/main/")
-            testOutputDir = file("$buildDir/classes/test")
-        }
+idea {
+    module {
+        inheritOutputDirs = false
+        outputDir = file("$buildDir/classes/main/")
+        testOutputDir = file("$buildDir/classes/test")
     }
 }
