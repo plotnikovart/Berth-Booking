@@ -52,9 +52,9 @@ public class BerthFacade {
     }
 
     @Transactional
-    public Long updateBerth(BerthDto.WithId dto) {
+    public void updateBerth(BerthDto.WithId dto) {
         Berth berth = berthRepository.findById(dto.getId()).orElseThrow(NotFoundException::new);
-        permissionService.checkPermission(berth);
+        permissionService.changeEntity(berth);
 
         berth.setDto(dto);
         berthRepository.save(berth);
@@ -78,8 +78,6 @@ public class BerthFacade {
 
             berth.setConveniences(conveniences);
         }
-
-        return berth.getId();
     }
 
     @Transactional(readOnly = true)
@@ -103,7 +101,7 @@ public class BerthFacade {
     @Transactional
     public void deleteBerth(Long berthId) {
         var berth = berthRepository.findById(berthId).orElseThrow(NotFoundException::new);
-        permissionService.checkPermission(berth);
+        permissionService.changeEntity(berth);
         berthRepository.delete(berth);        // todo проверки на зависимости
     }
 

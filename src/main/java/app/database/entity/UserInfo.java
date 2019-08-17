@@ -21,7 +21,7 @@ public class UserInfo {
     private Long id;
 
     @MapsId
-    @OneToOne(optional = false, fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "account_id")
     private Account account;
 

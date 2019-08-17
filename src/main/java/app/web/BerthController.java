@@ -2,7 +2,9 @@ package app.web;
 
 import app.common.ValidationUtils;
 import app.service.facade.BerthFacade;
+import app.service.facade.ReviewFacade;
 import app.web.dto.BerthDto;
+import app.web.dto.ReviewDto;
 import app.web.dto.response.IdResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,7 @@ import java.util.List;
 public class BerthController {
 
     private final BerthFacade berthFacade;
+    private final ReviewFacade reviewFacade;
 
     @PostMapping
     public IdResponse<Long> createBerth(@RequestBody BerthDto berthDto) {
@@ -44,6 +47,36 @@ public class BerthController {
     public void deleteBerth(@PathVariable Long id) {
         berthFacade.deleteBerth(id);
     }
+
+
+    @PostMapping("{id}/reviews")
+    public IdResponse<Long> createReview(@PathVariable Long id, @RequestBody ReviewDto reviewDto) {
+        reviewDto.setBerthId(id);
+
+        ValidationUtils.validateEntity(reviewDto);
+        long reviewId = reviewFacade.createReview(reviewDto);
+        return new IdResponse<>(reviewId);
+    }
+
+    @GetMapping("{id}/reviews")
+    public List<ReviewDto.WithId> getReviews(@PathVariable Long id) {
+        return reviewFacade.getReviews(id);
+    }
+
+    @PutMapping("{id}/reviews/{reviewId}")
+    public void updateReview(@PathVariable Long id, @PathVariable Long reviewId, @RequestBody ReviewDto.WithId reviewDto) {
+        reviewDto.setBerthId(id);
+        reviewDto.setId(reviewId);
+
+        ValidationUtils.validateEntity(reviewDto);
+        reviewFacade.updateReview(reviewDto);
+    }
+
+    @DeleteMapping("{id}/reviews/{reviewId}")
+    public void deleteReview(@PathVariable Long id, @PathVariable Long reviewId) {
+        reviewFacade.deleteReview(reviewId);
+    }
+
 
     private void validateBerthDto(BerthDto berthDto) {
         ValidationUtils.validateEntity(berthDto);

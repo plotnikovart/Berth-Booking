@@ -32,10 +32,9 @@ public class ShipFacade {
     @Transactional
     public void updateShip(ShipDto.WithId shipDto) {
         var ship = shipRepository.findById(shipDto.getId()).orElseThrow(NotFoundException::new);
-        permissionService.checkPermission(ship);
+        permissionService.changeEntity(ship);
 
         ship.setDto(shipDto);
-        shipRepository.save(ship);
     }
 
     @Transactional(readOnly = true)
@@ -53,7 +52,7 @@ public class ShipFacade {
     @Transactional
     public void deleteShip(Long shipId) {
         var ship = shipRepository.findById(shipId).orElseThrow(NotFoundException::new);
-        permissionService.checkPermission(ship);
+        permissionService.changeEntity(ship);
         shipRepository.delete(ship);
     }
 }

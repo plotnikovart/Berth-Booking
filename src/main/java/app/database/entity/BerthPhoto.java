@@ -28,7 +28,7 @@ public class BerthPhoto {
     @Embeddable
     public static class PK implements Serializable {
 
-        @ManyToOne
+        @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "berth_id")
         private Berth berth;
 

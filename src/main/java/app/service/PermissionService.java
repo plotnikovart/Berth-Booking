@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class PermissionService {
 
-    public void checkPermission(EntityWithOwner entityWithOwner) throws AccessException {
+    public void changeEntity(EntityWithOwner entityWithOwner) throws AccessException {
         long currentId = OperationContext.getAccountId();
         long ownerId = entityWithOwner.getOwnerId();
 

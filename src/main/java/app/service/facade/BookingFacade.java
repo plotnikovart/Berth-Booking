@@ -129,7 +129,7 @@ public class BookingFacade {
     @Transactional(readOnly = true)
     public List<BookingDto.WithId> getAllBookingsByBerth(Long berthId) {
         Berth berth = berthRepository.findById(berthId).orElseThrow(NotFoundException::new);
-        permissionService.checkPermission(berth);
+        permissionService.changeEntity(berth);
 
         return bookingRepository.findAllByBerth(berth).stream()
                 .map(Booking::getDto)
