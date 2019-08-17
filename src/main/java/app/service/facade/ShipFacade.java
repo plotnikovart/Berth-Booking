@@ -35,6 +35,7 @@ public class ShipFacade {
         permissionService.changeEntity(ship);
 
         ship.setDto(shipDto);
+        shipRepository.save(ship);
     }
 
     @Transactional(readOnly = true)
