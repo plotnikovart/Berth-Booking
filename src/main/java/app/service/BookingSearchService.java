@@ -68,10 +68,10 @@ public class BookingSearchService {
 
         if (req.getSorting() == Sorting.DISTANCE) {
             result = result.sorted(Comparator.comparing(BerthDto::getDistance));
-        }
-
-        if (req.getSorting() == Sorting.PRICE) {
+        } else if (req.getSorting() == Sorting.PRICE) {
             result = result.sorted(Comparator.comparing(BerthDto::getMinPrice));
+        } else if (req.getSorting() == Sorting.RATING) {
+            result = result.sorted(Comparator.comparing(BerthDto::getRating));
         }
 
         return result.collect(Collectors.toList());

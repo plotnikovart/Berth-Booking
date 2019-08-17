@@ -5,6 +5,7 @@ import app.web.dto.BerthDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Formula;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Latitude;
 import org.hibernate.search.annotations.Longitude;
@@ -66,6 +67,9 @@ public class Berth implements EntityWithOwner {
     @OrderBy("id")
     private List<Convenience> conveniences = new ArrayList<>();
 
+    @Formula("(select avg(r.rating) from review as r WHERE r.berth_id = id)")   // todo lazy loading
+    private Integer rating;
+
 
     public Berth(UserInfo userInfo, BerthDto dto) {
         this.userInfo = userInfo;
@@ -91,24 +95,25 @@ public class Berth implements EntityWithOwner {
 
     public BerthDto.WithId getDto() {
         return (BerthDto.WithId) new BerthDto.WithId()
-                .setId(id)
-                .setName(name)
-                .setDescription(description)
-                .setLat(lat)
-                .setLng(lng)
-                .setStandardPrice(standardPrice)
-                .setPhotoList(photos.stream().map(BerthPhoto::getFileName).collect(Collectors.toList()));
+                .setId(getId())
+                .setName(getName())
+                .setDescription(getDescription())
+                .setLat(getLat())
+                .setLng(getLng())
+                .setStandardPrice(getStandardPrice())
+                .setPhotoList(getPhotos().stream().map(BerthPhoto::getFileName).collect(Collectors.toList()))
+                .setRating(getRating());
     }
 
     public Berth setBerthPlaces(Collection<BerthPlace> newPlaces) {
-        berthPlaces.clear();
-        berthPlaces.addAll(newPlaces);
+        getBerthPlaces().clear();
+        getBerthPlaces().addAll(newPlaces);
         return this;
     }
 
     public Berth setConveniences(Collection<Convenience> newConveniences) {
-        conveniences.clear();
-        conveniences.addAll(newConveniences);
+        getConveniences().clear();
+        getConveniences().addAll(newConveniences);
         return this;
     }
 
@@ -120,6 +125,6 @@ public class Berth implements EntityWithOwner {
 
     @Override
     public Long getOwnerId() {
-        return userInfo.getAccountId();
+        return getUserInfo().getAccountId();
     }
 }

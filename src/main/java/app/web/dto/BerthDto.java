@@ -36,9 +36,11 @@ public class BerthDto {
 
     private List<ConvenienceDto> convenienceList;
 
+    private Integer rating;
+
     private Double distance;
+
     private Double minPrice;
-    private Double rating;
 
     @Data
     public static class WithId extends BerthDto {
