@@ -91,9 +91,11 @@ public class BerthFacade {
         var userInfo = userInfoRepository.findCurrent();
         var berths = userInfo.getBerths();
 
-        berthRepository.loadPhotos(berths);
-        berthRepository.loadConveniences(berths);
-        berthRepository.loadPlaces(berths);
+        if (!berths.isEmpty()) {
+            berthRepository.loadPhotos(berths);
+            berthRepository.loadConveniences(berths);
+            berthRepository.loadPlaces(berths);
+        }
 
         return berths.stream().map(this::convertToDto).collect(Collectors.toList());
     }
