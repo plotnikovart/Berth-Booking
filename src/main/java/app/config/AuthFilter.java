@@ -22,7 +22,7 @@ import java.util.Set;
 public class AuthFilter extends HttpFilter {
 
     private final AccountService accountService;
-    private final Set<String> openUri = Set.of("/api/register", "/api/login");
+    private final Set<String> openUri = Set.of("/api/register", "/api/login", "/api/confirm");
 
     @Override
     public void doFilter(HttpServletRequest req, HttpServletResponse resp, FilterChain chain) throws IOException, ServletException {

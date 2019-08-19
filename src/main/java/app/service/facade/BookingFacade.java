@@ -9,6 +9,7 @@ import app.database.entity.*;
 import app.database.entity.enums.BookingStatus;
 import app.database.repository.*;
 import app.service.BookingSearchService;
+import app.service.EmailService;
 import app.service.PermissionService;
 import app.web.dto.BookingDto;
 import app.web.dto.request.BookingRequest;
@@ -30,6 +31,7 @@ public class BookingFacade {
     private final BerthPlaceRepository berthPlaceRepository;
     private final BookingSearchService bookingSearchService;
     private final PermissionService permissionService;
+    private final EmailService emailService;
 
     @Transactional
     public synchronized Long createBooking(BookingRequest bookingRequest) {
@@ -56,7 +58,9 @@ public class BookingFacade {
                 .setStatus(BookingStatus.NEW);
 
         validateBooking(booking);
-        return bookingRepository.save(booking).getId();
+        Long id = bookingRepository.save(booking).getId();
+        emailService.sendBookingCreate(booking);
+        return id;
     }
 
     @Transactional
@@ -89,6 +93,7 @@ public class BookingFacade {
                 .forEach(b -> b.setStatus(BookingStatus.REJECTED));
 
         booking.setStatus(BookingStatus.APPROVED);
+        emailService.sendBookingApprove(booking);
     }
 
     @Transactional

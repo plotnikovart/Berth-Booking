@@ -2,6 +2,7 @@ package app.service;
 
 import app.common.OperationContext;
 import app.common.SMessageSource;
+import app.common.exception.NotFoundException;
 import app.common.exception.ServiceException;
 import app.common.exception.UnauthorizedException;
 import app.database.entity.Account;
@@ -9,6 +10,8 @@ import app.database.repository.AccountRepository;
 import app.web.dto.AccountDto;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,17 +19,28 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Nullable;
 import javax.servlet.http.Cookie;
 import java.util.Date;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AccountService {
 
+    public final static String CONFIRM_CODE = "code";
     public final static String AUTH_TOKEN_NAME = "auth_token";
     private final static Integer TOKEN_MAX_AGE = 5 * 24 * 60 * 60;    // 5 days in seconds
 
     @Value("${secretKey}")
     private String secretKey;
+    @Value("${front.url}")
+    private String frontUrl;
+
+    private final Map<String, AccountDto> codeToAccountMap = new ConcurrentHashMap<>();
+
     private final AccountRepository accountRepository;
+    private final EmailService emailService;
 
 
     @Transactional
@@ -34,8 +48,26 @@ public class AccountService {
         checkExistence(accountDto.getEmail());
         checkPasswordComplexity(accountDto.getPassword());
 
-        var account = new Account(accountDto);
-        accountRepository.save(account);
+        String code = RandomStringUtils.random(20, true, true);
+        codeToAccountMap.put(code, accountDto);
+
+        emailService.sendEmailConfirmation(accountDto.getEmail(), code);
+    }
+
+    @Transactional
+    public String confirmAccount(String code) {
+        try {
+            var accountDto = Optional.ofNullable(codeToAccountMap.get(code)).orElseThrow(NotFoundException::new);
+            codeToAccountMap.remove(code);
+
+            var account = new Account(accountDto);
+            accountRepository.save(account);
+
+            return frontUrl + "/success";
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return frontUrl + "/error";
+        }
     }
 
     public Cookie login(AccountDto accountDto) throws UnauthorizedException {
