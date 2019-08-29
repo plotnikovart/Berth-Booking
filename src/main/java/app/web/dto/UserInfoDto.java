@@ -20,6 +20,8 @@ public class UserInfoDto {
 
     private String photo;
 
+    private String email;
+
     @Data
     public static class WithId extends UserInfoDto {
 

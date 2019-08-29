@@ -65,7 +65,8 @@ public class UserInfo {
                 .setLastName(lastName)
                 .setPhCode(phCode)
                 .setPhNumber(phNumber)
-                .setPhoto(photoName);
+                .setPhoto(photoName)
+                .setEmail(account.getEmail());
     }
 
     private Long getId() {

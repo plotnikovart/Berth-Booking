@@ -7,6 +7,7 @@ import app.service.file.ImageKind;
 import app.web.dto.response.FileLoadResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,7 +26,7 @@ public class ImageController {
         return new FileLoadResponse(image.getName());
     }
 
-    @GetMapping("/{imageKind}/{fileName:.+}")
+    @GetMapping(value = "/{imageKind}/{fileName:.+}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     public FileSystemResource getImage(@PathVariable String imageKind, @PathVariable String fileName, @RequestParam Long accountId) {
         var imageFile = fileStorageService.getImageFile(ImageKind.get(imageKind), accountId, fileName).orElseThrow(NotFoundException::new);
         return new FileSystemResource(imageFile);
