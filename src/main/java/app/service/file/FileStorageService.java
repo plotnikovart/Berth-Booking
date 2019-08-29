@@ -1,5 +1,6 @@
 package app.service.file;
 
+import app.common.OperationContext;
 import app.common.exception.NotFoundException;
 import app.config.AppConfig;
 import app.database.repository.BerthPhotoRepository;
@@ -31,8 +32,7 @@ public class FileStorageService {
     public File saveImage(byte[] imageBytes, String fileNameOriginal, ImageKind imageKind) throws IOException {
         var fileName = UUID.randomUUID().toString() + getExtension(fileNameOriginal);
 
-        var userInfo = userInfoRepository.findCurrent();
-        var dirPath = getImageDirectoryPath(imageKind, userInfo.getAccountId());
+        var dirPath = getImageDirectoryPath(imageKind, OperationContext.getAccountId());
         Files.createDirectories(dirPath);
         var imagePath = dirPath.resolve(fileName);
 
