@@ -31,7 +31,7 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ServiceException.class)
     public final ResponseEntity<ErrorDetails> handleServiceException(ServiceException ex, WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(ex.getMessage(), request.getDescription(false));
-        return createResponse(errorDetails, HttpStatus.OK);
+        return createResponse(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UnauthorizedException.class)
