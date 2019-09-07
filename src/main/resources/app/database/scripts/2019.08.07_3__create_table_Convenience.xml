@@ -66,4 +66,17 @@
         </sql>
     </changeSet>
 
+    <changeSet id="2019.08.07_3_5" author="aplotnikov">
+        <sql>
+            INSERT INTO convenience (code, name) VALUES ('grocery_store', 'Grocery store');
+            INSERT INTO convenience (code, name) VALUES ('restaurant', 'Restaurant');
+            INSERT INTO convenience (code, name) VALUES ('local_bar', 'Bar');
+            INSERT INTO convenience (code, name) VALUES ('local_hotel', 'Hotel');
+            INSERT INTO convenience (code, name) VALUES ('bathtub', 'Shower');
+            INSERT INTO convenience (code, name) VALUES ('car_rental', 'Car rental');
+            INSERT INTO convenience (code, name) VALUES ('bicycle_rental', 'Bicycle rental');
+            INSERT INTO convenience (code, name) VALUES ('exchanger', 'Exchanger');
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>
