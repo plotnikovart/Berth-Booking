@@ -23,7 +23,7 @@ public class BerthDto {
     private Double lat;     // широта
 
     @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
-    @Range(min = 0, max = 180, message = ValidationUtils.RANGE_MESSAGE)
+    @Range(min = -180, max = 180, message = ValidationUtils.RANGE_MESSAGE)
     private Double lng;     // долгота
 
     @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)

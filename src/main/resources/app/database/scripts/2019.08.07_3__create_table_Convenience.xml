@@ -59,23 +59,26 @@
                                  onDelete="CASCADE"/>
     </changeSet>
 
+
+
     <changeSet id="2019.08.07_3_4" author="aplotnikov">
         <sql>
-            INSERT INTO convenience (code, name) VALUES ('wifi', 'Wi-Fi');
-            INSERT INTO convenience (code, name) VALUES ('food', 'Food and Drinks');
-        </sql>
-    </changeSet>
+            delete from convenience;
 
-    <changeSet id="2019.08.07_3_5" author="aplotnikov">
-        <sql>
+            INSERT INTO convenience (code, name) VALUES ('wifi', 'Wi-Fi');
             INSERT INTO convenience (code, name) VALUES ('grocery_store', 'Grocery store');
+            INSERT INTO convenience (code, name) VALUES ('water', 'Water');
             INSERT INTO convenience (code, name) VALUES ('restaurant', 'Restaurant');
-            INSERT INTO convenience (code, name) VALUES ('local_bar', 'Bar');
-            INSERT INTO convenience (code, name) VALUES ('local_hotel', 'Hotel');
+            INSERT INTO convenience (code, name) VALUES ('bar', 'Bar');
+            INSERT INTO convenience (code, name) VALUES ('hotel', 'Hotel');
             INSERT INTO convenience (code, name) VALUES ('bathtub', 'Shower');
+            INSERT INTO convenience (code, name) VALUES ('atm', 'ATM');
+            INSERT INTO convenience (code, name) VALUES ('accessible', 'Accessible');
+            INSERT INTO convenience (code, name) VALUES ('gas_station', 'Gas station');
+            INSERT INTO convenience (code, name) VALUES ('ev_station', 'Electric charging station');
             INSERT INTO convenience (code, name) VALUES ('car_rental', 'Car rental');
             INSERT INTO convenience (code, name) VALUES ('bicycle_rental', 'Bicycle rental');
-            INSERT INTO convenience (code, name) VALUES ('exchanger', 'Exchanger');
+            INSERT INTO convenience (code, name) VALUES ('parking', 'Parking');
         </sql>
     </changeSet>
 
