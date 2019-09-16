@@ -1,11 +1,13 @@
 package app.database.entity;
 
+import app.service.file.ImageKind;
 import app.web.dto.UserInfoDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,27 +48,27 @@ public class UserInfo {
     private List<Booking> bookings = new ArrayList<>();
 
     public UserInfo(Account account, UserInfoDto userInfoDto) {
-        this.account = account;
+        setAccount(account);
         setDto(userInfoDto);
     }
 
-    public void setDto(UserInfoDto userInfoDto) {
-        firstName = userInfoDto.getFirstName();
-        lastName = userInfoDto.getLastName();
-        phCode = userInfoDto.getPhCode();
-        phNumber = userInfoDto.getPhNumber();
-        photoName = userInfoDto.getPhoto();
+    public void setDto(UserInfoDto dto) {
+        setFirstName(dto.getFirstName());
+        setLastName(dto.getLastName());
+        setPhCode(dto.getPhCode());
+        setPhNumber(dto.getPhNumber());
+        setPhotoName(dto.getPhoto());
     }
 
     public UserInfoDto.WithId getDto() {
         return (UserInfoDto.WithId) new UserInfoDto.WithId()
-                .setAccountId(id)
-                .setFirstName(firstName)
-                .setLastName(lastName)
-                .setPhCode(phCode)
-                .setPhNumber(phNumber)
-                .setPhoto(photoName)
-                .setEmail(account.getEmail());
+                .setAccountId(getAccountId())
+                .setFirstName(getFirstName())
+                .setLastName(getLastName())
+                .setPhCode(getPhCode())
+                .setPhNumber(getPhNumber())
+                .setPhoto(getPhotoName() == null ? null : MessageFormat.format("/api/images/{0}/{1}/{2}", ImageKind.USER.name().toLowerCase(), getAccountId(), getPhotoName()))
+                .setEmail(getAccount().getEmail());
     }
 
     private Long getId() {

@@ -1,12 +1,14 @@
 package app.database.entity;
 
 import app.common.EntityWithOwner;
+import app.service.file.ImageKind;
 import app.web.dto.ShipDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -59,14 +61,17 @@ public class Ship implements EntityWithOwner {
     }
 
     public ShipDto.WithId getDto() {
-        var dto = new ShipDto.WithId();
-        dto.setId(id);
-        dto.setName(name);
-        dto.setLength(length);
-        dto.setDraft(draft);
-        dto.setWidth(width);
-        dto.setPhotoList(getPhotos().stream().map(ShipPhoto::getFileName).collect(Collectors.toList()));
-        return dto;
+        List<String> photoList = getPhotos().stream()
+                .map(photo -> MessageFormat.format("/api/images/{0}/{1}/{2}", ImageKind.SHIP.name().toLowerCase(), getOwnerId(), photo.getFileName()))
+                .collect(Collectors.toList());
+
+        return (ShipDto.WithId) new ShipDto.WithId()
+                .setId(getId())
+                .setName(getName())
+                .setLength(getLength())
+                .setDraft(getDraft())
+                .setWidth(getWidth())
+                .setPhotoList(photoList);
     }
 
     public void setPhotos(List<ShipPhoto> newPhotos) {
