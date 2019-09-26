@@ -42,7 +42,7 @@ public class ReviewFacade {
     @Transactional
     public void updateReview(ReviewDto.WithId dto) {
         var review = reviewRepository.findById(dto.getId()).orElseThrow(NotFoundException::new);
-        permissionService.changeEntity(review);
+        permissionService.check(review);
 
         review.setDto(dto);
     }
@@ -50,7 +50,7 @@ public class ReviewFacade {
     @Transactional
     public void deleteReview(Long reviewId) {
         var review = reviewRepository.findById(reviewId).orElseThrow(NotFoundException::new);
-        permissionService.changeEntity(review);
+        permissionService.check(review);
 
         reviewRepository.delete(review);
     }

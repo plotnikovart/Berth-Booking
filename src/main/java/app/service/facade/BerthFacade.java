@@ -54,7 +54,7 @@ public class BerthFacade {
     @Transactional
     public void updateBerth(BerthDto.WithId dto) {
         Berth berth = berthRepository.findById(dto.getId()).orElseThrow(NotFoundException::new);
-        permissionService.changeEntity(berth);
+        permissionService.check(berth);
 
         berth.setDto(dto);
         berthRepository.save(berth);
@@ -91,19 +91,14 @@ public class BerthFacade {
         var userInfo = userInfoRepository.findCurrent();
         var berths = userInfo.getBerths();
 
-        if (!berths.isEmpty()) {
-            berthRepository.loadPhotos(berths);
-            berthRepository.loadConveniences(berths);
-            berthRepository.loadPlaces(berths);
-        }
-
+        loadFields(berths);
         return berths.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
     @Transactional
     public void deleteBerth(Long berthId) {
         var berth = berthRepository.findById(berthId).orElseThrow(NotFoundException::new);
-        permissionService.changeEntity(berth);
+        permissionService.check(berth);
         berthRepository.delete(berth);        // todo проверки на зависимости
     }
 
@@ -138,5 +133,13 @@ public class BerthFacade {
         return (BerthDto.WithId) berth.getDto()
                 .setPlaceList(berthPlaces.stream().map(BerthPlace::getDto).collect(Collectors.toList()))
                 .setConvenienceList(conveniences.stream().map(Convenience::getDto).collect(Collectors.toList()));
+    }
+
+    private void loadFields(List<Berth> berths) {
+        if (!berths.isEmpty()) {
+            berthRepository.loadPhotos(berths);
+            berthRepository.loadConveniences(berths);
+            berthRepository.loadPlaces(berths);
+        }
     }
 }

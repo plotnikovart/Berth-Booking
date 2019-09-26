@@ -51,7 +51,7 @@ class ShipControllerTest extends AbstractAccountTest {
         dto.setLength(12.0);
         dto.setWidth(8.0);
         dto.setDraft(3.0);
-        dto.setPhotoList(List.of("photo1"));
+//        dto.setPhotoList(List.of("photo1"));
 
         MvcResult result = mvc.perform(post("/api/ships")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -70,7 +70,7 @@ class ShipControllerTest extends AbstractAccountTest {
 
         // PUT
         dto.setName("122");
-        dto.setPhotoList(List.of("photo1", "photo2"));
+//        dto.setPhotoList(List.of("photo1", "photo2"));
         mvc.perform(put("/api/ships/" + dto.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(dto)))

@@ -126,6 +126,8 @@ public class BookingFacade {
     @Transactional(readOnly = true)
     public List<BookingDto.WithId> getAllBookings() {
         UserInfo userInfo = userInfoRepository.findCurrent();
+        loadFields(userInfo.getBookings());
+
         return userInfo.getBookings().stream()
                 .map(Booking::getDto)
                 .collect(Collectors.toList());
@@ -134,9 +136,12 @@ public class BookingFacade {
     @Transactional(readOnly = true)
     public List<BookingDto.WithId> getAllBookingsByBerth(Long berthId) {
         Berth berth = berthRepository.findById(berthId).orElseThrow(NotFoundException::new);
-        permissionService.changeEntity(berth);
+        permissionService.check(berth);
 
-        return bookingRepository.findAllByBerth(berth).stream()
+        List<Booking> bookings = bookingRepository.findAllByBerth(berth);
+        loadFields(bookings);
+
+        return bookings.stream()
                 .map(Booking::getDto)
                 .collect(Collectors.toList());
     }
@@ -155,6 +160,16 @@ public class BookingFacade {
 
         if (bookingSearchService.isReserved(booking.getBerthPlace(), booking.getStartDate(), booking.getEndDate())) {
             throw new ServiceException(SMessageSource.get("booking.is_reserved"));
+        }
+    }
+
+    private void loadFields(List<Booking> bookings) {
+        if (!bookings.isEmpty()) {
+            List<BerthPlace> places = bookings.stream().map(Booking::getBerthPlace).collect(Collectors.toList());
+            List<Ship> ships = bookings.stream().map(Booking::getShip).collect(Collectors.toList());
+
+            shipRepository.loadPhotos(ships);
+            berthPlaceRepository.loadBerths(places);
         }
     }
 }

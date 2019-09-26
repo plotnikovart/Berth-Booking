@@ -44,6 +44,7 @@ public class Booking {
     public BookingDto.WithId getDto() {
         return (BookingDto.WithId) new BookingDto.WithId()
                 .setId(getId())
+                .setBerth(getBerthPlace().getBerth().getDto())
                 .setBerthPlace(getBerthPlace().getDto())
                 .setShip(getShip().getDto())
                 .setOwner(getOwner().getDto())

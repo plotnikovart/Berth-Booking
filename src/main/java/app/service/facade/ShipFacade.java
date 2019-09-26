@@ -32,7 +32,7 @@ public class ShipFacade {
     @Transactional
     public void updateShip(ShipDto.WithId shipDto) {
         var ship = shipRepository.findById(shipDto.getId()).orElseThrow(NotFoundException::new);
-        permissionService.changeEntity(ship);
+        permissionService.check(ship);
 
         ship.setDto(shipDto);
         shipRepository.save(ship);
@@ -47,13 +47,22 @@ public class ShipFacade {
     @Transactional(readOnly = true)
     public List<ShipDto.WithId> getShips() {
         var userInfo = userInfoRepository.findCurrent();
-        return userInfo.getShips().stream().map(Ship::getDto).collect(Collectors.toList());
+        var ships = userInfo.getShips();
+
+        loadFields(ships);
+        return ships.stream().map(Ship::getDto).collect(Collectors.toList());
     }
 
     @Transactional
     public void deleteShip(Long shipId) {
         var ship = shipRepository.findById(shipId).orElseThrow(NotFoundException::new);
-        permissionService.changeEntity(ship);
+        permissionService.check(ship);
         shipRepository.delete(ship);
+    }
+
+    private void loadFields(List<Ship> ships) {
+        if (!ships.isEmpty()) {
+            shipRepository.loadPhotos(ships);
+        }
     }
 }

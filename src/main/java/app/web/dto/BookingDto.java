@@ -21,6 +21,9 @@ public class BookingDto {
     private BerthPlaceDto.WithId berthPlace;
 
     @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
+    private BerthDto.WithId berth;
+
+    @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
     private ShipDto.WithId ship;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
