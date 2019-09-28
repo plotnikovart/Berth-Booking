@@ -49,12 +49,13 @@ public class Review implements EntityWithOwner {
 
     public ReviewDto.WithId getDto() {
         var userInfo = getUserInfo().getDto()
+                .setAccountId(null)
                 .setPhCode(null)
-                .setPhNumber(null);
+                .setPhNumber(null)
+                .setEmail(null);
 
         return (ReviewDto.WithId) new ReviewDto.WithId()
                 .setId(getId())
-                .setBerthId(getBerth().getId())
                 .setUserInfo(userInfo)
                 .setRating(getRating())
                 .setText(getText())
