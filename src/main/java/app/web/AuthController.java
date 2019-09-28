@@ -37,4 +37,8 @@ public class AuthController {
         var cookie = accountService.login(accountDto);
         HttpHelper.addCookie(response, cookie);
     }
+
+    @PostMapping("/logout")
+    public void logout() {
+    }
 }

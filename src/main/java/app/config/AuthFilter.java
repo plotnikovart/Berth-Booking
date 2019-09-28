@@ -21,13 +21,14 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class AuthFilter extends HttpFilter {
 
+    private final Set<String> OPEN_URI = Set.of("/api/register", "/api/login", "/api/confirm");
+    private final String LOGOUT_URI = "/api/logout";
     private final AccountService accountService;
-    private final Set<String> openUri = Set.of("/api/register", "/api/login", "/api/confirm");
 
     @Override
     public void doFilter(HttpServletRequest req, HttpServletResponse resp, FilterChain chain) throws IOException, ServletException {
         try {
-            if (!openUri.contains(req.getRequestURI())) {
+            if (!OPEN_URI.contains(req.getRequestURI())) {
                 var tokenCookie = req.getCookies() != null ?
                         Arrays.stream(req.getCookies()).filter(cook -> cook.getName().equals(AccountService.AUTH_TOKEN_NAME)).findFirst().orElse(null) :
                         null;
@@ -35,7 +36,8 @@ public class AuthFilter extends HttpFilter {
                 accountService.authenticate(tokenCookie);
 
                 // Обновляем куки
-                Cookie newCookie = accountService.createUserCookie(OperationContext.getAccountId());
+                Cookie newCookie = LOGOUT_URI.equals(req.getRequestURI()) ?
+                        accountService.createLogoutCookie() : accountService.createUserCookie(OperationContext.getAccountId());
                 HttpHelper.addCookie(resp, newCookie);
             }
 

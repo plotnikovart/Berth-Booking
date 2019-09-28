@@ -91,9 +91,17 @@ public class AccountService {
         }
     }
 
+    public Cookie createLogoutCookie() {
+        var cookie = new Cookie(AUTH_TOKEN_NAME, "none");
+        cookie.setMaxAge(-1);
+        return cookie;
+    }
+
     public Cookie createUserCookie(Long accountId) {
         var token = createToken(accountId);
-        return new Cookie(AUTH_TOKEN_NAME, token);
+        var cookie = new Cookie(AUTH_TOKEN_NAME, token);
+        cookie.setMaxAge(TOKEN_MAX_AGE);
+        return cookie;
     }
 
     private String createToken(Long accountId) {

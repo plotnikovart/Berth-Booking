@@ -7,9 +7,10 @@ import java.text.MessageFormat;
 public class HttpHelper {
 
     public static void addCookie(HttpServletResponse resp, Cookie cookie) {
-//        resp.addCookie(cookie);
+        String other = MessageFormat.format("{0}={1};path=/;max-age={2}", cookie.getName(), cookie.getValue(), String.valueOf(cookie.getMaxAge()));
+        String chrome = other + ";SameSite=None";
 
-        String value = MessageFormat.format("{0}={1};path=/;SameSite=None", cookie.getName(), cookie.getValue());
-        resp.addHeader("Set-Cookie", value);
+        resp.addHeader("Set-Cookie", other);
+        resp.addHeader("Set-Cookie", chrome);
     }
 }
