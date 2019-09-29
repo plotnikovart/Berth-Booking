@@ -20,11 +20,14 @@ public class UserInfoDto {
 
     private String photo;
 
-    private String email;
+    @Data
+    public static class Req extends UserInfoDto {
+    }
 
     @Data
-    public static class WithId extends UserInfoDto {
+    public static class Resp extends UserInfoDto {
 
         private Long accountId;
+        private String email;
     }
 }

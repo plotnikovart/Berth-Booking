@@ -11,21 +11,6 @@ import java.util.Date;
 @Data
 public class BookingDto {
 
-    @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
-    private UserInfoDto.WithId owner;
-
-    @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
-    private UserInfoDto.WithId renter;
-
-    @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
-    private BerthPlaceDto.WithId berthPlace;
-
-    @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
-    private BerthDto.WithId berth;
-
-    @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
-    private ShipDto.WithId ship;
-
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
     private Date startDate;
@@ -34,12 +19,40 @@ public class BookingDto {
     @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
     private Date endDate;
 
-    private BookingStatus status;
 
     @Data
-    public static class WithId extends BookingDto {
+    public static class Req extends BookingDto {
+
+        @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
+        private Long berthPlaceId;
+
+        @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
+        private Long shipId;
+    }
+
+    @Data
+    public static class Resp extends BookingDto {
 
         @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
         private Long id;
+
+        @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
+        private UserInfoDto.Resp owner;
+
+        @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
+        private UserInfoDto.Resp renter;
+
+        @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
+        private BerthPlaceDto berthPlace;
+
+        @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
+        private BerthDto.Resp berth;
+
+        @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
+        private ShipDto.Resp ship;
+
+        private BookingStatus status;
+
+        private Double totalPrice;
     }
 }

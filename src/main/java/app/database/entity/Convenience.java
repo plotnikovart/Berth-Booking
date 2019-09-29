@@ -1,6 +1,5 @@
 package app.database.entity;
 
-import app.web.dto.ConvenienceDto;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Immutable;
@@ -20,11 +19,4 @@ public class Convenience {
     private String code;
 
     private String name;
-
-    public ConvenienceDto getDto() {
-        return new ConvenienceDto()
-                .setId(getId())
-                .setCode(getCode())
-                .setName(getName());
-    }
 }

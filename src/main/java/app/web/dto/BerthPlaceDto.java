@@ -2,16 +2,14 @@ package app.web.dto;
 
 import app.common.ValidationUtils;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
 
 @Data
-@EqualsAndHashCode(exclude = "berthId")
 public class BerthPlaceDto {
 
-    private Long berthId;
+    private Long id;
 
     @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
     @Range(message = ValidationUtils.RANGE_MESSAGE)
@@ -27,10 +25,4 @@ public class BerthPlaceDto {
 
     @Range(message = ValidationUtils.RANGE_MESSAGE)
     private Double price;
-
-    @Data
-    public static class WithId extends BerthPlaceDto {
-
-        private Long id;
-    }
 }

@@ -5,13 +5,13 @@ import app.database.entity.Ship;
 import app.database.repository.ShipRepository;
 import app.database.repository.UserInfoRepository;
 import app.service.PermissionService;
+import app.service.converters.impl.ShipConverter;
 import app.web.dto.ShipDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -19,38 +19,40 @@ public class ShipFacade {
 
     private final UserInfoRepository userInfoRepository;
     private final ShipRepository shipRepository;
+    private final ShipConverter converter;
     private final PermissionService permissionService;
 
     @Transactional
-    public Long createShip(ShipDto shipDto) {
+    public Long createShip(ShipDto.Req shipDto) {
         var userInfo = userInfoRepository.findCurrent();
 
-        var ship = new Ship(userInfo, shipDto);
+        var ship = new Ship().setUserInfo(userInfo);
+        converter.convertToEntity(ship, shipDto);
+
         return shipRepository.save(ship).getId();
     }
 
     @Transactional
-    public void updateShip(ShipDto.WithId shipDto) {
-        var ship = shipRepository.findById(shipDto.getId()).orElseThrow(NotFoundException::new);
+    public void updateShip(Long id, ShipDto.Req shipDto) {
+        var ship = shipRepository.findById(id).orElseThrow(NotFoundException::new);
         permissionService.check(ship);
 
-        ship.setDto(shipDto);
+        converter.convertToEntity(ship, shipDto);
         shipRepository.save(ship);
     }
 
     @Transactional(readOnly = true)
-    public ShipDto.WithId getShip(Long shipId) {
+    public ShipDto.Resp getShip(Long shipId) {
         var ship = shipRepository.findById(shipId).orElseThrow(NotFoundException::new);
-        return ship.getDto();
+        return converter.convertToDto(ship);
     }
 
     @Transactional(readOnly = true)
-    public List<ShipDto.WithId> getShips() {
+    public List<ShipDto.Resp> getShips() {
         var userInfo = userInfoRepository.findCurrent();
         var ships = userInfo.getShips();
 
-        loadFields(ships);
-        return ships.stream().map(Ship::getDto).collect(Collectors.toList());
+        return converter.convertToDtos(ships);
     }
 
     @Transactional
@@ -58,11 +60,5 @@ public class ShipFacade {
         var ship = shipRepository.findById(shipId).orElseThrow(NotFoundException::new);
         permissionService.check(ship);
         shipRepository.delete(ship);
-    }
-
-    private void loadFields(List<Ship> ships) {
-        if (!ships.isEmpty()) {
-            shipRepository.loadPhotos(ships);
-        }
     }
 }

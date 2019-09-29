@@ -28,12 +28,16 @@ public class ShipDto {
     @Range(message = ValidationUtils.RANGE_MESSAGE)
     private Double width;
 
-    private List<String> photoList = new ArrayList<>();
+    @Data
+    public static class Req extends ShipDto {
+
+        private List<String> photoList = new ArrayList<>();
+    }
 
     @Data
-    public static class WithId extends ShipDto {
+    public static class Resp extends ShipDto {
 
-        @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
         private Long id;
+        private List<String> photoList = new ArrayList<>();
     }
 }

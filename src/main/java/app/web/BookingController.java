@@ -5,7 +5,6 @@ import app.service.BookingSearchService;
 import app.service.facade.BookingFacade;
 import app.web.dto.BerthDto;
 import app.web.dto.BookingDto;
-import app.web.dto.request.BookingRequest;
 import app.web.dto.request.BookingSearchRequest;
 import app.web.dto.response.IdResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,24 +21,24 @@ public class BookingController {
     private final BookingSearchService bookingSearchService;
 
     @PostMapping
-    public IdResponse<Long> createBooking(@RequestBody BookingRequest bookingRequest) {
+    public IdResponse<Long> createBooking(@RequestBody BookingDto.Req bookingRequest) {
         ValidationUtils.validateEntity(bookingRequest);
         Long id = bookingFacade.createBooking(bookingRequest);
         return new IdResponse<>(id);
     }
 
     @GetMapping
-    public List<BookingDto.WithId> getAllBookings() {
+    public List<BookingDto.Resp> getAllBookings() {
         return bookingFacade.getAllBookings();
     }
 
     @GetMapping("{id}")
-    public BookingDto.WithId getBookingById(@PathVariable Long id) {
+    public BookingDto.Resp getBookingById(@PathVariable Long id) {
         return bookingFacade.getBookingById(id);
     }
 
     @GetMapping("berths/{berthId}")
-    public List<BookingDto.WithId> getAllBookingsForBerth(@PathVariable Long berthId) {
+    public List<BookingDto.Resp> getAllBookingsForBerth(@PathVariable Long berthId) {
         return bookingFacade.getAllBookingsByBerth(berthId);
     }
 
@@ -59,7 +58,7 @@ public class BookingController {
     }
 
     @PostMapping("search")
-    public List<BerthDto.WithId> search(@RequestBody BookingSearchRequest req) {
+    public List<BerthDto.Resp.Search> search(@RequestBody BookingSearchRequest req) {
         ValidationUtils.validateEntity(req);
         return bookingSearchService.searchPlaces(req);
     }

@@ -15,25 +15,20 @@ public class UserInfoController {
     private final UserInfoFacade userInfoFacade;
 
     @GetMapping
-    public UserInfoDto.WithId getCurrentUserInfo() {
+    public UserInfoDto.Resp getCurrentUserInfo() {
         Long userId = OperationContext.getAccountId();
         return userInfoFacade.getUserInfo(userId);
     }
 
-    @GetMapping("/{id}")
-    public UserInfoDto.WithId getUserInfo(@PathVariable Long id) {
-        return userInfoFacade.getUserInfo(id);
-    }
-
     @PostMapping
-    public void createUserInfo(@RequestBody UserInfoDto userInfoDto) {
-        ValidationUtils.validateEntity(userInfoDto);
-        userInfoFacade.createUserInfo(userInfoDto);
+    public void createUserInfo(@RequestBody UserInfoDto.Req dto) {
+        ValidationUtils.validateEntity(dto);
+        userInfoFacade.createUserInfo(dto);
     }
 
     @PutMapping
-    public void updateUserInfo(@RequestBody UserInfoDto userInfoDto) {
-        ValidationUtils.validateEntity(userInfoDto);
-        userInfoFacade.updateUserInfo(userInfoDto);
+    public void updateUserInfo(@RequestBody UserInfoDto.Req dto) {
+        ValidationUtils.validateEntity(dto);
+        userInfoFacade.updateUserInfo(dto);
     }
 }

@@ -1,8 +1,6 @@
 package app.database.entity;
 
-import app.common.DateHelper;
 import app.database.entity.enums.BookingStatus;
-import app.web.dto.BookingDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -40,17 +38,4 @@ public class Booking {
 
     @Convert(converter = BookingStatus.Converter.class)
     private BookingStatus status;
-
-    public BookingDto.WithId getDto() {
-        return (BookingDto.WithId) new BookingDto.WithId()
-                .setId(getId())
-                .setBerth(getBerthPlace().getBerth().getDto())
-                .setBerthPlace(getBerthPlace().getDto())
-                .setShip(getShip().getDto())
-                .setOwner(getOwner().getDto())
-                .setRenter(getRenter().getDto())
-                .setStartDate(DateHelper.convertToDate(getStartDate()))
-                .setEndDate(DateHelper.convertToDate(getEndDate()))
-                .setStatus(getStatus());
-    }
 }

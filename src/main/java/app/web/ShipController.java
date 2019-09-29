@@ -17,26 +17,25 @@ public class ShipController {
     private final ShipFacade shipFacade;
 
     @PostMapping
-    public IdResponse<Long> createShip(@RequestBody ShipDto shipDto) {
+    public IdResponse<Long> createShip(@RequestBody ShipDto.Req shipDto) {
         ValidationUtils.validateEntity(shipDto);
         Long shipId = shipFacade.createShip(shipDto);
         return new IdResponse<>(shipId);
     }
 
     @PutMapping("/{id}")
-    public void updateShip(@RequestBody ShipDto.WithId shipDto, @PathVariable Long id) {
-        shipDto.setId(id);
+    public void updateShip(@RequestBody ShipDto.Req shipDto, @PathVariable Long id) {
         ValidationUtils.validateEntity(shipDto);
-        shipFacade.updateShip(shipDto);
+        shipFacade.updateShip(id, shipDto);
     }
 
     @GetMapping
-    public List<ShipDto.WithId> getShips() {
+    public List<ShipDto.Resp> getShips() {
         return shipFacade.getShips();
     }
 
     @GetMapping("/{id}")
-    public ShipDto.WithId getShip(@PathVariable Long id) {
+    public ShipDto.Resp getShip(@PathVariable Long id) {
         return shipFacade.getShip(id);
     }
 

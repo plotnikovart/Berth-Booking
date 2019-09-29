@@ -12,8 +12,7 @@ import java.time.LocalDateTime;
 @Data
 public class ReviewDto {
 
-    private UserInfoDto userInfo;
-
+    @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
     private Long berthId;
 
     @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
@@ -24,13 +23,19 @@ public class ReviewDto {
     @Length(max = 1024, message = ValidationUtils.LENGTH_MESSAGE)
     private String text;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime dateTime;
 
     @Data
-    public static class WithId extends ReviewDto {
+    public static class Req extends ReviewDto {
+    }
 
-        @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
+    @Data
+    public static class Resp extends ReviewDto {
+
         private Long id;
+
+        private UserInfoDto userInfo;
+
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        private LocalDateTime dateTime;
     }
 }

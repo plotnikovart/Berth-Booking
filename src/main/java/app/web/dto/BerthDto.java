@@ -30,22 +30,29 @@ public class BerthDto {
     @Range(message = ValidationUtils.RANGE_MESSAGE)
     private Double standardPrice;
 
-    private List<String> photoList;
-
-    private List<BerthPlaceDto.WithId> placeList;
-
     private List<ConvenienceDto> convenienceList;
 
-    private Integer rating;
-
-    private Double distance;
-
-    private Double minPrice;
+    private List<BerthPlaceDto> placeList;
 
     @Data
-    public static class WithId extends BerthDto {
+    public static class Req extends BerthDto {
 
-        @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
+        private List<String> photoList;
+    }
+
+    @Data
+    public static class Resp extends BerthDto {
+
         private Long id;
+        private Integer rating;
+        private List<String> photoList;     // ссылки
+
+
+        @Data
+        public static class Search extends Resp {
+
+            private Double distance;
+            private Double minPrice;
+        }
     }
 }

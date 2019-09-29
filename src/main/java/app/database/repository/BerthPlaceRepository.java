@@ -14,5 +14,5 @@ public interface BerthPlaceRepository extends JpaRepository<BerthPlace, Long> {
 
     @Query("select bp from BerthPlace bp where bp in (?1)")
     @EntityGraph(attributePaths = "berth.photos")
-    List<BerthPlace> loadBerths(Collection<BerthPlace> berths);
+    List<BerthPlace> loadBerthsWithPhotos(Collection<BerthPlace> berths);
 }

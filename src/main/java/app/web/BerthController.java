@@ -20,26 +20,25 @@ public class BerthController {
     private final ReviewFacade reviewFacade;
 
     @PostMapping
-    public IdResponse<Long> createBerth(@RequestBody BerthDto berthDto) {
+    public IdResponse<Long> createBerth(@RequestBody BerthDto.Req berthDto) {
         validateBerthDto(berthDto);
         long id = berthFacade.createBerth(berthDto);
         return new IdResponse<>(id);
     }
 
     @PutMapping("/{id}")
-    public void updateBerth(@RequestBody BerthDto.WithId berthDto, @PathVariable Long id) {
-        berthDto.setId(id);
+    public void updateBerth(@RequestBody BerthDto.Req berthDto, @PathVariable Long id) {
         validateBerthDto(berthDto);
-        berthFacade.updateBerth(berthDto);
+        berthFacade.updateBerth(id, berthDto);
     }
 
     @GetMapping
-    public List<BerthDto.WithId> getAllBerths() {
+    public List<BerthDto.Resp> getAllBerths() {
         return berthFacade.getBerths();
     }
 
     @GetMapping("/{id}")
-    public BerthDto.WithId getBerth(@PathVariable Long id) {
+    public BerthDto.Resp getBerth(@PathVariable Long id) {
         return berthFacade.getBerth(id);
     }
 
@@ -50,7 +49,7 @@ public class BerthController {
 
 
     @PostMapping("{id}/reviews")
-    public IdResponse<Long> createReview(@PathVariable Long id, @RequestBody ReviewDto reviewDto) {
+    public IdResponse<Long> createReview(@PathVariable Long id, @RequestBody ReviewDto.Req reviewDto) {
         reviewDto.setBerthId(id);
 
         ValidationUtils.validateEntity(reviewDto);
@@ -59,17 +58,8 @@ public class BerthController {
     }
 
     @GetMapping("{id}/reviews")
-    public List<ReviewDto.WithId> getReviews(@PathVariable Long id) {
+    public List<ReviewDto.Resp> getReviews(@PathVariable Long id) {
         return reviewFacade.getReviews(id);
-    }
-
-    @PutMapping("{id}/reviews/{reviewId}")
-    public void updateReview(@PathVariable Long id, @PathVariable Long reviewId, @RequestBody ReviewDto.WithId reviewDto) {
-        reviewDto.setBerthId(id);
-        reviewDto.setId(reviewId);
-
-        ValidationUtils.validateEntity(reviewDto);
-        reviewFacade.updateReview(reviewDto);
     }
 
     @DeleteMapping("{id}/reviews/{reviewId}")

@@ -6,13 +6,13 @@ import app.database.repository.BerthRepository;
 import app.database.repository.ReviewRepository;
 import app.database.repository.UserInfoRepository;
 import app.service.PermissionService;
+import app.service.converters.impl.ReviewConverter;
 import app.web.dto.ReviewDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -22,29 +22,22 @@ public class ReviewFacade {
     private final BerthRepository berthRepository;
     private final UserInfoRepository userInfoRepository;
     private final PermissionService permissionService;
+    private final ReviewConverter converter;
 
     @Transactional
-    public Long createReview(ReviewDto reviewDto) {
+    public Long createReview(ReviewDto.Req reviewDto) {
         var userInfo = userInfoRepository.findCurrent();
-        var berth = berthRepository.findById(reviewDto.getBerthId()).orElseThrow(NotFoundException::new);
 
-        var review = new Review(berth, userInfo, reviewDto);
+        var review = new Review().setUserInfo(userInfo);
+        converter.convertToEntity(review, reviewDto);
         return reviewRepository.save(review).getId();
     }
 
     @Transactional(readOnly = true)
-    public List<ReviewDto.WithId> getReviews(Long berthId) {
+    public List<ReviewDto.Resp> getReviews(Long berthId) {
         var berth = berthRepository.findById(berthId).orElseThrow(NotFoundException::new);
         var reviews = reviewRepository.findAllByBerth(berth);
-        return reviews.stream().map(Review::getDto).collect(Collectors.toList());
-    }
-
-    @Transactional
-    public void updateReview(ReviewDto.WithId dto) {
-        var review = reviewRepository.findById(dto.getId()).orElseThrow(NotFoundException::new);
-        permissionService.check(review);
-
-        review.setDto(dto);
+        return converter.convertToDtos(reviews);
     }
 
     @Transactional

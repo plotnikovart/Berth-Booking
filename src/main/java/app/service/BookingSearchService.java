@@ -5,6 +5,8 @@ import app.common.exception.NotFoundException;
 import app.database.entity.*;
 import app.database.entity.enums.BookingStatus;
 import app.database.repository.*;
+import app.service.converters.impl.BerthConverter;
+import app.service.converters.impl.BerthPlaceConverter;
 import app.web.dto.BerthDto;
 import app.web.dto.ConvenienceDto;
 import app.web.dto.request.BookingSearchRequest;
@@ -28,6 +30,8 @@ public class BookingSearchService {
     private final BookingRepository bookingRepository;
     private final BerthRepository berthRepository;
     private final ConvenienceRepository convenienceRepository;
+    private final BerthConverter berthConverter;
+    private final BerthPlaceConverter placeConverter;
 
 
     @Transactional(readOnly = true)
@@ -41,7 +45,7 @@ public class BookingSearchService {
     }
 
     @Transactional(readOnly = true)
-    public List<BerthDto.WithId> searchPlaces(BookingSearchRequest req) {
+    public List<BerthDto.Resp.Search> searchPlaces(BookingSearchRequest req) {
         Ship ship = shipRepository.findById(req.getShipId()).orElseThrow(NotFoundException::new);
         Set<Convenience> requiredConv = extractConveniences(req);
 
@@ -63,31 +67,29 @@ public class BookingSearchService {
                 .collect(Collectors.groupingBy(BerthPlace::getBerth));
 
 
-        Stream<BerthDto.WithId> result = filtered.entrySet().stream()
-                .map(pair -> convertToBerthDto(pair, berths.get(pair.getKey())));
+        Stream<BerthDto.Resp.Search> result = filtered.entrySet().stream()
+                .map(pair -> convertToBerthDtoSearch(pair, berths.get(pair.getKey())));
 
         if (req.getSorting() == Sorting.DISTANCE) {
-            result = result.sorted(Comparator.comparing(BerthDto::getDistance));
+            result = result.sorted(Comparator.comparing(BerthDto.Resp.Search::getDistance));
         } else if (req.getSorting() == Sorting.PRICE) {
-            result = result.sorted(Comparator.comparing(BerthDto::getMinPrice));
+            result = result.sorted(Comparator.comparing(BerthDto.Resp.Search::getMinPrice));
         } else if (req.getSorting() == Sorting.RATING) {
-            result = result.sorted(Comparator.comparing(BerthDto::getRating));
+            result = result.sorted(Comparator.comparing(BerthDto.Resp.Search::getRating));
         }
 
         return result.collect(Collectors.toList());
     }
 
-    private BerthDto.WithId convertToBerthDto(Map.Entry<Berth, List<BerthPlace>> pair, Double distance) {
-        var places = pair.getValue().stream().map(BerthPlace::getDto).collect(Collectors.toList());
-        var conveniences = pair.getKey().getConveniences().stream().map(Convenience::getDto).collect(Collectors.toList());
+    private BerthDto.Resp.Search convertToBerthDtoSearch(Map.Entry<Berth, List<BerthPlace>> pair, Double distance) {
+        var places = placeConverter.convertToDtos(pair.getValue());
+        var minPrice = pair.getValue().stream().mapToDouble(BerthPlace::getFactPrice).min().orElseThrow();
 
-        double minPrice = pair.getValue().stream().mapToDouble(BerthPlace::getFactPrice).min().orElseThrow();
-
-        return (BerthDto.WithId) pair.getKey().getDto()
+        var berthSearch = (BerthDto.Resp.Search) berthConverter.convertToDto(new BerthDto.Resp.Search(), pair.getKey());
+        return (BerthDto.Resp.Search) berthSearch
                 .setDistance(distance)
                 .setMinPrice(minPrice)
-                .setPlaceList(places)
-                .setConvenienceList(conveniences);
+                .setPlaceList(places);
     }
 
     private Set<Convenience> extractConveniences(BookingSearchRequest req) {

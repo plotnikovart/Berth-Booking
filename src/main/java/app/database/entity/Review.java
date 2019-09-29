@@ -1,7 +1,6 @@
 package app.database.entity;
 
 import app.common.EntityWithOwner;
-import app.web.dto.ReviewDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,11 +19,11 @@ public class Review implements EntityWithOwner {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "berth_id")
     private Berth berth;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "account_id")
     private UserInfo userInfo;
 
@@ -34,33 +33,6 @@ public class Review implements EntityWithOwner {
 
     @CreationTimestamp
     private LocalDateTime dateTime;
-
-    public Review(Berth berth, UserInfo userInfo, ReviewDto reviewDto) {
-        this.berth = berth;
-        this.userInfo = userInfo;
-        setDto(reviewDto);
-    }
-
-    public Review setDto(ReviewDto dto) {
-        setRating(dto.getRating());
-        setText(dto.getText());
-        return this;
-    }
-
-    public ReviewDto.WithId getDto() {
-        var userInfo = getUserInfo().getDto()
-                .setAccountId(null)
-                .setPhCode(null)
-                .setPhNumber(null)
-                .setEmail(null);
-
-        return (ReviewDto.WithId) new ReviewDto.WithId()
-                .setId(getId())
-                .setUserInfo(userInfo)
-                .setRating(getRating())
-                .setText(getText())
-                .setDateTime(getDateTime());
-    }
 
     @Override
     public Long getOwnerId() {

@@ -1,7 +1,6 @@
 package app.database.entity;
 
 import app.common.EntityWithOwner;
-import app.web.dto.BerthPlaceDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,28 +32,6 @@ public class BerthPlace implements EntityWithOwner {
 
     @OneToMany(mappedBy = "berthPlace", cascade = CascadeType.DETACH)
     private List<Booking> bookingList;
-
-    public BerthPlace(Berth berth, BerthPlaceDto dto) {
-        this.berth = berth;
-        setDto(dto);
-    }
-
-    public void setDto(BerthPlaceDto dto) {
-        length = dto.getLength();
-        draft = dto.getDraft();
-        width = dto.getWidth();
-        price = dto.getPrice();
-    }
-
-    public BerthPlaceDto.WithId getDto() {
-        return (BerthPlaceDto.WithId) new BerthPlaceDto.WithId()
-                .setId(getId())
-                .setBerthId(getBerth().getId())
-                .setLength(getLength())
-                .setDraft(getDraft())
-                .setWidth(getWidth())
-                .setPrice(getPrice());
-    }
 
     public Double getFactPrice() {
         return getPrice() == null ? getBerth().getStandardPrice() : getPrice();

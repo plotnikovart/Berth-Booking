@@ -5,20 +5,26 @@ import app.common.SMessageSource;
 import app.common.exception.AccessException;
 import app.common.exception.NotFoundException;
 import app.common.exception.ServiceException;
-import app.database.entity.*;
+import app.database.entity.Berth;
+import app.database.entity.Booking;
+import app.database.entity.UserInfo;
 import app.database.entity.enums.BookingStatus;
-import app.database.repository.*;
+import app.database.repository.BerthPlaceRepository;
+import app.database.repository.BerthRepository;
+import app.database.repository.BookingRepository;
+import app.database.repository.UserInfoRepository;
 import app.service.BookingSearchService;
 import app.service.EmailService;
 import app.service.PermissionService;
+import app.service.converters.impl.BookingConverter;
 import app.web.dto.BookingDto;
-import app.web.dto.request.BookingRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 @Component
 @RequiredArgsConstructor
@@ -26,35 +32,22 @@ public class BookingFacade {
 
     private final BookingRepository bookingRepository;
     private final UserInfoRepository userInfoRepository;
-    private final ShipRepository shipRepository;
     private final BerthRepository berthRepository;
     private final BerthPlaceRepository berthPlaceRepository;
     private final BookingSearchService bookingSearchService;
     private final PermissionService permissionService;
     private final EmailService emailService;
+    private final BookingConverter bookingConverter;
 
     @Transactional
-    public synchronized Long createBooking(BookingRequest bookingRequest) {
-        BerthPlace berthPlace = berthPlaceRepository.findById(bookingRequest.getBerthPlaceId()).orElseThrow(NotFoundException::new);
-        Ship ship = shipRepository.findById(bookingRequest.getShipId()).orElseThrow(NotFoundException::new);
-
-        var startDate = DateHelper.convertToLocalDate(bookingRequest.getStartDate());
-        var endDate = DateHelper.convertToLocalDate(bookingRequest.getEndDate());
-
-        UserInfo owner = userInfoRepository.findById(berthPlace.getOwnerId()).orElseThrow(NotFoundException::new);
+    public synchronized Long createBooking(BookingDto.Req bookingRequest) {
+        UserInfo owner = berthPlaceRepository.findById(bookingRequest.getBerthPlaceId()).orElseThrow(NotFoundException::new)
+                .getBerth().getUserInfo();
         UserInfo renter = userInfoRepository.findCurrent();
 
-        if (renter != ship.getUserInfo()) {
-            throw new AccessException();
-        }
-
-        var booking = new Booking()
-                .setBerthPlace(berthPlace)
-                .setShip(ship)
+        var booking = bookingConverter.convertToEntity(bookingRequest)
                 .setOwner(owner)
                 .setRenter(renter)
-                .setStartDate(startDate)
-                .setEndDate(endDate)
                 .setStatus(BookingStatus.NEW);
 
         validateBooking(booking);
@@ -112,41 +105,37 @@ public class BookingFacade {
     }
 
     @Transactional(readOnly = true)
-    public BookingDto.WithId getBookingById(Long bookingId) {
+    public BookingDto.Resp getBookingById(Long bookingId) {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(NotFoundException::new);
 
         UserInfo current = userInfoRepository.findCurrent();
         if (booking.getOwner() == current || booking.getRenter() == current) {
-            return booking.getDto();
+            return bookingConverter.convertToDto(booking);
         }
 
         throw new AccessException();
     }
 
     @Transactional(readOnly = true)
-    public List<BookingDto.WithId> getAllBookings() {
+    public List<BookingDto.Resp> getAllBookings() {
         UserInfo userInfo = userInfoRepository.findCurrent();
-        loadFields(userInfo.getBookings());
-
-        return userInfo.getBookings().stream()
-                .map(Booking::getDto)
-                .collect(Collectors.toList());
+        return bookingConverter.convertToDtos(userInfo.getBookings());
     }
 
     @Transactional(readOnly = true)
-    public List<BookingDto.WithId> getAllBookingsByBerth(Long berthId) {
+    public List<BookingDto.Resp> getAllBookingsByBerth(Long berthId) {
         Berth berth = berthRepository.findById(berthId).orElseThrow(NotFoundException::new);
         permissionService.check(berth);
 
         List<Booking> bookings = bookingRepository.findAllByBerth(berth);
-        loadFields(bookings);
-
-        return bookings.stream()
-                .map(Booking::getDto)
-                .collect(Collectors.toList());
+        return bookingConverter.convertToDtos(bookings);
     }
 
     private void validateBooking(Booking booking) {
+        if (booking.getShip().getUserInfo() != booking.getRenter()) {
+            throw new AccessException();
+        }
+
         if (booking.getEndDate().isBefore(booking.getStartDate())) {
             throw new ServiceException(SMessageSource.get("booking.date"));
         }
@@ -163,13 +152,8 @@ public class BookingFacade {
         }
     }
 
-    private void loadFields(List<Booking> bookings) {
-        if (!bookings.isEmpty()) {
-            List<BerthPlace> places = bookings.stream().map(Booking::getBerthPlace).collect(Collectors.toList());
-            List<Ship> ships = bookings.stream().map(Booking::getShip).collect(Collectors.toList());
-
-            shipRepository.loadPhotos(ships);
-            berthPlaceRepository.loadBerths(places);
-        }
+    private Double calcTotalPrice(Booking booking) {        // todo хранить в бд
+        Double price = booking.getBerthPlace().getFactPrice();
+        return price * DAYS.between(booking.getStartDate(), booking.getEndDate());
     }
 }

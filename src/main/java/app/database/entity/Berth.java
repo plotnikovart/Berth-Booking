@@ -1,8 +1,6 @@
 package app.database.entity;
 
 import app.common.EntityWithOwner;
-import app.service.file.ImageKind;
-import app.web.dto.BerthDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,16 +11,12 @@ import org.hibernate.search.annotations.Longitude;
 import org.hibernate.search.annotations.Spatial;
 
 import javax.persistence.*;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 import static javax.persistence.CascadeType.*;
 
-@NamedEntityGraph(name = "berth_eg", attributeNodes = @NamedAttributeNode("berthPlaces"))
 @Getter
 @Setter
 @Indexed
@@ -72,44 +66,6 @@ public class Berth implements EntityWithOwner {
     @Formula("(select avg(r.rating) from review as r WHERE r.berth_id = id)")   // todo lazy loading
     private Integer rating;
 
-
-    public Berth(UserInfo userInfo, BerthDto dto) {
-        this.userInfo = userInfo;
-        setDto(dto);
-    }
-
-    public void setDto(BerthDto dto) {
-        name = dto.getName();
-        description = dto.getDescription();
-        lat = dto.getLat();
-        lng = dto.getLng();
-        standardPrice = dto.getStandardPrice();
-        if (dto.getPhotoList() != null) {
-            var i = new AtomicInteger();
-            var newPhotos = dto.getPhotoList().stream()
-                    .map(photoName -> new BerthPhoto(this, i.getAndIncrement(), photoName))
-                    .collect(Collectors.toList());
-
-            photos.clear();
-            photos.addAll(newPhotos);
-        }
-    }
-
-    public BerthDto.WithId getDto() {
-        List<String> photoList = getPhotos().stream()
-                .map(photo -> MessageFormat.format("/api/images/{0}/{1}/{2}", ImageKind.BERTH.name().toLowerCase(), getOwnerId(), photo.getFileName()))
-                .collect(Collectors.toList());
-
-        return (BerthDto.WithId) new BerthDto.WithId()
-                .setId(getId())
-                .setName(getName())
-                .setDescription(getDescription())
-                .setLat(getLat())
-                .setLng(getLng())
-                .setStandardPrice(getStandardPrice())
-                .setPhotoList(photoList)
-                .setRating(getRating());
-    }
 
     public Berth setBerthPlaces(Collection<BerthPlace> newPlaces) {
         getBerthPlaces().clear();
