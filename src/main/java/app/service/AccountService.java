@@ -63,7 +63,7 @@ public class AccountService {
             var account = new Account(accountDto);
             accountRepository.save(account);
 
-            return frontUrl + "/success";
+            return frontUrl;
         } catch (Exception e) {
             log.error(e.getMessage());
             return frontUrl + "/error";
