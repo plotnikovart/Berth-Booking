@@ -22,7 +22,7 @@ public class ShipConverter extends AbstractConverter<Ship, ShipDto.Resp, ShipDto
     private final ShipRepository repository;
 
     @Override
-    public ShipDto.Resp convertToDto(ShipDto.Resp dto, Ship e) {
+    public ShipDto.Resp toDto(ShipDto.Resp dto, Ship e) {
         var photoList = e.getPhotos().stream()
                 .map(photo -> MessageFormat.format("/api/images/{0}/{1}/{2}", ImageKind.SHIP.name().toLowerCase(), e.getOwnerId(), photo.getFileName()))
                 .collect(Collectors.toList());
@@ -37,7 +37,7 @@ public class ShipConverter extends AbstractConverter<Ship, ShipDto.Resp, ShipDto
     }
 
     @Override
-    public Ship convertToEntity(Ship entity, ShipDto.Req dto) {
+    public Ship toEntity(Ship entity, ShipDto.Req dto) {
         if (dto.getPhotoList() != null) {
             var i = new AtomicInteger(0);
             var newPhotos = dto.getPhotoList().stream()
@@ -55,10 +55,10 @@ public class ShipConverter extends AbstractConverter<Ship, ShipDto.Resp, ShipDto
     }
 
     @Override
-    public List<ShipDto.Resp> convertToDtos(Collection<Ship> entities) {
+    public List<ShipDto.Resp> toDtos(Collection<Ship> entities) {
         if (!entities.isEmpty()) {
             repository.loadPhotos(entities);
         }
-        return super.convertToDtos(entities);
+        return super.toDtos(entities);
     }
 }

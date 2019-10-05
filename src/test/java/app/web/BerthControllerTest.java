@@ -2,11 +2,11 @@ package app.web;
 
 import app.database.repository.AbstractConvenienceTest;
 import app.database.repository.BerthRepository;
+import app.service.file.ImageKind;
 import app.web.dto.BerthDto;
 import app.web.dto.BerthPlaceDto;
 import app.web.dto.response.IdResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +16,9 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -47,21 +48,22 @@ class BerthControllerTest extends AbstractConvenienceTest {
     @Test
     void crud() throws Exception {
         var placeList = List.of(
-                (BerthPlaceDto.WithId) new BerthPlaceDto.WithId().setDraft(1.0).setWidth(1.0).setLength(1.0),
-                (BerthPlaceDto.WithId) new BerthPlaceDto.WithId().setDraft(1.0).setWidth(1.0).setLength(1.0).setPrice(11.0)
+                new BerthPlaceDto().setDraft(1.0).setWidth(1.0).setLength(1.0),
+                new BerthPlaceDto().setDraft(1.0).setWidth(1.0).setLength(1.0).setPrice(11.0)
         );
 
-        var convenienceList = List.of(conv1.getDto(), conv2.getDto());
+        var convenienceList = List.of(convConverter.toDto(conv1), convConverter.toDto(conv2));
 
-        var dto = (BerthDto.WithId) new BerthDto.WithId()
+        var dto = (BerthDto.Req) new BerthDto.Req()
+                .setPhotoList(List.of("photo1", "photo2"))
                 .setName("1")
                 .setDescription("asada")
                 .setStandardPrice(12.5)
                 .setLat(12.0)
                 .setLng(13.0)
-                .setPhotoList(List.of("photo1", "photo2"))
                 .setPlaceList(placeList)
                 .setConvenienceList(convenienceList);
+
 
         // post
         MvcResult actual = mvc.perform(post("/api/berths")
@@ -70,41 +72,44 @@ class BerthControllerTest extends AbstractConvenienceTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        dto.getPlaceList().get(0).setId(0L);
-        dto.getPlaceList().get(1).setId(1L);
-
         var response = mapper.readValue(actual.getResponse().getContentAsString(), IdResponse.class);
-        dto.setId(Long.valueOf((Integer) response.getId()));
+        var dtoResp = new BerthDto.Resp()
+                .setId(Long.valueOf((Integer) response.getId()));
+        syncDto(dto, dtoResp);
+
+        placeList.get(0).setId(0L);
+        placeList.get(1).setId(1L);
+
         commitAndStartNewTransaction();
 
         // get
-        actual = mvc.perform(get("/api/berths/" + dto.getId()))
+        mvc.perform(get("/api/berths/" + dtoResp.getId()))
                 .andExpect(status().isOk())
-                .andReturn();
-        Assertions.assertEquals(dto, mapper.readValue(actual.getResponse().getContentAsString(), BerthDto.WithId.class));
+                .andExpect(content().string(mapper.writeValueAsString(dtoResp)));
 
         // put
         dto.setName("122");
         dto.setPhotoList(List.of("photo1", "photo3"));
-        dto.setPlaceList(List.of((BerthPlaceDto.WithId) new BerthPlaceDto.WithId().setDraft(1.0).setWidth(1.0).setLength(1.0)));
-        dto.setConvenienceList(List.of(conv1.getDto()));
+        dto.setPlaceList(List.of(placeList.get(0).setLength(2.0), new BerthPlaceDto().setDraft(1.0).setWidth(1.0).setLength(1.0).setPrice(1.0)));
+        dto.setConvenienceList(List.of(convConverter.toDto(conv1)));
 
-        mvc.perform(put("/api/berths/" + dto.getId())
+        mvc.perform(put("/api/berths/" + dtoResp.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(dto)))
                 .andExpect(status().isOk());
+
+        syncDto(dto, dtoResp);
+        dto.getPlaceList().get(1).setId(2L);
+
         commitAndStartNewTransaction();
 
-        dto.getPlaceList().get(0).setId(2L);
-
         // get
-        actual = mvc.perform(get("/api/berths/" + dto.getId()))
+        mvc.perform(get("/api/berths/" + dtoResp.getId()))
                 .andExpect(status().isOk())
-                .andReturn();
-        Assertions.assertEquals(dto, mapper.readValue(actual.getResponse().getContentAsString(), BerthDto.WithId.class));
+                .andExpect(content().string(mapper.writeValueAsString(dtoResp)));
 
         // delete
-        mvc.perform(delete("/api/berths/" + dto.getId()))
+        mvc.perform(delete("/api/berths/" + dtoResp.getId()))
                 .andExpect(status().isOk());
         commitAndStartNewTransaction();
 
@@ -113,9 +118,21 @@ class BerthControllerTest extends AbstractConvenienceTest {
                 .andExpect(content().json((mapper.writeValueAsString(List.of()))));
     }
 
-    private String rightJson(MvcResult result) throws IOException {
-        var dto = mapper.readValue(result.getResponse().getContentAsString(), BerthDto.WithId.class);
-        return mapper.writeValueAsString(dto);
+
+    private void syncDto(BerthDto.Req req, BerthDto.Resp resp) {
+        var photoList = req.getPhotoList().stream()
+                .map(photo -> MessageFormat.format("/api/images/{0}/{1}/{2}", ImageKind.BERTH.name().toLowerCase(), account.getId(), photo))
+                .collect(Collectors.toList());
+
+        resp
+                .setPhotoList(photoList)
+                .setName(req.getName())
+                .setDescription(req.getDescription())
+                .setStandardPrice(req.getStandardPrice())
+                .setLat(req.getLat())
+                .setLng(req.getLng())
+                .setPlaceList(req.getPlaceList())
+                .setConvenienceList(req.getConvenienceList());
     }
 
 }

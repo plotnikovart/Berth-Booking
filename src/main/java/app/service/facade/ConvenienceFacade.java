@@ -17,7 +17,7 @@ public class ConvenienceFacade {
 
     public List<ConvenienceDto> getAll() {
         var conveniences = repository.findAll();
-        return converter.convertToDtos(conveniences);
+        return converter.toDtos(conveniences);
     }
 
 }

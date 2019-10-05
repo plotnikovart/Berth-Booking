@@ -27,7 +27,7 @@ public class BerthFacade {
         var userInfo = userInfoRepository.findCurrent();
 
         var berth = new Berth().setUserInfo(userInfo);
-        converter.convertToEntity(berth, dto);
+        converter.toEntity(berth, dto);
 
         return berthRepository.save(berth).getId();
     }
@@ -37,14 +37,14 @@ public class BerthFacade {
         Berth berth = berthRepository.findById(berthId).orElseThrow(NotFoundException::new);
         permissionService.check(berth);
 
-        converter.convertToEntity(berth, dto);
+        converter.toEntity(berth, dto);
         berthRepository.save(berth);
     }
 
     @Transactional(readOnly = true)
     public BerthDto.Resp getBerth(Long berthId) {
         Berth berth = berthRepository.findById(berthId).orElseThrow(NotFoundException::new);
-        return converter.convertToDto(berth);
+        return converter.toDto(berth);
     }
 
     @Transactional(readOnly = true)
@@ -52,7 +52,7 @@ public class BerthFacade {
         var userInfo = userInfoRepository.findCurrent();
         var berths = userInfo.getBerths();
 
-        return converter.convertToDtos(berths);
+        return converter.toDtos(berths);
     }
 
     @Transactional

@@ -29,7 +29,7 @@ public class ReviewFacade {
         var userInfo = userInfoRepository.findCurrent();
 
         var review = new Review().setUserInfo(userInfo);
-        converter.convertToEntity(review, reviewDto);
+        converter.toEntity(review, reviewDto);
         return reviewRepository.save(review).getId();
     }
 
@@ -37,7 +37,7 @@ public class ReviewFacade {
     public List<ReviewDto.Resp> getReviews(Long berthId) {
         var berth = berthRepository.findById(berthId).orElseThrow(NotFoundException::new);
         var reviews = reviewRepository.findAllByBerth(berth);
-        return converter.convertToDtos(reviews);
+        return converter.toDtos(reviews);
     }
 
     @Transactional

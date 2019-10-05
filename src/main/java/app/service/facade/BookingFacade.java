@@ -45,7 +45,7 @@ public class BookingFacade {
                 .getBerth().getUserInfo();
         UserInfo renter = userInfoRepository.findCurrent();
 
-        var booking = bookingConverter.convertToEntity(bookingRequest)
+        var booking = bookingConverter.toEntity(bookingRequest)
                 .setOwner(owner)
                 .setRenter(renter)
                 .setStatus(BookingStatus.NEW);
@@ -110,7 +110,7 @@ public class BookingFacade {
 
         UserInfo current = userInfoRepository.findCurrent();
         if (booking.getOwner() == current || booking.getRenter() == current) {
-            return bookingConverter.convertToDto(booking);
+            return bookingConverter.toDto(booking);
         }
 
         throw new AccessException();
@@ -119,7 +119,7 @@ public class BookingFacade {
     @Transactional(readOnly = true)
     public List<BookingDto.Resp> getAllBookings() {
         UserInfo userInfo = userInfoRepository.findCurrent();
-        return bookingConverter.convertToDtos(userInfo.getBookings());
+        return bookingConverter.toDtos(userInfo.getBookings());
     }
 
     @Transactional(readOnly = true)
@@ -128,7 +128,7 @@ public class BookingFacade {
         permissionService.check(berth);
 
         List<Booking> bookings = bookingRepository.findAllByBerth(berth);
-        return bookingConverter.convertToDtos(bookings);
+        return bookingConverter.toDtos(bookings);
     }
 
     private void validateBooking(Booking booking) {

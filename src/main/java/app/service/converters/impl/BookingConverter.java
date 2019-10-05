@@ -31,21 +31,21 @@ public class BookingConverter extends AbstractConverter<Booking, BookingDto.Resp
     private final ShipConverter shipConverter;
 
     @Override
-    public BookingDto.Resp convertToDto(BookingDto.Resp dto, Booking e) {
+    public BookingDto.Resp toDto(BookingDto.Resp dto, Booking e) {
         return (BookingDto.Resp) dto
                 .setId(e.getId())
-                .setBerth(berthConverter.convertToDto(new BerthDto.Resp(), e.getBerthPlace().getBerth(), false, false))
-                .setBerthPlace(berthPlaceConverter.convertToDto(e.getBerthPlace()))
-                .setShip(shipConverter.convertToDto(e.getShip()))
-                .setOwner(userInfoConverter.convertToDto(e.getOwner()))
-                .setRenter(userInfoConverter.convertToDto(e.getRenter()))
+                .setBerth(berthConverter.toDto(new BerthDto.Resp(), e.getBerthPlace().getBerth(), false, false))
+                .setBerthPlace(berthPlaceConverter.toDto(e.getBerthPlace()))
+                .setShip(shipConverter.toDto(e.getShip()))
+                .setOwner(userInfoConverter.toDto(e.getOwner()))
+                .setRenter(userInfoConverter.toDto(e.getRenter()))
                 .setStatus(e.getStatus())
                 .setStartDate(DateHelper.convertToDate(e.getStartDate()))
                 .setEndDate(DateHelper.convertToDate(e.getEndDate()));
     }
 
     @Override
-    public Booking convertToEntity(Booking entity, BookingDto.Req dto) {
+    public Booking toEntity(Booking entity, BookingDto.Req dto) {
         var berthPlace = em.getReference(BerthPlace.class, dto.getBerthPlaceId());
         var ship = em.getReference(Ship.class, dto.getShipId());
 
@@ -60,7 +60,7 @@ public class BookingConverter extends AbstractConverter<Booking, BookingDto.Resp
     }
 
     @Override
-    public List<BookingDto.Resp> convertToDtos(Collection<Booking> entities) {
+    public List<BookingDto.Resp> toDtos(Collection<Booking> entities) {
         if (!entities.isEmpty()) {
             List<BerthPlace> places = entities.stream().map(Booking::getBerthPlace).collect(Collectors.toList());
             List<Ship> ships = entities.stream().map(Booking::getShip).collect(Collectors.toList());
@@ -69,6 +69,6 @@ public class BookingConverter extends AbstractConverter<Booking, BookingDto.Resp
             berthPlaceRepository.loadBerthsWithPhotos(places);
         }
 
-        return super.convertToDtos(entities);
+        return super.toDtos(entities);
     }
 }

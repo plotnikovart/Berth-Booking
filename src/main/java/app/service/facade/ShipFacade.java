@@ -27,7 +27,7 @@ public class ShipFacade {
         var userInfo = userInfoRepository.findCurrent();
 
         var ship = new Ship().setUserInfo(userInfo);
-        converter.convertToEntity(ship, shipDto);
+        converter.toEntity(ship, shipDto);
 
         return shipRepository.save(ship).getId();
     }
@@ -37,14 +37,14 @@ public class ShipFacade {
         var ship = shipRepository.findById(id).orElseThrow(NotFoundException::new);
         permissionService.check(ship);
 
-        converter.convertToEntity(ship, shipDto);
+        converter.toEntity(ship, shipDto);
         shipRepository.save(ship);
     }
 
     @Transactional(readOnly = true)
     public ShipDto.Resp getShip(Long shipId) {
         var ship = shipRepository.findById(shipId).orElseThrow(NotFoundException::new);
-        return converter.convertToDto(ship);
+        return converter.toDto(ship);
     }
 
     @Transactional(readOnly = true)
@@ -52,7 +52,7 @@ public class ShipFacade {
         var userInfo = userInfoRepository.findCurrent();
         var ships = userInfo.getShips();
 
-        return converter.convertToDtos(ships);
+        return converter.toDtos(ships);
     }
 
     @Transactional

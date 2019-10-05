@@ -1,8 +1,8 @@
 package app.service.file;
 
 import app.database.entity.Ship;
+import app.database.entity.ShipPhoto;
 import app.database.repository.ShipRepository;
-import app.web.dto.ShipDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,14 +43,13 @@ class FileDeleteTaskTest extends FileStorageServiceTest {
 
         setOldCreationTime(shipPh1, shipPh2, shipPh3, userPhOld);
 
-        var shipDto = new ShipDto();
-        shipDto.setName("ship1");
-        shipDto.setDraft(12.0);
-        shipDto.setLength(12.0);
-        shipDto.setWidth(1.0);
-        shipDto.setPhotoList(List.of(shipPh1.getName(), shipPh2.getName()));
-
-        var ship = new Ship(userInfo, shipDto);
+        var ship = new Ship()
+                .setUserInfo(userInfo)
+                .setName("ship1")
+                .setDraft(12.0)
+                .setLength(12.0)
+                .setWidth(1.0);
+        ship.setPhotos(List.of(new ShipPhoto(ship, 0 , shipPh1.getName()), new ShipPhoto(ship, 1, shipPh2.getName())));
         shipRepository.save(ship);
 
 

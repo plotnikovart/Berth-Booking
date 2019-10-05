@@ -4,6 +4,7 @@ import app.ApplicationTest;
 import app.common.OperationContext;
 import app.database.entity.Account;
 import app.database.entity.UserInfo;
+import app.service.converters.impl.UserInfoConverter;
 import app.web.dto.AccountDto;
 import app.web.dto.UserInfoDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +19,8 @@ public class AbstractAccountTest extends ApplicationTest {
     protected UserInfoRepository userInfoRepository;
     @Autowired
     protected AccountRepository accountRepository;
+    @Autowired
+    protected UserInfoConverter userInfoConverter;
 
     protected Account account;
     protected UserInfo userInfo;
@@ -36,13 +39,13 @@ public class AbstractAccountTest extends ApplicationTest {
         account = new Account(accountDto);
         accountRepository.save(account);
 
-        var userDto = new UserInfoDto();
+        var userDto = new UserInfoDto.Req();
         userDto.setFirstName("Артем");
         userDto.setLastName("Плотников");
         userDto.setPhCode("164");
         userDto.setPhNumber("1238467");
 
-        userInfo = new UserInfo(account, userDto);
+        userInfo = userInfoConverter.toEntity(userDto).setAccount(account);
         userInfoRepository.save(userInfo);
 
         OperationContext.setAccountId(userInfo.getAccountId());

@@ -82,10 +82,10 @@ public class BookingSearchService {
     }
 
     private BerthDto.Resp.Search convertToBerthDtoSearch(Map.Entry<Berth, List<BerthPlace>> pair, Double distance) {
-        var places = placeConverter.convertToDtos(pair.getValue());
+        var places = placeConverter.toDtos(pair.getValue());
         var minPrice = pair.getValue().stream().mapToDouble(BerthPlace::getFactPrice).min().orElseThrow();
 
-        var berthSearch = (BerthDto.Resp.Search) berthConverter.convertToDto(new BerthDto.Resp.Search(), pair.getKey());
+        var berthSearch = (BerthDto.Resp.Search) berthConverter.toDto(new BerthDto.Resp.Search(), pair.getKey());
         return (BerthDto.Resp.Search) berthSearch
                 .setDistance(distance)
                 .setMinPrice(minPrice)

@@ -21,20 +21,20 @@ public class UserInfoFacade {
     @Transactional(readOnly = true)
     public UserInfoDto.Resp getUserInfo(Long userId) {
         UserInfo userInfo = userInfoRepository.findById(userId).orElseThrow(NotFoundException::new);
-        return converter.convertToDto(userInfo);
+        return converter.toDto(userInfo);
     }
 
     @Transactional
     public void createUserInfo(UserInfoDto.Req dto) {
         var account = accountRepository.findCurrent();
         var userInfo = new UserInfo().setAccount(account);
-        converter.convertToEntity(userInfo, dto);
+        converter.toEntity(userInfo, dto);
         userInfoRepository.save(userInfo);
     }
 
     @Transactional
     public void updateUserInfo(UserInfoDto.Req dto) {
         var userInfo = userInfoRepository.findCurrent();
-        converter.convertToEntity(userInfo, dto);
+        converter.toEntity(userInfo, dto);
     }
 }

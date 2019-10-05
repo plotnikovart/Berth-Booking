@@ -1,5 +1,7 @@
 package app;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +17,11 @@ public abstract class ApplicationTest {
 
     @Autowired
     protected TransactionTemplate tpl;
+
+    @Autowired
+    public void configureTestObjectMapper(ObjectMapper mapper) {
+        mapper.setSerializationInclusion(JsonInclude.Include.ALWAYS);
+    }
 
     protected void commitAndStartNewTransaction() {
         TestTransaction.flagForCommit();

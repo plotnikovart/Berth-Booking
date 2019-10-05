@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class ConvenienceConverter extends AbstractRespConverter<Convenience, ConvenienceDto> {
 
     @Override
-    public ConvenienceDto convertToDto(ConvenienceDto dto, Convenience e) {
+    public ConvenienceDto toDto(ConvenienceDto dto, Convenience e) {
         return dto
                 .setId(e.getId())
                 .setCode(e.getCode())

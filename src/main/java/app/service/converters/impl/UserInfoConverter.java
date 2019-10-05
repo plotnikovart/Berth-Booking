@@ -12,7 +12,7 @@ import java.text.MessageFormat;
 public class UserInfoConverter extends AbstractConverter<UserInfo, UserInfoDto.Resp, UserInfoDto.Req> {
 
     @Override
-    public UserInfoDto.Resp convertToDto(UserInfoDto.Resp dto, UserInfo e) {
+    public UserInfoDto.Resp toDto(UserInfoDto.Resp dto, UserInfo e) {
         var photo = e.getPhotoName() == null ?
                 null : MessageFormat.format("/api/images/{0}/{1}/{2}", ImageKind.USER.name().toLowerCase(), e.getAccountId(), e.getPhotoName());
 
@@ -27,7 +27,7 @@ public class UserInfoConverter extends AbstractConverter<UserInfo, UserInfoDto.R
     }
 
     @Override
-    public UserInfo convertToEntity(UserInfo entity, UserInfoDto.Req dto) {
+    public UserInfo toEntity(UserInfo entity, UserInfoDto.Req dto) {
         return entity
                 .setFirstName(dto.getFirstName())
                 .setLastName(dto.getLastName())

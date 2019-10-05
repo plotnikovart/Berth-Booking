@@ -7,6 +7,7 @@ import app.database.entity.Booking;
 import app.database.entity.Ship;
 import app.database.entity.enums.BookingStatus;
 import app.database.repository.*;
+import app.service.converters.impl.ConvenienceConverter;
 import app.web.dto.BerthDto;
 import app.web.dto.ConvenienceDto;
 import app.web.dto.request.BookingSearchRequest;
@@ -32,6 +33,8 @@ class BookingSearchServiceTest extends AbstractConvenienceTest {
     BerthPlaceRepository berthPlaceRepository;
     @Autowired
     BookingSearchService bookingSearchService;
+    @Autowired
+    ConvenienceConverter convenienceConverter;
 
     protected Berth berth1, berth2, berth3, berth4;
     protected BerthPlace place1, place2, place3, place4, place5, place6;
@@ -49,9 +52,9 @@ class BookingSearchServiceTest extends AbstractConvenienceTest {
         berthRepository.deleteAll();
         shipRepository.deleteAll();
 
-        convDto1 = conv1.getDto();
-        convDto2 = conv2.getDto();
-        convDto3 = conv3.getDto();
+        convDto1 = convenienceConverter.toDto(conv1);
+        convDto2 = convenienceConverter.toDto(conv2);
+        convDto3 = convenienceConverter.toDto(conv3);
 
         // ======================================
         ship1 = new Ship()
@@ -207,7 +210,7 @@ class BookingSearchServiceTest extends AbstractConvenienceTest {
     }
 
 
-    private long calcPlaces(List<BerthDto.WithId> berthDto) {
+    private long calcPlaces(List<BerthDto.Resp.Search> berthDto) {
         return berthDto.stream().mapToLong(dto -> dto.getPlaceList().size()).sum();
     }
 

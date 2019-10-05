@@ -1,6 +1,7 @@
 package app.database.repository;
 
 import app.database.entity.Convenience;
+import app.service.converters.impl.ConvenienceConverter;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,8 @@ public class AbstractConvenienceTest extends AbstractAccountTest {
 
     @Autowired
     ConvenienceRepository convenienceRepository;
+    @Autowired
+    protected ConvenienceConverter convConverter;
 
     @Override
     @BeforeEach

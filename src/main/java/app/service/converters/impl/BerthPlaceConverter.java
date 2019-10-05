@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class BerthPlaceConverter extends AbstractSingleConverter<BerthPlace, BerthPlaceDto> {
 
     @Override
-    public BerthPlaceDto convertToDto(BerthPlaceDto dto, BerthPlace e) {
+    public BerthPlaceDto toDto(BerthPlaceDto dto, BerthPlace e) {
         return dto
                 .setId(e.getId())
                 .setLength(e.getLength())
@@ -19,7 +19,7 @@ public class BerthPlaceConverter extends AbstractSingleConverter<BerthPlace, Ber
     }
 
     @Override
-    public BerthPlace convertToEntity(BerthPlace entity, BerthPlaceDto dto) {
+    public BerthPlace toEntity(BerthPlace entity, BerthPlaceDto dto) {
         return entity
                 .setLength(dto.getLength())
                 .setDraft(dto.getDraft())

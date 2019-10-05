@@ -32,13 +32,13 @@ public class BerthConverter extends AbstractConverter<Berth, BerthDto.Resp, Bert
     private final BerthRepository berthRepository;
     private final EntityManager em;
 
-    public BerthDto.Resp convertToDto(BerthDto.Resp dto, Berth e, boolean convertPlaces, boolean convertConveniences) {
+    public BerthDto.Resp toDto(BerthDto.Resp dto, Berth e, boolean convertPlaces, boolean convertConveniences) {
         List<String> photoList = e.getPhotos().stream()
                 .map(photo -> MessageFormat.format("/api/images/{0}/{1}/{2}", ImageKind.BERTH.name().toLowerCase(), e.getOwnerId(), photo.getFileName()))
                 .collect(toList());
 
-        List<BerthPlaceDto> places = convertPlaces ? berthPlaceConverter.convertToDtos(e.getBerthPlaces()) : null;
-        List<ConvenienceDto> conveniences = convertConveniences ? convenienceConverter.convertToDtos(e.getConveniences()) : null;
+        List<BerthPlaceDto> places = convertPlaces ? berthPlaceConverter.toDtos(e.getBerthPlaces()) : null;
+        List<ConvenienceDto> conveniences = convertConveniences ? convenienceConverter.toDtos(e.getConveniences()) : null;
 
         return (BerthDto.Resp) dto
                 .setId(e.getId())
@@ -54,12 +54,12 @@ public class BerthConverter extends AbstractConverter<Berth, BerthDto.Resp, Bert
     }
 
     @Override
-    public BerthDto.Resp convertToDto(BerthDto.Resp dto, Berth e) {
-        return convertToDto(dto, e, true, true);
+    public BerthDto.Resp toDto(BerthDto.Resp dto, Berth e) {
+        return toDto(dto, e, true, true);
     }
 
     @Override
-    public Berth convertToEntity(Berth entity, BerthDto.Req dto) {
+    public Berth toEntity(Berth entity, BerthDto.Req dto) {
         if (dto.getPhotoList() != null) {
             var i = new AtomicInteger();
             var newPhotos = dto.getPhotoList().stream()
@@ -87,10 +87,10 @@ public class BerthConverter extends AbstractConverter<Berth, BerthDto.Resp, Bert
                             var oldPlace = Optional.ofNullable(idToPlace.get(placeDto.getId()))
                                     .orElseThrow(NotFoundException::new);
 
-                            return berthPlaceConverter.convertToEntity(oldPlace, placeDto);
+                            return berthPlaceConverter.toEntity(oldPlace, placeDto);
                         } else {
                             var newPlace = new BerthPlace().setBerth(entity);
-                            return berthPlaceConverter.convertToEntity(newPlace, placeDto);
+                            return berthPlaceConverter.toEntity(newPlace, placeDto);
                         }
                     })
                     .collect(Collectors.toList());
@@ -107,13 +107,13 @@ public class BerthConverter extends AbstractConverter<Berth, BerthDto.Resp, Bert
     }
 
     @Override
-    public List<BerthDto.Resp> convertToDtos(Collection<Berth> entities) {
+    public List<BerthDto.Resp> toDtos(Collection<Berth> entities) {
         if (!entities.isEmpty()) {
             berthRepository.loadPhotos(entities);
             berthRepository.loadConveniences(entities);
             berthRepository.loadPlaces(entities);
         }
 
-        return super.convertToDtos(entities);
+        return super.toDtos(entities);
     }
 }

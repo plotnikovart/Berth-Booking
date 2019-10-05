@@ -17,8 +17,8 @@ public class ReviewConverter extends AbstractConverter<Review, ReviewDto.Resp, R
     private final EntityManager em;
 
     @Override
-    public ReviewDto.Resp convertToDto(ReviewDto.Resp dto, Review e) {
-        var userInfo = userInfoConverter.convertToDto(e.getUserInfo())
+    public ReviewDto.Resp toDto(ReviewDto.Resp dto, Review e) {
+        var userInfo = userInfoConverter.toDto(e.getUserInfo())
                 .setAccountId(null)
                 .setEmail(null)
                 .setPhNumber(null)
@@ -33,7 +33,7 @@ public class ReviewConverter extends AbstractConverter<Review, ReviewDto.Resp, R
     }
 
     @Override
-    public Review convertToEntity(Review entity, ReviewDto.Req dto) {
+    public Review toEntity(Review entity, ReviewDto.Req dto) {
         Berth berth = em.getReference(Berth.class, dto.getBerthId());
 
         return entity
