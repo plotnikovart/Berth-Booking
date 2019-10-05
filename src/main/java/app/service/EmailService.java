@@ -26,10 +26,11 @@ public class EmailService {
 
     public void sendBookingApprove(Booking booking) {
         UserInfo owner = booking.getOwner();
+        UserInfo renter = booking.getRenter();
         String text = SMessageSource.get("booking.approve", booking.getId(), booking.getBerthPlace().getBerth().getName(),
                 owner.getFirstName(), owner.getLastName());
 
-        emailSender.sendMessage(owner.getAccount().getEmail(), "Бронирование подтверждено", text);
+        emailSender.sendMessage(renter.getAccount().getEmail(), "Бронирование подтверждено", text);
     }
 
     public void sendBookingCreate(Booking booking) {
