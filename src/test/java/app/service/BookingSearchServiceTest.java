@@ -213,5 +213,4 @@ class BookingSearchServiceTest extends AbstractConvenienceTest {
     private long calcPlaces(List<BerthDto.Resp.Search> berthDto) {
         return berthDto.stream().mapToLong(dto -> dto.getPlaceList().size()).sum();
     }
-
 }

@@ -12,4 +12,5 @@ public class Application {
     }
 
     // todo проверка перед сохранением фотки
+    // todo lazy loading for all entities
 }

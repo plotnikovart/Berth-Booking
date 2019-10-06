@@ -2,12 +2,15 @@ package app.service.converters.impl;
 
 import app.database.entity.Berth;
 import app.database.entity.Review;
+import app.database.repository.ReviewRepository;
 import app.service.converters.AbstractConverter;
 import app.web.dto.ReviewDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
+import java.util.Collection;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -15,6 +18,7 @@ public class ReviewConverter extends AbstractConverter<Review, ReviewDto.Resp, R
 
     private final UserInfoConverter userInfoConverter;
     private final EntityManager em;
+    private final ReviewRepository reviewRepository;
 
     @Override
     public ReviewDto.Resp toDto(ReviewDto.Resp dto, Review e) {
@@ -40,5 +44,13 @@ public class ReviewConverter extends AbstractConverter<Review, ReviewDto.Resp, R
                 .setBerth(berth)
                 .setRating(dto.getRating())
                 .setText(dto.getText());
+    }
+
+    @Override
+    public List<ReviewDto.Resp> toDtos(Collection<Review> entities) {
+        if (!entities.isEmpty()) {
+            reviewRepository.loadUserInfo(entities);
+        }
+        return super.toDtos(entities);
     }
 }
