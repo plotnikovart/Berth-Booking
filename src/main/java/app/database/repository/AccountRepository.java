@@ -13,6 +13,9 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     Optional<Account> findByEmail(String email);
 
+    Optional<Account> findByGoogleMail(String gMail);
+
+
     default Account findCurrent() {
         return findById(OperationContext.accountId()).orElseThrow(ServiceException::new);
     }

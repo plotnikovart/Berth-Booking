@@ -70,14 +70,7 @@ public class AccountRegisterService {
                 throw new NotFoundException();
             }
 
-            var account = new Account()
-                    .setKind(AccountKind.EMAIL)
-                    .setEmail(conf.getEmail())
-                    .setPasswordHash(conf.getPasswordHash())
-                    .setSalt(conf.getSalt())
-                    .setRoles(Set.of(AccountRole.USER));
-
-            accountRepository.save(account);
+            createAccount(conf);
             conf.setConfirmed(true);
 
             return frontUrl;    // todo
@@ -99,5 +92,18 @@ public class AccountRegisterService {
 
     private void checkPasswordComplexity(String password) {
         // todo
+    }
+
+
+    private Account createAccount(AccountConfirmation conf) {
+        var account = new Account()
+                .setKind(AccountKind.EMAIL)
+                .setEmail(conf.getEmail())
+                .setPasswordHash(conf.getPasswordHash())
+                .setSalt(conf.getSalt())
+                .setRoles(Set.of(AccountRole.USER));
+
+        // todo user_info
+        return accountRepository.saveAndFlush(account);
     }
 }
