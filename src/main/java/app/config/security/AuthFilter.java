@@ -21,7 +21,8 @@ public class AuthFilter extends HttpFilter {
     private final static String AUTH_TOKEN_HEADER = "Authorization";
     private final static List<String> OPEN_URI = List.of(
             "/api/auth/.*",                 // authentication
-            "/", "/berth", "/berth/.*"      // static
+            "/", "/berth", "/berth/.*",     // static
+            "/v2/api-docs", "/configuration/ui", "/swagger-resources.*", "/configuration/security", "/swagger-ui.html", "/webjars/.*"
     );
 
     private final TokenService tokenService;
