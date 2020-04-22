@@ -21,14 +21,15 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class AuthFilter extends HttpFilter {
 
-    private final Set<String> OPEN_URI = Set.of("/api/register", "/api/login", "/api/confirm");
-    private final String LOGOUT_URI = "/api/logout";
+    private final static Set<String> OPEN_URI = Set.of("/api/register", "/api/login", "/api/confirm", "/", "/berth", "/berth/.*");
+    private final static String LOGOUT_URI = "/api/logout";
+
     private final AccountService accountService;
 
     @Override
     public void doFilter(HttpServletRequest req, HttpServletResponse resp, FilterChain chain) throws IOException, ServletException {
         try {
-            if (!OPEN_URI.contains(req.getRequestURI())) {
+            if (!isOpen(req.getRequestURI())) {
                 var tokenCookie = req.getCookies() != null ?
                         Arrays.stream(req.getCookies()).filter(cook -> cook.getName().equals(AccountService.AUTH_TOKEN_NAME)).findFirst().orElse(null) :
                         null;
@@ -45,5 +46,16 @@ public class AuthFilter extends HttpFilter {
         } catch (UnauthorizedException e) {
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
+    }
+
+
+    private boolean isOpen(String uri) {
+        for (var openUri : OPEN_URI) {
+            if (uri.matches(openUri)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
