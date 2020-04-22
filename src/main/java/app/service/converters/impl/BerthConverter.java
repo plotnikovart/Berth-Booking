@@ -1,6 +1,6 @@
 package app.service.converters.impl;
 
-import app.common.exception.NotFoundException;
+import app.config.exception.impl.NotFoundException;
 import app.database.entity.Berth;
 import app.database.entity.BerthPhoto;
 import app.database.entity.BerthPlace;

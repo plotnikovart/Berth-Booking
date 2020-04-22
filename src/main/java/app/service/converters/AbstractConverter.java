@@ -1,6 +1,6 @@
 package app.service.converters;
 
-import app.common.exception.ServiceException;
+import app.config.exception.impl.ServiceException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.ParameterizedType;

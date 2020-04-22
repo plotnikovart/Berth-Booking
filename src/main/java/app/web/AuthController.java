@@ -1,44 +1,58 @@
 package app.web;
 
-import app.common.HttpHelper;
 import app.common.ValidationUtils;
-import app.service.AccountService;
-import app.web.dto.AccountDto;
+import app.service.EmailService;
+import app.service.account.AccountLoginService;
+import app.service.account.AccountRegisterService;
+import app.service.account.TokenService;
+import app.service.account.dto.AuthToken;
+import app.service.account.dto.EmailCredential;
+import app.service.account.dto.GoogleCredential;
+import app.service.account.dto.RefreshTokenReq;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Slf4j
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final AccountService accountService;
+    private final TokenService tokenService;
+    private final AccountLoginService accountLoginService;
+    private final AccountRegisterService accountRegisterService;
 
-    @PostMapping("/register")
-    public void register(@RequestBody AccountDto accountDto) {
-        ValidationUtils.validateEntity(accountDto);
-        accountService.register(accountDto);
+    @PostMapping("/registration")
+    public void register(@RequestBody EmailCredential emailCredential) {
+        ValidationUtils.validateEntity(emailCredential);
+        accountRegisterService.register(emailCredential);
     }
 
-    @GetMapping("/confirm")
-    public void confirm(@RequestParam(name = AccountService.CONFIRM_CODE) String code, HttpServletResponse resp) throws IOException {
-        String redirectUrl = accountService.confirmAccount(code);
+    @GetMapping("/registration/confirm")
+    public void confirm(@RequestParam(name = EmailService.CONFIRM_CODE_PARAM) String code,
+                        @RequestParam(name = EmailService.EMAIL_PARAM) String email,
+                        HttpServletResponse resp) throws IOException {
+        String redirectUrl = accountRegisterService.confirmAccount(code, email);
         resp.sendRedirect(redirectUrl);
     }
 
-    @PostMapping("/login")
-    public void login(@RequestBody AccountDto accountDto, HttpServletResponse response) {
-        ValidationUtils.validateEntity(accountDto);
-        var cookie = accountService.login(accountDto);
-        HttpHelper.addCookie(response, cookie);
+    @PostMapping("/login/email")
+    public AuthToken login(@RequestBody EmailCredential emailCredential) {
+        ValidationUtils.validateEntity(emailCredential);
+        return accountLoginService.loginEmail(emailCredential, "");
     }
 
-    @PostMapping("/logout")
-    public void logout() {
+    @PostMapping("/login/google")
+    public AuthToken loginGoogle(@RequestBody GoogleCredential googleCredential) {
+        ValidationUtils.validateEntity(googleCredential);
+        return accountLoginService.loginGoogle(googleCredential, "");
+    }
+
+    @PostMapping("/token/refresh")
+    public AuthToken refreshToken(@RequestBody RefreshTokenReq req) {
+        ValidationUtils.validateEntity(req);
+        return tokenService.updateToken(req.getRefreshToken(), "");
     }
 }

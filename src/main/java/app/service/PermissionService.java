@@ -1,16 +1,16 @@
 package app.service;
 
 import app.common.EntityWithOwner;
-import app.common.OperationContext;
 import app.common.SMessageSource;
-import app.common.exception.AccessException;
+import app.config.exception.impl.AccessException;
+import app.config.security.OperationContext;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PermissionService {
 
     public void check(EntityWithOwner entityWithOwner) throws AccessException {
-        long currentId = OperationContext.getAccountId();
+        long currentId = OperationContext.accountId();
         long ownerId = entityWithOwner.getOwnerId();
 
         if (currentId != ownerId) {

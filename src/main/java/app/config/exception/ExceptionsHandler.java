@@ -1,9 +1,9 @@
-package app.config;
+package app.config.exception;
 
-import app.common.exception.AccessException;
-import app.common.exception.NotFoundException;
-import app.common.exception.ServiceException;
-import app.common.exception.UnauthorizedException;
+import app.config.exception.impl.AccessException;
+import app.config.exception.impl.NotFoundException;
+import app.config.exception.impl.ServiceException;
+import app.config.exception.impl.UnauthorizedException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;

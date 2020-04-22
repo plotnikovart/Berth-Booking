@@ -1,6 +1,6 @@
 package app.service.facade;
 
-import app.common.exception.NotFoundException;
+import app.config.exception.impl.NotFoundException;
 import app.database.entity.Ship;
 import app.database.repository.ShipRepository;
 import app.database.repository.UserInfoRepository;

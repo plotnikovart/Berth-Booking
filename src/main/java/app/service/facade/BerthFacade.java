@@ -1,6 +1,6 @@
 package app.service.facade;
 
-import app.common.exception.NotFoundException;
+import app.config.exception.impl.NotFoundException;
 import app.database.entity.Berth;
 import app.database.repository.BerthRepository;
 import app.database.repository.UserInfoRepository;

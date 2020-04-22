@@ -13,13 +13,19 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class EmailService {
 
+    public final static String CONFIRM_CODE_PARAM = "code";
+    public final static String EMAIL_PARAM = "email";
+
     @Value("${back.url}")
     private String backUrl;
 
     private final EmailSender emailSender;
 
+
     public void sendEmailConfirmation(String to, String code) {
-        String url = backUrl + "/api/confirm" + "?code=" + code;
+        String url = backUrl + "/api/auth/register/confirm" +
+                "?" + CONFIRM_CODE_PARAM + "=" + code +
+                "&" + EMAIL_PARAM + "=" + to;
         String text = SMessageSource.get("account.confirm", url);
         emailSender.sendMessage(to, "Подтверждение аккаунта", text);
     }

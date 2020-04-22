@@ -1,6 +1,6 @@
 package app.service.converters;
 
-import app.common.exception.ServiceException;
+import app.config.exception.impl.ServiceException;
 
 public abstract class AbstractRespConverter<E, DRESP> extends AbstractConverter<E, DRESP, Object> {
 

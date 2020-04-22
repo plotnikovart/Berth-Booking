@@ -1,6 +1,6 @@
 package app.service;
 
-import app.common.exception.ServiceException;
+import app.config.exception.impl.ServiceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;

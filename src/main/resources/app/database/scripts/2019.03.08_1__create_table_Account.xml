@@ -9,13 +9,17 @@
             <column name="id" type="bigint">
                 <constraints primaryKey="true" primaryKeyName="pk_account"/>
             </column>
-            <column name="email" type="varchar(255)">
+            <column name="kind" type="smallint">
                 <constraints nullable="false"/>
             </column>
-            <column name="password_hash" type="varchar(60)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="salt" type="varchar(16)">
+
+            <column name="email" type="varchar(255)"/>
+            <column name="password_hash" type="bytea"/>
+            <column name="salt" type="bytea"/>
+
+            <column name="google_mail" type="varchar(255)"/>
+
+            <column name="join_date_time" type="datetime">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -31,24 +35,50 @@
 
     <changeSet id="2019.03.08_1_3" author="aplotnikov">
         <addUniqueConstraint tableName="account" columnNames="email"/>
+        <addUniqueConstraint tableName="account" columnNames="google_mail"/>
     </changeSet>
 
     <changeSet id="2019.03.08_1_4" author="aplotnikov">
-        <createTable tableName="account_to_role">
+        <createTable tableName="account_role">
             <column name="account_id" type="bigint"/>
             <column name="role" type="smallint"/>
         </createTable>
 
-        <addForeignKeyConstraint baseTableName="account_to_role"
+        <addForeignKeyConstraint baseTableName="account_role"
                                  baseColumnNames="account_id"
-                                 constraintName="fk_account_to_role_acc"
+                                 constraintName="fk_account_role_account"
                                  referencedTableName="account"
                                  referencedColumnNames="id"
                                  onDelete="CASCADE"/>
 
-        <addUniqueConstraint tableName="account_to_role"
+        <addUniqueConstraint tableName="account_role"
                              columnNames="account_id, role"
-                             constraintName="uc_account_to_role"/>
+                             constraintName="uc_account_role"/>
+    </changeSet>
+
+    <changeSet id="2019.03.08_1_5" author="aplotnikov">
+        <createTable tableName="account_confirmation">
+            <column name="uuid" type="uuid">
+                <constraints primaryKey="true" primaryKeyName="pk_account_confirmation"/>
+            </column>
+
+            <column name="email" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password_hash" type="bytea">
+                <constraints nullable="false"/>
+            </column>
+            <column name="salt" type="bytea">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="expired_at" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="confirmed" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
     </changeSet>
 
 </databaseChangeLog>

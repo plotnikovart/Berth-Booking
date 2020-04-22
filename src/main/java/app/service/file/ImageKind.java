@@ -1,7 +1,7 @@
 package app.service.file;
 
 import app.common.SMessageSource;
-import app.common.exception.ServiceException;
+import app.config.exception.impl.ServiceException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

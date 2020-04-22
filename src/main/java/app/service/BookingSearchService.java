@@ -1,7 +1,7 @@
 package app.service;
 
 import app.common.DateHelper;
-import app.common.exception.NotFoundException;
+import app.config.exception.impl.NotFoundException;
 import app.database.entity.*;
 import app.database.entity.enums.BookingStatus;
 import app.database.repository.*;

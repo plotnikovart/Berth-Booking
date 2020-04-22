@@ -1,55 +1,59 @@
 package app.database.entity;
 
-import app.database.entity.enums.Role;
-import app.web.dto.AccountDto;
-import at.favre.lib.crypto.bcrypt.BCrypt;
+import app.database.entity.enums.AccountKind;
+import app.database.entity.enums.AccountRole;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
-import java.nio.charset.StandardCharsets;
-import java.security.SecureRandom;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
 @Setter
 @Getter
-@NoArgsConstructor
+@Entity
 public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NaturalId
+    @NotNull
+    @Convert(converter = AccountKind.Converter.class)
+    private AccountKind kind;
+
     private String email;
+    private byte[] passwordHash;
+    private byte[] salt;
 
-    private String passwordHash;
+    private String googleMail;
 
-    private String salt;
+    @NotNull
+    private LocalDateTime joinDateTime = LocalDateTime.now();
 
-    @ElementCollection(targetClass = Role.class)
-    @CollectionTable(name = "account_to_role", joinColumns = @JoinColumn(name = "account_id"))
+    @ElementCollection(targetClass = AccountRole.class)
+    @CollectionTable(name = "account_role", joinColumns = @JoinColumn(name = "account_id"))
     @Column(name = "role")
-    private Set<Role> roles = new HashSet<>();
+    @Convert(converter = AccountRole.Converter.class)
+    private Set<AccountRole> roles = new HashSet<>();
 
-    public Account(AccountDto accountDto) {
-        email = accountDto.getEmail();
-        salt = new String(new SecureRandom().generateSeed(16), StandardCharsets.US_ASCII);
-        passwordHash = createPasswordHash(accountDto.getPassword(), salt);
-        roles.add(Role.USER);
-    }
 
-    private String createPasswordHash(String password, String salt) {
-        byte[] byteArr = BCrypt.withDefaults().hash(6, salt.getBytes(StandardCharsets.US_ASCII), password.getBytes());
-        return new String(byteArr, StandardCharsets.US_ASCII);
-    }
-
-    public boolean checkPassword(String password) {
-        String passwordHash = createPasswordHash(password, salt);
-        return this.passwordHash.equals(passwordHash);
-    }
+//    public Account(EmailCredential emailCredential) {
+//        email = emailCredential.getEmail();
+//        salt = new String(new SecureRandom().generateSeed(16), StandardCharsets.US_ASCII);
+//        passwordHash = createPasswordHash(emailCredential.getPassword(), salt);
+//        roles.add(Role.USER);
+//    }
+//
+//    private String createPasswordHash(String password, String salt) {
+//        byte[] byteArr = BCrypt.withDefaults().hash(6, salt.getBytes(StandardCharsets.US_ASCII), password.getBytes());
+//        return new String(byteArr, StandardCharsets.US_ASCII);
+//    }
+//
+//    public boolean checkPassword(String password) {
+//        String passwordHash = createPasswordHash(password, salt);
+//        return this.passwordHash.equals(passwordHash);
+//    }
 }

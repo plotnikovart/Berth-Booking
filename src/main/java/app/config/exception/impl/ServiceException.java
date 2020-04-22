@@ -1,4 +1,4 @@
-package app.common.exception;
+package app.config.exception.impl;
 
 public class ServiceException extends RuntimeException {
 

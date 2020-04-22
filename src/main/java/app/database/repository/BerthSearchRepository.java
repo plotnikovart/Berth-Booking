@@ -1,6 +1,6 @@
 package app.database.repository;
 
-import app.common.exception.ServiceException;
+import app.config.exception.impl.ServiceException;
 import app.database.entity.Berth;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,6 +1,6 @@
 package app.common.enums;
 
-import app.common.exception.ServiceException;
+import app.config.exception.impl.ServiceException;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
