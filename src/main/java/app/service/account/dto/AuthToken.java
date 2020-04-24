@@ -6,7 +6,10 @@ import lombok.Data;
 public class AuthToken {
 
     private String tokenType = "bearer";
+
     private String accessToken;
     private String refreshToken;
-    private Long expiresIn;
+
+    private Long accessExpiresIn;
+    private Long refreshExpiresIn;
 }

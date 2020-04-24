@@ -52,7 +52,8 @@ public class TokenService {
             return new AuthToken()
                     .setAccessToken(accessToken)
                     .setRefreshToken(refreshToken)
-                    .setExpiresIn(ACCESS_TOKEN_EXP);
+                    .setAccessExpiresIn(ACCESS_TOKEN_EXP)
+                    .setRefreshExpiresIn(REFRESH_TOKEN_EXP);
         } catch (Exception e) {
             log.error(e);
             throw new ServiceException(e);
