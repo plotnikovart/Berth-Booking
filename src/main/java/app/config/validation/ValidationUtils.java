@@ -1,4 +1,4 @@
-package app.common;
+package app.config.validation;
 
 import app.config.exception.impl.ServiceException;
 
@@ -12,13 +12,13 @@ import java.util.stream.Collectors;
 
 public class ValidationUtils {
 
-    public static final String NOT_NULL_MESSAGE = "Параметр является обязательным";
-    public static final String MIN_MESSAGE = "Значение параметра меньше минимального допустимого = {value}";
-    public static final String MAX_MESSAGE = "Значение параметра больше максимально допустимого = {value}";
-    public static final String RANGE_MESSAGE = "Значение параметра должно быть в пределах [{min}, {max}]";
-    public static final String SIZE_MESSAGE = "Значение строки должно быть в пределах от {min} до {max}";
-    public static final String LENGTH_MESSAGE = "Значение строки должно быть не больше, чем {max}";
-    public static final String EMAIL_MESSAGE = "Значение почты некорректно";
+    public static final String NOT_NULL_MESSAGE = "The parameter is required";
+    public static final String MIN_MESSAGE = "The parameter value is less than the minimum acceptable = {value}";
+    public static final String MAX_MESSAGE = "The parameter value is greater than the maximum allowed = {value}";
+    public static final String RANGE_MESSAGE = "The parameter value must be within [{min}, {max}]";
+    public static final String SIZE_MESSAGE = "The string value must be between {min} до {max}";
+    public static final String LENGTH_MESSAGE = "The string value must be no greater than {max}";
+    public static final String EMAIL_MESSAGE = "Email value is incorrect";
 
     private static final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 

@@ -1,6 +1,6 @@
 package app.service.account.dto;
 
-import app.common.ValidationUtils;
+import app.config.validation.ValidationUtils;
 import lombok.Data;
 
 import javax.validation.constraints.Email;

@@ -1,7 +1,5 @@
 package app.web;
 
-import app.common.ValidationUtils;
-import app.config.exception.impl.ServiceException;
 import app.service.EmailService;
 import app.service.account.AccountLoginService;
 import app.service.account.AccountRegisterService;
@@ -29,10 +27,6 @@ public class AuthController {
 
     @PostMapping("/registration")
     public EmptyResp register(@RequestBody EmailCredential emailCredential) {
-        if (5 == 5) {
-            throw new ServiceException("Нет иформации об объекте!");
-        }
-        ValidationUtils.validateEntity(emailCredential);
         accountRegisterService.register(emailCredential);
         return new EmptyResp();
     }
@@ -48,21 +42,18 @@ public class AuthController {
 
     @PostMapping("/login/email")
     public ObjectResp<AuthToken> login(@RequestBody EmailCredential emailCredential) {
-        ValidationUtils.validateEntity(emailCredential);
         AuthToken token = accountLoginService.loginEmail(emailCredential, "");
         return new ObjectResp<>(token);
     }
 
     @PostMapping("/login/google")
     public ObjectResp<AuthToken> loginGoogle(@RequestBody GoogleCredential googleCredential) {
-        ValidationUtils.validateEntity(googleCredential);
         AuthToken token = accountLoginService.loginGoogle(googleCredential, "");
         return new ObjectResp<>(token);
     }
 
     @PostMapping("/token/refresh")
     public ObjectResp<AuthToken> refreshToken(@RequestBody RefreshTokenReq req) {
-        ValidationUtils.validateEntity(req);
         AuthToken token = tokenService.updateToken(req.getRefreshToken(), "");
         return new ObjectResp<>(token);
     }

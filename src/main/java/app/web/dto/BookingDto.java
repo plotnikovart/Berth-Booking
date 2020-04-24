@@ -1,6 +1,6 @@
 package app.web.dto;
 
-import app.common.ValidationUtils;
+import app.config.validation.ValidationUtils;
 import app.database.entity.enums.BookingStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;

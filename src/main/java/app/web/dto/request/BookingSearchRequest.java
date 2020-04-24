@@ -1,6 +1,6 @@
 package app.web.dto.request;
 
-import app.common.ValidationUtils;
+import app.config.validation.ValidationUtils;
 import app.web.dto.ConvenienceDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;

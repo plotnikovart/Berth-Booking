@@ -1,6 +1,6 @@
 package app.web.dto;
 
-import app.common.ValidationUtils;
+import app.config.validation.ValidationUtils;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
