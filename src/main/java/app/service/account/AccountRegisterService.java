@@ -6,10 +6,12 @@ import app.config.exception.impl.NotFoundException;
 import app.config.exception.impl.ServiceException;
 import app.database.entity.Account;
 import app.database.entity.AccountConfirmation;
+import app.database.entity.UserInfo;
 import app.database.entity.enums.AccountKind;
 import app.database.entity.enums.AccountRole;
 import app.database.repository.AccountConfirmationRepository;
 import app.database.repository.AccountRepository;
+import app.database.repository.UserInfoRepository;
 import app.service.EmailService;
 import app.service.account.dto.EmailCredential;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +36,7 @@ public class AccountRegisterService {
     private String frontUrl;
 
     private final AccountRepository accountRepository;
+    private final UserInfoRepository userInfoRepository;
     private final AccountConfirmationRepository accountConfirmationRepository;
     private final EmailService emailService;
 
@@ -103,7 +106,13 @@ public class AccountRegisterService {
                 .setSalt(conf.getSalt())
                 .setRoles(Set.of(AccountRole.USER));
 
-        // todo user_info
-        return accountRepository.saveAndFlush(account);
+        account = accountRepository.saveAndFlush(account);
+
+        var userInfo = new UserInfo()
+                .setAccount(account);
+
+        userInfoRepository.save(userInfo);
+
+        return account;
     }
 }

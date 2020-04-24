@@ -4,7 +4,6 @@ import app.common.SMessageSource;
 import app.config.AppConfig;
 import app.database.entity.BerthPhoto;
 import app.database.entity.ShipPhoto;
-import app.database.entity.UserInfo;
 import app.database.repository.BerthPhotoRepository;
 import app.database.repository.ShipPhotoRepository;
 import app.database.repository.UserInfoRepository;
@@ -36,7 +35,7 @@ public class FileDeleteTask extends TimerTask {
     @Transactional(readOnly = true)
     public void run() {
         try {
-            Stream<String> userFiles = userInfoRepository.findAll().stream().map(UserInfo::getPhotoName);
+            Stream<String> userFiles = Stream.of();//userInfoRepository.findAll().stream().map(UserInfo::getPhotoName);
             Stream<String> shipFiles = shipPhotoRepository.findAll().stream().map(ShipPhoto::getFileName);
             Stream<String> berthFiles = berthPhotoRepository.findAll().stream().map(BerthPhoto::getFileName);
 

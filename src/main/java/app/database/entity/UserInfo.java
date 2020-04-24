@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static javax.persistence.CascadeType.DETACH;
 
@@ -32,7 +33,9 @@ public class UserInfo {
 
     private String phNumber;
 
-    private String photoName;
+    private UUID photo;
+
+    private String photoLink;
 
     @OneToMany(mappedBy = "userInfo", cascade = DETACH, orphanRemoval = true)
     private List<Ship> ships = new ArrayList<>();
