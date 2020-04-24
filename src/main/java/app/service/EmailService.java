@@ -23,7 +23,7 @@ public class EmailService {
 
 
     public void sendEmailConfirmation(String to, String code) {
-        String url = backUrl + "/api/auth/register/confirm" +
+        String url = backUrl + "/api/auth/registration/confirm" +
                 "?" + CONFIRM_CODE_PARAM + "=" + code +
                 "&" + EMAIL_PARAM + "=" + to;
         String text = SMessageSource.get("account.confirm", url);
