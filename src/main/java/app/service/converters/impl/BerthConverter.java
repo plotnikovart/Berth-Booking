@@ -7,7 +7,6 @@ import app.database.entity.BerthPlace;
 import app.database.entity.Convenience;
 import app.database.repository.BerthRepository;
 import app.service.converters.AbstractConverter;
-import app.service.file.ImageKind;
 import app.web.dto.BerthDto;
 import app.web.dto.BerthPlaceDto;
 import app.web.dto.ConvenienceDto;
@@ -15,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
-import java.text.MessageFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
@@ -34,7 +32,7 @@ public class BerthConverter extends AbstractConverter<Berth, BerthDto.Resp, Bert
 
     public BerthDto.Resp toDto(BerthDto.Resp dto, Berth e, boolean convertPlaces, boolean convertConveniences) {
         List<String> photoList = e.getPhotos().stream()
-                .map(photo -> MessageFormat.format("/api/images/{0}/{1}/{2}", ImageKind.BERTH.name().toLowerCase(), e.getOwnerId(), photo.getFileName()))
+                .map(photo -> "")//MessageFormat.format("/api/images/{0}/{1}/{2}", ImageKind.BERTH.name().toLowerCase(), e.getOwnerId(), photo.getFileName()))
                 .collect(toList());
 
         List<BerthPlaceDto> places = convertPlaces ? berthPlaceConverter.toDtos(e.getBerthPlaces()) : null;

@@ -76,7 +76,7 @@ public class BookingFacade {
         }
 
         if (booking.getStatus() == BookingStatus.CANCELLED) {
-            throw new ServiceException(SMessageSource.get("booking.is_cancelled"));
+            throw new ServiceException(SMessageSource.message("booking.is_cancelled"));
         }
 
         // Для других бронирований на пересекающиеся даты устанавливаем статус - отклонено
@@ -98,7 +98,7 @@ public class BookingFacade {
         }
 
         if (booking.getStatus() == BookingStatus.CANCELLED) {
-            throw new ServiceException(SMessageSource.get("booking.is_cancelled"));
+            throw new ServiceException(SMessageSource.message("booking.is_cancelled"));
         }
 
         booking.setStatus(BookingStatus.REJECTED);
@@ -137,18 +137,18 @@ public class BookingFacade {
         }
 
         if (booking.getEndDate().isBefore(booking.getStartDate())) {
-            throw new ServiceException(SMessageSource.get("booking.date"));
+            throw new ServiceException(SMessageSource.message("booking.date"));
         }
 
         var place = booking.getBerthPlace();
         var ship = booking.getShip();
 
         if (!(ship.getLength() <= place.getLength() && ship.getWidth() <= place.getWidth() && ship.getDraft() <= place.getDraft())) {
-            throw new ServiceException(SMessageSource.get("booking.size"));
+            throw new ServiceException(SMessageSource.message("booking.size"));
         }
 
         if (bookingSearchService.isReserved(booking.getBerthPlace(), booking.getStartDate(), booking.getEndDate())) {
-            throw new ServiceException(SMessageSource.get("booking.is_reserved"));
+            throw new ServiceException(SMessageSource.message("booking.is_reserved"));
         }
     }
 

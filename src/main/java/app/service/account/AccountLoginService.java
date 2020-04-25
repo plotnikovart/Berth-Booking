@@ -36,13 +36,13 @@ public class AccountLoginService {
         var accountOpt = accountRepository.findByEmail(emailCredential.getEmail());
 
         if (accountOpt.isEmpty()) {
-            String message = SMessageSource.get("account.not_found");
+            String message = SMessageSource.message("account.not_found");
             throw new UnauthorizedException(message);
         }
 
         Account account = accountOpt.get();
         if (!PasswordUtils.checkPassword(emailCredential.getPassword(), account.getPasswordHash(), account.getSalt())) {
-            String message = SMessageSource.get("account.not_found");
+            String message = SMessageSource.message("account.not_found");
             throw new UnauthorizedException(message);
         }
 

@@ -1,8 +1,8 @@
 package app.service.account.dto;
 
-import lombok.Data;
+import lombok.Setter;
 
-@Data
+@Setter
 public class AuthToken {
 
     private String tokenType = "bearer";

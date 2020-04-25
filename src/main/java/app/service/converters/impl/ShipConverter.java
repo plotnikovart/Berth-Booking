@@ -4,12 +4,10 @@ import app.database.entity.Ship;
 import app.database.entity.ShipPhoto;
 import app.database.repository.ShipRepository;
 import app.service.converters.AbstractConverter;
-import app.service.file.ImageKind;
 import app.web.dto.ShipDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -24,7 +22,7 @@ public class ShipConverter extends AbstractConverter<Ship, ShipDto.Resp, ShipDto
     @Override
     public ShipDto.Resp toDto(ShipDto.Resp dto, Ship e) {
         var photoList = e.getPhotos().stream()
-                .map(photo -> MessageFormat.format("/api/images/{0}/{1}/{2}", ImageKind.SHIP.name().toLowerCase(), e.getOwnerId(), photo.getFileName()))
+                .map(photo -> "")//MessageFormat.format("/api/images/{0}/{1}/{2}", ImageKind.SHIP.name().toLowerCase(), e.getOwnerId(), photo.getFileName()))
                 .collect(Collectors.toList());
 
         return (ShipDto.Resp) dto

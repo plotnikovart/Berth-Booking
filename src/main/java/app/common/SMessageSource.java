@@ -21,11 +21,11 @@ public final class SMessageSource {
         mSource = source;
     }
 
-    public static String get(String code) throws NoSuchMessageException {
+    public static String message(String code) throws NoSuchMessageException {
         return mSource.getMessage(code, null, Locale.getDefault());
     }
 
-    public static String get(String code, Object... args) throws NoSuchMessageException {
+    public static String message(String code, Object... args) throws NoSuchMessageException {
         return mSource.getMessage(code, args, Locale.getDefault());
     }
 }

@@ -15,7 +15,7 @@ public class PermissionService {
 
         if (currentId != ownerId) {
             // todo проверка на администратора
-            String message = SMessageSource.get("access.forbidden");
+            String message = SMessageSource.message("access.forbidden");
             throw new AccessException(message);
         }
     }

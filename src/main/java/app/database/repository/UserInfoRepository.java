@@ -12,7 +12,7 @@ public interface UserInfoRepository extends JpaRepository<UserInfo, Long> {
 
     default UserInfo findCurrent() {
         return findById(OperationContext.accountId()).orElseThrow(() -> {
-            String message = SMessageSource.get("user_info.not_found");
+            String message = SMessageSource.message("user_info.not_found");
             throw new NotFoundException(message);
         });
     }

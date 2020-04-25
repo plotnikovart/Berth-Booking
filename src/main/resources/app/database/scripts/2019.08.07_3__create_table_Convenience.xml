@@ -4,82 +4,82 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <changeSet id="2019.08.07_3_1" author="aplotnikov">
-        <createTable tableName="convenience">
-            <column name="id" type="int">
-                <constraints primaryKey="true" primaryKeyName="pk_convenience"/>
-            </column>
-            <column name="code" type="varchar(16)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="name" type="varchar(64)">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
+<!--    <changeSet id="2019.08.07_3_1" author="aplotnikov">-->
+<!--        <createTable tableName="convenience">-->
+<!--            <column name="id" type="int">-->
+<!--                <constraints primaryKey="true" primaryKeyName="pk_convenience"/>-->
+<!--            </column>-->
+<!--            <column name="code" type="varchar(16)">-->
+<!--                <constraints nullable="false"/>-->
+<!--            </column>-->
+<!--            <column name="name" type="varchar(64)">-->
+<!--                <constraints nullable="false"/>-->
+<!--            </column>-->
+<!--        </createTable>-->
 
-        <addAutoIncrement tableName="convenience"
-                          columnName="id"
-                          columnDataType="int"
-                          startWith="0"
-                          incrementBy="1"/>
-    </changeSet>
+<!--        <addAutoIncrement tableName="convenience"-->
+<!--                          columnName="id"-->
+<!--                          columnDataType="int"-->
+<!--                          startWith="0"-->
+<!--                          incrementBy="1"/>-->
+<!--    </changeSet>-->
 
-    <changeSet id="2019.08.07_3_2" author="aplotnikov">
-        <addUniqueConstraint tableName="convenience"
-                             columnNames="code"
-                             constraintName="uc_convenience_code"/>
-    </changeSet>
+<!--    <changeSet id="2019.08.07_3_2" author="aplotnikov">-->
+<!--        <addUniqueConstraint tableName="convenience"-->
+<!--                             columnNames="code"-->
+<!--                             constraintName="uc_convenience_code"/>-->
+<!--    </changeSet>-->
 
-    <changeSet id="2019.08.07_3_3" author="aplotnikov">
-        <createTable tableName="berth_to_convenience">
-            <column name="berth_id" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-            <column name="convenience_id" type="int">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
+<!--    <changeSet id="2019.08.07_3_3" author="aplotnikov">-->
+<!--        <createTable tableName="berth_to_convenience">-->
+<!--            <column name="berth_id" type="bigint">-->
+<!--                <constraints nullable="false"/>-->
+<!--            </column>-->
+<!--            <column name="convenience_id" type="int">-->
+<!--                <constraints nullable="false"/>-->
+<!--            </column>-->
+<!--        </createTable>-->
 
-        <addPrimaryKey tableName="berth_to_convenience"
-                       columnNames="berth_id, convenience_id"
-                       constraintName="pk_berth_to_convenience"/>
+<!--        <addPrimaryKey tableName="berth_to_convenience"-->
+<!--                       columnNames="berth_id, convenience_id"-->
+<!--                       constraintName="pk_berth_to_convenience"/>-->
 
-        <addForeignKeyConstraint baseTableName="berth_to_convenience"
-                                 baseColumnNames="berth_id"
-                                 constraintName="fk_berth_to_convenience_berth"
-                                 referencedTableName="berth"
-                                 referencedColumnNames="id"
-                                 onDelete="CASCADE"/>
+<!--        <addForeignKeyConstraint baseTableName="berth_to_convenience"-->
+<!--                                 baseColumnNames="berth_id"-->
+<!--                                 constraintName="fk_berth_to_convenience_berth"-->
+<!--                                 referencedTableName="berth"-->
+<!--                                 referencedColumnNames="id"-->
+<!--                                 onDelete="CASCADE"/>-->
 
-        <addForeignKeyConstraint baseTableName="berth_to_convenience"
-                                 baseColumnNames="convenience_id"
-                                 constraintName="fk_berth_to_convenience_conv"
-                                 referencedTableName="convenience"
-                                 referencedColumnNames="id"
-                                 onDelete="CASCADE"/>
-    </changeSet>
+<!--        <addForeignKeyConstraint baseTableName="berth_to_convenience"-->
+<!--                                 baseColumnNames="convenience_id"-->
+<!--                                 constraintName="fk_berth_to_convenience_conv"-->
+<!--                                 referencedTableName="convenience"-->
+<!--                                 referencedColumnNames="id"-->
+<!--                                 onDelete="CASCADE"/>-->
+<!--    </changeSet>-->
 
 
 
-    <changeSet id="2019.08.07_3_4" author="aplotnikov">
-        <sql>
-            delete from convenience;
+<!--    <changeSet id="2019.08.07_3_4" author="aplotnikov">-->
+<!--        <sql>-->
+<!--            delete from convenience;-->
 
-            INSERT INTO convenience (code, name) VALUES ('wifi', 'Wi-Fi');
-            INSERT INTO convenience (code, name) VALUES ('grocery_store', 'Grocery store');
-            INSERT INTO convenience (code, name) VALUES ('water', 'Water');
-            INSERT INTO convenience (code, name) VALUES ('restaurant', 'Restaurant');
-            INSERT INTO convenience (code, name) VALUES ('bar', 'Bar');
-            INSERT INTO convenience (code, name) VALUES ('hotel', 'Hotel');
-            INSERT INTO convenience (code, name) VALUES ('bathtub', 'Shower');
-            INSERT INTO convenience (code, name) VALUES ('atm', 'ATM');
-            INSERT INTO convenience (code, name) VALUES ('accessible', 'Accessible');
-            INSERT INTO convenience (code, name) VALUES ('gas_station', 'Gas station');
-            INSERT INTO convenience (code, name) VALUES ('ev_station', 'Electric charging station');
-            INSERT INTO convenience (code, name) VALUES ('car_rental', 'Car rental');
-            INSERT INTO convenience (code, name) VALUES ('bicycle_rental', 'Bicycle rental');
-            INSERT INTO convenience (code, name) VALUES ('parking', 'Parking');
-        </sql>
-    </changeSet>
+<!--            INSERT INTO convenience (code, name) VALUES ('wifi', 'Wi-Fi');-->
+<!--            INSERT INTO convenience (code, name) VALUES ('grocery_store', 'Grocery store');-->
+<!--            INSERT INTO convenience (code, name) VALUES ('water', 'Water');-->
+<!--            INSERT INTO convenience (code, name) VALUES ('restaurant', 'Restaurant');-->
+<!--            INSERT INTO convenience (code, name) VALUES ('bar', 'Bar');-->
+<!--            INSERT INTO convenience (code, name) VALUES ('hotel', 'Hotel');-->
+<!--            INSERT INTO convenience (code, name) VALUES ('bathtub', 'Shower');-->
+<!--            INSERT INTO convenience (code, name) VALUES ('atm', 'ATM');-->
+<!--            INSERT INTO convenience (code, name) VALUES ('accessible', 'Accessible');-->
+<!--            INSERT INTO convenience (code, name) VALUES ('gas_station', 'Gas station');-->
+<!--            INSERT INTO convenience (code, name) VALUES ('ev_station', 'Electric charging station');-->
+<!--            INSERT INTO convenience (code, name) VALUES ('car_rental', 'Car rental');-->
+<!--            INSERT INTO convenience (code, name) VALUES ('bicycle_rental', 'Bicycle rental');-->
+<!--            INSERT INTO convenience (code, name) VALUES ('parking', 'Parking');-->
+<!--        </sql>-->
+<!--    </changeSet>-->
 
 </databaseChangeLog>

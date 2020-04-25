@@ -87,7 +87,7 @@ public class AccountRegisterService {
     private void checkExistence(String email) {
         var accountOpt = accountRepository.findByEmail(email);
         if (accountOpt.isPresent()) {
-            String message = SMessageSource.get("account.already_exist", email);
+            String message = SMessageSource.message("account.already_exist", email);
             throw new ServiceException(message);
         }
     }
