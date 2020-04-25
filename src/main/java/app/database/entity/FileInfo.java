@@ -2,6 +2,8 @@ package app.database.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Immutable;
 
 import javax.persistence.Column;
@@ -13,6 +15,7 @@ import java.util.UUID;
 @Setter
 @Entity
 @Immutable
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class FileInfo {
 
     @Id

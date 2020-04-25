@@ -14,7 +14,7 @@ public final class SMessageSource {
     private final static MessageSource mSource;
 
     static {
-        ReloadableResourceBundleMessageSource source = new ReloadableResourceBundleMessageSource();
+        var source = new ReloadableResourceBundleMessageSource();
         source.setBasenames("classpath:messages/label", "classpath:messages/email");
         source.setUseCodeAsDefaultMessage(true);
         source.setDefaultEncoding("UTF-8");
