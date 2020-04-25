@@ -81,4 +81,27 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="2019.03.08_1_6" author="aplotnikov">
+        <createTable tableName="account_refresh_token">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" primaryKeyName="pk_account_refresh_token"/>
+            </column>
+            <column name="code" type="char(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="device_id" type="varchar(512)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expires_at" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="used" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="account_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
 </databaseChangeLog>

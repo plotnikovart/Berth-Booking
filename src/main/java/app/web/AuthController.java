@@ -57,6 +57,11 @@ public class AuthController {
         return new ObjectResp<>(token);
     }
 
+    @PostMapping("/logout")
+    public EmptyResp logout() {
+        return new EmptyResp();
+    }
+
     @PostMapping("/token/refresh")
     public ObjectResp<AuthToken> refreshToken(@RequestBody RefreshTokenReq req,
                                               @RequestHeader(name = DEVICE_ID_HEADER) String deviceId) {

@@ -4,6 +4,9 @@ import app.common.DateHelper;
 import app.config.exception.impl.AccessException;
 import app.config.exception.impl.ServiceException;
 import app.config.exception.impl.UnauthorizedException;
+import app.database.entity.Account;
+import app.database.entity.AccountRefreshToken;
+import app.database.repository.AccountRefreshTokenRepository;
 import app.service.account.dto.AuthToken;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -11,12 +14,15 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.UUID;
 
 import static java.util.Optional.ofNullable;
 
@@ -26,10 +32,13 @@ import static java.util.Optional.ofNullable;
 public class TokenService {
 
     private static final String ACCOUNT_ID_CLAIM = "account_id";
+    private static final int CODE_LENGTH = 16;
 
     private static final long ACCESS_TOKEN_EXP = 2L * 3600 * 1000;         // 2 hour in milliseconds
     private static final long REFRESH_TOKEN_EXP = 30L * 24 * 3600 * 1000;  // 30 days in milliseconds
 
+    private final AccountRefreshTokenRepository refreshTokenRepository;
+    private final EntityManager em;
 
     @Value("${auth.secretKey}")
     private String secretKey;
@@ -89,12 +98,37 @@ public class TokenService {
 
 
     private Long verifyRefreshToken(String refreshToken, String deviceId) {
-        // todo
-        return -1L;
+        if (refreshToken.length() != 36 + CODE_LENGTH) {
+            throw new UnauthorizedException();
+        }
+
+        var id = UUID.fromString(refreshToken.substring(0, 36));
+        var code = refreshToken.substring(36);
+
+        AccountRefreshToken realToken = refreshTokenRepository.findById(id).orElseThrow(UnauthorizedException::new);
+
+        if (realToken.getCode().equals(code)
+                && realToken.getDeviceId().equals(deviceId)
+                && realToken.getExpiresAt().isAfter(LocalDateTime.now())
+                && !realToken.getUsed()
+        ) {
+            realToken.setUsed(true);
+            refreshTokenRepository.save(realToken);
+            return realToken.getAccount().getId();
+        }
+
+        throw new UnauthorizedException();
     }
 
     private String createRefreshToken(Long accountId, String deviceId) {
-        // todo
-        return "";
+        var refreshToken = new AccountRefreshToken()
+                .setId(UUID.randomUUID())
+                .setCode(RandomStringUtils.random(CODE_LENGTH, true, true))
+                .setDeviceId(deviceId)
+                .setExpiresAt(LocalDateTime.now().plusSeconds(REFRESH_TOKEN_EXP / 1000))
+                .setAccount(em.getReference(Account.class, accountId));
+
+        refreshTokenRepository.save(refreshToken);
+        return refreshToken.getId().toString() + refreshToken.getCode();
     }
 }
