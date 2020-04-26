@@ -38,22 +38,4 @@ public class Account {
     @Column(name = "role")
     @Convert(converter = AccountRole.Converter.class)
     private Set<AccountRole> roles = new HashSet<>();
-
-
-//    public Account(EmailCredential emailCredential) {
-//        email = emailCredential.getEmail();
-//        salt = new String(new SecureRandom().generateSeed(16), StandardCharsets.US_ASCII);
-//        passwordHash = createPasswordHash(emailCredential.getPassword(), salt);
-//        roles.add(Role.USER);
-//    }
-//
-//    private String createPasswordHash(String password, String salt) {
-//        byte[] byteArr = BCrypt.withDefaults().hash(6, salt.getBytes(StandardCharsets.US_ASCII), password.getBytes());
-//        return new String(byteArr, StandardCharsets.US_ASCII);
-//    }
-//
-//    public boolean checkPassword(String password) {
-//        String passwordHash = createPasswordHash(password, salt);
-//        return this.passwordHash.equals(passwordHash);
-//    }
 }

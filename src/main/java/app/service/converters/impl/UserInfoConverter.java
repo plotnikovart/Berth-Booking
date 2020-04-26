@@ -1,35 +1,51 @@
 package app.service.converters.impl;
 
 import app.database.entity.UserInfo;
+import app.service.account.dto.UserInfoDto;
 import app.service.converters.AbstractConverter;
-import app.web.dto.UserInfoDto;
+import app.service.file.FileInfoService;
+import app.service.file.dto.FileInfoDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
-public class UserInfoConverter extends AbstractConverter<UserInfo, UserInfoDto.Resp, UserInfoDto.Req> {
+@RequiredArgsConstructor
+public class UserInfoConverter extends AbstractConverter<UserInfo, UserInfoDto.Resp, UserInfoDto> {
+
+    private final FileInfoService fileInfoService;
 
     @Override
     public UserInfoDto.Resp toDto(UserInfoDto.Resp dto, UserInfo e) {
-//        var photo = e.getPhotoName() == null ?
-//                null : MessageFormat.format("/api/images/{0}/{1}/{2}", ImageKind.USER.name().toLowerCase(), e.getAccountId(), e.getPhotoName());
+        FileInfoDto photo = null;
+        if (e.getPhoto() != null) {
+            photo = fileInfoService.get(e.getPhoto());
+        } else if (e.getPhotoLink() != null) {
+            photo = new FileInfoDto().setFileLink(e.getPhotoLink());
+        }
 
         return (UserInfoDto.Resp) dto
                 .setAccountId(e.getAccountId())
-                .setEmail(e.getAccount().getEmail())
                 .setFirstName(e.getFirstName())
                 .setLastName(e.getLastName())
                 .setPhCode(e.getPhCode())
-                .setPhNumber(e.getPhNumber());
-//                .setPhoto("");
+                .setPhNumber(e.getPhNumber())
+                .setPhoto(photo);
     }
 
     @Override
-    public UserInfo toEntity(UserInfo entity, UserInfoDto.Req dto) {
+    public UserInfo toEntity(UserInfo entity, UserInfoDto dto) {
+        UUID photo = null;
+        if (dto.getPhoto() != null && dto.getPhoto().getFileId() != null) {
+            photo = fileInfoService.get(dto.getPhoto().getFileId()).getFileId();
+        }
+
         return entity
                 .setFirstName(dto.getFirstName())
                 .setLastName(dto.getLastName())
                 .setPhCode(dto.getPhCode())
-                .setPhNumber(dto.getPhNumber());
-//                .setPhotoName(dto.getPhoto());
+                .setPhNumber(dto.getPhNumber())
+                .setPhoto(photo);
     }
 }

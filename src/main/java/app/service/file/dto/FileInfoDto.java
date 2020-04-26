@@ -1,12 +1,14 @@
 package app.service.file.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
-@Getter
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class FileInfoDto {
 
     private UUID fileId;

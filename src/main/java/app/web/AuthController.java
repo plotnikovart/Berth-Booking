@@ -1,7 +1,7 @@
 package app.web;
 
-import app.service.account.AccountLoginService;
-import app.service.account.AccountRegisterService;
+import app.service.account.LoginService;
+import app.service.account.RegisterService;
 import app.service.account.TokenService;
 import app.service.account.dto.AuthToken;
 import app.service.account.dto.EmailCredential;
@@ -26,12 +26,12 @@ public class AuthController {
     private static final String DEVICE_ID_HEADER = "DeviceId";
 
     private final TokenService tokenService;
-    private final AccountLoginService accountLoginService;
-    private final AccountRegisterService accountRegisterService;
+    private final LoginService loginService;
+    private final RegisterService registerService;
 
     @PostMapping("/registration")
     public EmptyResp register(@RequestBody EmailCredential emailCredential) {
-        accountRegisterService.register(emailCredential);
+        registerService.register(emailCredential);
         return new EmptyResp();
     }
 
@@ -39,21 +39,21 @@ public class AuthController {
     public void confirm(@RequestParam(name = CONFIRM_CODE_PARAM) String code,
                         @RequestParam(name = EMAIL_PARAM) String email,
                         HttpServletResponse resp) throws IOException {
-        String redirectUrl = accountRegisterService.confirmAccount(code, email);
+        String redirectUrl = registerService.confirmAccount(code, email);
         resp.sendRedirect(redirectUrl);
     }
 
     @PostMapping("/login/email")
     public ObjectResp<AuthToken> login(@RequestBody EmailCredential emailCredential,
                                        @RequestHeader(name = DEVICE_ID_HEADER) String deviceId) {
-        AuthToken token = accountLoginService.loginEmail(emailCredential, deviceId);
+        AuthToken token = loginService.loginEmail(emailCredential, deviceId);
         return new ObjectResp<>(token);
     }
 
     @PostMapping("/login/google")
     public ObjectResp<AuthToken> loginGoogle(@RequestBody GoogleCredential googleCredential,
                                              @RequestHeader(name = DEVICE_ID_HEADER) String deviceId) {
-        AuthToken token = accountLoginService.loginGoogle(googleCredential, deviceId);
+        AuthToken token = loginService.loginGoogle(googleCredential, deviceId);
         return new ObjectResp<>(token);
     }
 

@@ -3,8 +3,10 @@ package app.database.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -21,7 +23,7 @@ public class UserInfo {
     private Long id;
 
     @MapsId
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     private Account account;
 
@@ -36,6 +38,9 @@ public class UserInfo {
     private UUID photo;
 
     private String photoLink;
+
+    @UpdateTimestamp
+    private LocalDateTime changeDate = LocalDateTime.now();
 
     @OneToMany(mappedBy = "userInfo", cascade = DETACH, orphanRemoval = true)
     private List<Ship> ships = new ArrayList<>();

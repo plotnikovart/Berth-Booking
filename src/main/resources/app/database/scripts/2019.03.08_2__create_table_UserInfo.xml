@@ -15,6 +15,9 @@
             <column name="ph_number" type="varchar(20)"/>
             <column name="photo" type="uuid"/>
             <column name="photo_link" type="clob"/>
+            <column name="change_date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
 

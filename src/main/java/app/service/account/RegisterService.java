@@ -4,14 +4,9 @@ import app.common.PasswordUtils;
 import app.common.SMessageSource;
 import app.config.exception.impl.NotFoundException;
 import app.config.exception.impl.ServiceException;
-import app.database.entity.Account;
 import app.database.entity.AccountConfirmation;
-import app.database.entity.UserInfo;
-import app.database.entity.enums.AccountKind;
-import app.database.entity.enums.AccountRole;
 import app.database.repository.AccountConfirmationRepository;
 import app.database.repository.AccountRepository;
-import app.database.repository.UserInfoRepository;
 import app.service.EmailService;
 import app.service.account.dto.EmailCredential;
 import lombok.RequiredArgsConstructor;
@@ -22,13 +17,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 import java.util.UUID;
+
+import static app.database.entity.enums.AccountRole.USER;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AccountRegisterService {
+public class RegisterService {
 
     private final static int CONFIRM_MINUTES = 60;
 
@@ -36,9 +32,9 @@ public class AccountRegisterService {
     private String frontUrl;
 
     private final AccountRepository accountRepository;
-    private final UserInfoRepository userInfoRepository;
     private final AccountConfirmationRepository accountConfirmationRepository;
     private final EmailService emailService;
+    private final AccountService accountService;
 
 
     public void register(EmailCredential emailCredential) {
@@ -73,7 +69,7 @@ public class AccountRegisterService {
                 throw new NotFoundException();
             }
 
-            createAccount(conf);
+            accountService.createEmailAccount(conf.getEmail(), conf.getPasswordHash(), conf.getSalt(), USER);
             conf.setConfirmed(true);
 
             return frontUrl;    // todo
@@ -95,24 +91,5 @@ public class AccountRegisterService {
 
     private void checkPasswordComplexity(String password) {
         // todo
-    }
-
-
-    private Account createAccount(AccountConfirmation conf) {
-        var account = new Account()
-                .setKind(AccountKind.EMAIL)
-                .setEmail(conf.getEmail())
-                .setPasswordHash(conf.getPasswordHash())
-                .setSalt(conf.getSalt())
-                .setRoles(Set.of(AccountRole.USER));
-
-        account = accountRepository.saveAndFlush(account);
-
-        var userInfo = new UserInfo()
-                .setAccount(account);
-
-        userInfoRepository.save(userInfo);
-
-        return account;
     }
 }

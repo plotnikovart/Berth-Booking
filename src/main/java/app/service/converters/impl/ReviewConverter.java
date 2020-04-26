@@ -24,7 +24,7 @@ public class ReviewConverter extends AbstractConverter<Review, ReviewDto.Resp, R
     public ReviewDto.Resp toDto(ReviewDto.Resp dto, Review e) {
         var userInfo = userInfoConverter.toDto(e.getUserInfo())
                 .setAccountId(null)
-                .setEmail(null)
+//                .setEmail(null)
                 .setPhNumber(null)
                 .setPhCode(null);
 

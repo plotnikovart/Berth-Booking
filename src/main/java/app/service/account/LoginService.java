@@ -6,8 +6,6 @@ import app.config.exception.impl.NotFoundException;
 import app.config.exception.impl.UnauthorizedException;
 import app.database.entity.Account;
 import app.database.entity.UserInfo;
-import app.database.entity.enums.AccountKind;
-import app.database.entity.enums.AccountRole;
 import app.database.repository.AccountRepository;
 import app.database.repository.UserInfoRepository;
 import app.service.account.dto.AuthToken;
@@ -19,17 +17,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-import java.util.Set;
+
+import static app.database.entity.enums.AccountRole.USER;
 
 
 @Service
 @RequiredArgsConstructor
-public class AccountLoginService {
+public class LoginService {
 
     private final AccountRepository accountRepository;
     private final TokenService tokenService;
     private final GoogleAuthClient googleAuthClient;
     private final UserInfoRepository userInfoRepository;
+    private final AccountService accountService;
 
 
     public AuthToken loginEmail(EmailCredential emailCredential, String deviceId) throws UnauthorizedException {
@@ -55,25 +55,9 @@ public class AccountLoginService {
         GoogleUserInfo googleUserInfo = googleAuthClient.authenticate(googleCredential.getCode(), googleCredential.getRedirectUri());
         Optional<Account> accountOpt = accountRepository.findByGoogleMail(googleUserInfo.getGmail());
 
-        Account account = accountOpt.orElseGet(() -> createAccount(googleUserInfo));
+        Account account = accountOpt.orElseGet(() -> accountService.createGoogleAccount(googleUserInfo.getGmail(), USER));
         actualizeUserInfo(account, googleUserInfo);
         return tokenService.createToken(account.getId(), deviceId);
-    }
-
-    private Account createAccount(GoogleUserInfo googleUserInfo) {
-        var account = new Account()
-                .setKind(AccountKind.GOOGLE)
-                .setGoogleMail(googleUserInfo.getGmail())
-                .setRoles(Set.of(AccountRole.USER));
-
-        account = accountRepository.saveAndFlush(account);
-
-        var userInfo = new UserInfo()
-                .setAccount(account);
-
-        userInfoRepository.save(userInfo);
-
-        return account;
     }
 
     private UserInfo actualizeUserInfo(Account account, GoogleUserInfo googleUserInfo) {

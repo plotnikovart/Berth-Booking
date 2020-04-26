@@ -50,7 +50,7 @@ public class GoogleAuthClient {
             return new GoogleUserInfo()
                     .setGmail(userInfo.getEmail())
                     .setFirstName(userInfo.getGivenName())
-                    .setLastName(userInfo.getGivenName())
+                    .setLastName(userInfo.getFamilyName())
                     .setPhotoLink(userInfo.getPicture());
         } catch (Exception e) {
             log.error(e);

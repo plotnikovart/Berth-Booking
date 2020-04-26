@@ -24,7 +24,7 @@ import static app.common.SMessageSource.message;
 @RequiredArgsConstructor
 public class FileStorageService {
 
-    private static final String BASE_FILE_DIR = "." + "/files";
+    public static final String BASE_FILE_DIR = "." + "/files";
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyyMM");
 
     private final FileInfoService fileInfoService;
