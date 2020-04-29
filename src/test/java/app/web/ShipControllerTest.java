@@ -26,7 +26,7 @@ package app.web;
 //    void crud() throws Exception {
 //        // POST
 //        var dto = new ShipDto.Req();
-//        dto.setName("ship1");
+//        dto.setValue("ship1");
 //        dto.setLength(12.0);
 //        dto.setWidth(8.0);
 //        dto.setDraft(3.0);
@@ -52,7 +52,7 @@ package app.web;
 //                .andExpect(content().string(mapper.writeValueAsString(dtoResp)));
 //
 //        // PUT
-//        dto.setName("122");
+//        dto.setValue("122");
 //        dto.setPhotoList(List.of("photo1", "photo2"));
 //        syncDto(dto, dtoResp);
 //
@@ -79,12 +79,12 @@ package app.web;
 //
 //    private void syncDto(ShipDto.Req req, ShipDto.Resp resp) {
 //        var photoList = req.getPhotoList().stream()
-//                .map(photo -> MessageFormat.format("/api/images/{0}/{1}/{2}", ImageKind.SHIP.name().toLowerCase(), account.getId(), photo))
+//                .map(photo -> MessageFormat.format("/api/images/{0}/{1}/{2}", ImageKind.SHIP.value().toLowerCase(), account.getId(), photo))
 //                .collect(Collectors.toList());
 //
 //        resp
 //                .setPhotoList(photoList)
-//                .setName(req.getName())
+//                .setValue(req.getValue())
 //                .setLength(req.getLength())
 //                .setWidth(req.getWidth())
 //                .setDraft(req.getDraft());

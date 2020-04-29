@@ -1,6 +1,5 @@
 package app.service.file;
 
-import app.database.repository.BerthPhotoRepository;
 import app.database.repository.FileInfoRepository;
 import app.database.repository.ShipPhotoRepository;
 import app.database.repository.UserInfoRepository;
@@ -32,7 +31,6 @@ public class FileDeleteTask {
     private final FileInfoRepository fileInfoRepository;
     private final UserInfoRepository userInfoRepository;
     private final ShipPhotoRepository shipPhotoRepository;
-    private final BerthPhotoRepository berthPhotoRepository;
 
 
     @Scheduled(cron = "0 0 2 * * ?")    // каждый день в 2 ночи

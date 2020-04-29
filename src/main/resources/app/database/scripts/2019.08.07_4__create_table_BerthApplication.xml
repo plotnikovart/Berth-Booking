@@ -1,0 +1,71 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="2019.08.07_4_1" author="aplotnikov">
+        <createTable tableName="berth_application">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="pk_berth_application"/>
+            </column>
+            <column name="applicant_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="berth_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creation_date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(2048)"/>
+            <column name="attachments" type="clob"/>
+
+            <column name="status" type="smallint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="decision" type="varchar(2048)"/>
+            <column name="moderator_id" type="bigint"/>
+
+            <column name="is_deleted" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="change_user" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="change_date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addAutoIncrement tableName="berth_application"
+                          columnName="id"
+                          columnDataType="bigint"
+                          startWith="0"
+                          incrementBy="1"/>
+    </changeSet>
+
+    <changeSet id="2019.08.07_4_2" author="aplotnikov">
+        <addForeignKeyConstraint baseTableName="berth_application"
+                                 baseColumnNames="applicant_id"
+                                 constraintName="fk_berth_application_account_a"
+                                 referencedTableName="account"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="berth_application"
+                                 baseColumnNames="berth_id"
+                                 constraintName="fk_berth_application_berth"
+                                 referencedTableName="berth"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="berth_application"
+                                 baseColumnNames="moderator_id"
+                                 constraintName="fk_berth_application_account_m"
+                                 referencedTableName="account"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+</databaseChangeLog>

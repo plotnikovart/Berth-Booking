@@ -1,12 +1,12 @@
-package app.service.facade;
+package app.service.berth;
 
 import app.config.exception.impl.NotFoundException;
 import app.database.entity.Berth;
 import app.database.repository.BerthRepository;
 import app.database.repository.UserInfoRepository;
 import app.service.PermissionService;
+import app.service.berth.dto.BerthDto;
 import app.service.converters.impl.BerthConverter;
-import app.web.dto.BerthDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,21 +23,21 @@ public class BerthFacade {
     private final BerthConverter converter;
 
     @Transactional
-    public Long createBerth(BerthDto.Req dto) {
+    public Long createBerthApplication(BerthDto dto) {
         var userInfo = userInfoRepository.findCurrent();
 
-        var berth = new Berth().setUserInfo(userInfo);
-        converter.toEntity(berth, dto);
+        var berth = new Berth();//(userInfo);
+//        converter.toEntity(berth, dto);
 
         return berthRepository.save(berth).getId();
     }
 
     @Transactional
-    public void updateBerth(Long berthId, BerthDto.Req dto) {
+    public void updateBerth(Long berthId, BerthDto dto) {
         Berth berth = berthRepository.findById(berthId).orElseThrow(NotFoundException::new);
         permissionService.check(berth);
 
-        converter.toEntity(berth, dto);
+//        converter.toEntity(berth, dto);
         berthRepository.save(berth);
     }
 
@@ -50,7 +50,7 @@ public class BerthFacade {
     @Transactional(readOnly = true)
     public List<BerthDto.Resp> getBerths() {
         var userInfo = userInfoRepository.findCurrent();
-        var berths = userInfo.getBerths();
+        var berths = List.of(new Berth());//userInfo.getBerths();
 
         return converter.toDtos(berths);
     }

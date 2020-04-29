@@ -6,14 +6,11 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class ConvenienceDto {
+public class DictAmenityDto {
 
     @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
-    private Integer id;
+    private String key;
 
     @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
-    private String code;
-
-    @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
-    private String name;
+    private String value;
 }

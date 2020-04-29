@@ -6,22 +6,22 @@
 
 <!--    <changeSet id="2019.04.06_1_1" author="aplotnikov">-->
 <!--        <createTable tableName="ship">-->
-<!--            <column name="id" type="bigint">-->
+<!--            <column value="id" type="bigint">-->
 <!--                <constraints primaryKey="true" primaryKeyName="pk_ship"/>-->
 <!--            </column>-->
-<!--            <column name="account_id" type="bigint">-->
+<!--            <column value="account_id" type="bigint">-->
 <!--                <constraints nullable="false"/>-->
 <!--            </column>-->
-<!--            <column name="name" type="varchar(40)">-->
+<!--            <column value="value" type="varchar(40)">-->
 <!--                <constraints nullable="false"/>-->
 <!--            </column>-->
-<!--            <column name="length" type="double">-->
+<!--            <column value="length" type="double">-->
 <!--                <constraints nullable="false"/>-->
 <!--            </column>-->
-<!--            <column name="draft" type="double">-->
+<!--            <column value="draft" type="double">-->
 <!--                <constraints nullable="false"/>-->
 <!--            </column>-->
-<!--            <column name="width" type="double">-->
+<!--            <column value="width" type="double">-->
 <!--                <constraints nullable="false"/>-->
 <!--            </column>-->
 <!--        </createTable>-->
@@ -42,13 +42,13 @@
 
 <!--    <changeSet id="2019.04.06_1_2" author="aplotnikov">-->
 <!--        <createTable tableName="ship_photo">-->
-<!--            <column name="ship_id" type="bigint">-->
+<!--            <column value="ship_id" type="bigint">-->
 <!--                <constraints nullable="false"/>-->
 <!--            </column>-->
-<!--            <column name="num" type="int">-->
+<!--            <column value="num" type="int">-->
 <!--                <constraints nullable="false"/>-->
 <!--            </column>-->
-<!--            <column name="file_name" type="varchar(42)">-->
+<!--            <column value="file_name" type="varchar(42)">-->
 <!--                <constraints nullable="false"/>-->
 <!--            </column>-->
 <!--        </createTable>-->

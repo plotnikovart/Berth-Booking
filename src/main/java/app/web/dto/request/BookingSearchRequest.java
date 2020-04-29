@@ -1,7 +1,7 @@
 package app.web.dto.request;
 
 import app.config.validation.ValidationUtils;
-import app.web.dto.ConvenienceDto;
+import app.web.dto.DictAmenityDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.hibernate.validator.constraints.Range;
@@ -36,7 +36,7 @@ public class BookingSearchRequest {
     @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
     private Date endDate;
 
-    private List<ConvenienceDto> convenienceList = new ArrayList<>();
+    private List<DictAmenityDto> convenienceList = new ArrayList<>();
 
     private Sorting sorting = Sorting.DISTANCE;
 }

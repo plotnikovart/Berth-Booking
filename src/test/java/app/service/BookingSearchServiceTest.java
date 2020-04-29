@@ -58,14 +58,14 @@
 //
 //        // ======================================
 //        ship1 = new Ship()
-//                .setName("1")
+//                .setValue("1")
 //                .setLength(1.5)
 //                .setWidth(1.5)
 //                .setDraft(1.5)
 //                .setUserInfo(userInfo);
 //
 //        ship2 = new Ship()
-//                .setName("2")
+//                .setValue("2")
 //                .setLength(2.5)
 //                .setWidth(2.5)
 //                .setDraft(2.5)
@@ -75,7 +75,7 @@
 //
 //        // =====================================
 //        berth1 = new Berth()
-//                .setName("1")
+//                .setValue("1")
 //                .setLat(58.950880)
 //                .setLng(27.397539)
 //                .setUserInfo(userInfo)
@@ -99,7 +99,7 @@
 //
 //        // =========================
 //        berth2 = new Berth()
-//                .setName("2")
+//                .setValue("2")
 //                .setLat(58.977930)
 //                .setLng(27.428904)
 //                .setUserInfo(userInfo)
@@ -123,7 +123,7 @@
 //
 //        // ============================
 //        berth3 = new Berth()
-//                .setName("3")
+//                .setValue("3")
 //                .setLat(58.980555)
 //                .setLng(27.486817)
 //                .setUserInfo(userInfo)
@@ -141,7 +141,7 @@
 //
 //        // ===========================
 //        berth4 = new Berth()
-//                .setName("4")
+//                .setValue("4")
 //                .setLat(58.960529)
 //                .setLng(27.539061)
 //                .setUserInfo(userInfo)

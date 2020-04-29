@@ -5,10 +5,10 @@ import app.config.exception.impl.NotFoundException;
 import app.database.entity.*;
 import app.database.entity.enums.BookingStatus;
 import app.database.repository.*;
+import app.service.berth.dto.BerthDto;
 import app.service.converters.impl.BerthConverter;
 import app.service.converters.impl.BerthPlaceConverter;
-import app.web.dto.BerthDto;
-import app.web.dto.ConvenienceDto;
+import app.web.dto.DictAmenityDto;
 import app.web.dto.request.BookingSearchRequest;
 import app.web.dto.request.Sorting;
 import com.google.common.collect.Sets;
@@ -29,7 +29,7 @@ public class BookingSearchService {
     private final BerthSearchRepository berthSearchRepository;
     private final BookingRepository bookingRepository;
     private final BerthRepository berthRepository;
-    private final ConvenienceRepository convenienceRepository;
+    private final DictAmenityRepository dictAmenityRepository;
     private final BerthConverter berthConverter;
     private final BerthPlaceConverter placeConverter;
 
@@ -47,7 +47,7 @@ public class BookingSearchService {
     @Transactional(readOnly = true)
     public List<BerthDto.Resp.Search> searchPlaces(BookingSearchRequest req) {
         Ship ship = shipRepository.findById(req.getShipId()).orElseThrow(NotFoundException::new);
-        Set<Convenience> requiredConv = extractConveniences(req);
+        Set<DictAmenity> requiredAmenities = extractAmenities(req);
 
         Map<Berth, Double> berths = berthSearchRepository.findByCoordinates(req.getLat(), req.getLng(), req.getRad());
         loadData(berths.keySet());
@@ -58,8 +58,8 @@ public class BookingSearchService {
 
         Map<Berth, List<BerthPlace>> filtered = berths.keySet().stream()
                 .filter(berth -> {
-                    var conv = Set.copyOf(berth.getConveniences());
-                    return Sets.intersection(conv, requiredConv).size() == requiredConv.size();
+                    var amenities = Set.copyOf(berth.getAmenities());
+                    return Sets.intersection(amenities, requiredAmenities).size() == requiredAmenities.size();
                 })
                 .flatMap(berth -> berth.getBerthPlaces().stream())
                 .filter(place -> !bookedPlaces.contains(place))
@@ -83,7 +83,7 @@ public class BookingSearchService {
 
     private BerthDto.Resp.Search convertToBerthDtoSearch(Map.Entry<Berth, List<BerthPlace>> pair, Double distance) {
         var places = placeConverter.toDtos(pair.getValue());
-        var minPrice = pair.getValue().stream().mapToDouble(BerthPlace::getFactPrice).min().orElseThrow();
+        var minPrice = 0.0;//pair.getValue().stream().mapToDouble(BerthPlace::getFactPrice).min().orElseThrow();
 
         var berthSearch = (BerthDto.Resp.Search) berthConverter.toDto(new BerthDto.Resp.Search(), pair.getKey());
         return (BerthDto.Resp.Search) berthSearch
@@ -92,9 +92,9 @@ public class BookingSearchService {
                 .setPlaceList(places);
     }
 
-    private Set<Convenience> extractConveniences(BookingSearchRequest req) {
-        List<Integer> requiredConvIds = req.getConvenienceList().stream().map(ConvenienceDto::getId).collect(Collectors.toList());
-        return Set.copyOf(convenienceRepository.findAllById(requiredConvIds));
+    private Set<DictAmenity> extractAmenities(BookingSearchRequest req) {
+        List<String> requiredConvIds = req.getConvenienceList().stream().map(DictAmenityDto::getKey).collect(Collectors.toList());
+        return Set.copyOf(dictAmenityRepository.findAllById(requiredConvIds));
     }
 
     private void loadData(Collection<Berth> berths) {

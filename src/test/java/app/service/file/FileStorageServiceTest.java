@@ -24,7 +24,7 @@ package app.service.file;
 //        var imageKind = ImageKind.USER;
 //
 //        var file = fileStorageService.saveImage(image, originalFileName, imageKind);
-//        var actual = fileStorageService.getImage(imageKind, account.getId(), file.getName());
+//        var actual = fileStorageService.getImage(imageKind, account.getId(), file.getValue());
 //        ReflectionAssert.assertReflectionEquals(actual, image);
 //
 //        image = new byte[]{1, 2};
@@ -32,7 +32,7 @@ package app.service.file;
 //        imageKind = ImageKind.SHIP;
 //
 //        file = fileStorageService.saveImage(image, originalFileName, imageKind);
-//        actual = fileStorageService.getImage(imageKind, account.getId(), file.getName());
+//        actual = fileStorageService.getImage(imageKind, account.getId(), file.getValue());
 //        ReflectionAssert.assertReflectionEquals(actual, image);
 //
 //        Assertions.assertThrows(NotFoundException.class, () -> fileStorageService.getImage(ImageKind.SHIP, account.getId(), "1"));

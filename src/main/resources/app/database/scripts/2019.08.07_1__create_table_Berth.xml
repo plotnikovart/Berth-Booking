@@ -4,68 +4,55 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-<!--    <changeSet id="2019.08.07_1_1" author="aplotnikov">-->
-<!--        <createTable tableName="berth">-->
-<!--            <column name="id" type="bigint">-->
-<!--                <constraints primaryKey="true" primaryKeyName="pk_berth"/>-->
-<!--            </column>-->
-<!--            <column name="account_id" type="bigint">-->
-<!--                <constraints nullable="false"/>-->
-<!--            </column>-->
-<!--            <column name="name" type="varchar(64)">-->
-<!--                <constraints nullable="false"/>-->
-<!--            </column>-->
-<!--            <column name="description" type="varchar(2048)"/>-->
-<!--            <column name="lat" type="double">-->
-<!--                <constraints nullable="false"/>-->
-<!--            </column>-->
-<!--            <column name="lng" type="double">-->
-<!--                <constraints nullable="false"/>-->
-<!--            </column>-->
-<!--            <column name="standard_price" type="double">-->
-<!--                <constraints nullable="false"/>-->
-<!--            </column>-->
-<!--        </createTable>-->
+    <changeSet id="2019.08.07_1_1" author="aplotnikov">
+        <createTable tableName="berth">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="pk_berth"/>
+            </column>
+            <column name="owner_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(2048)"/>
+            <column name="lat" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="lng" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="photos" type="clob"/>
 
-<!--        <addAutoIncrement tableName="berth"-->
-<!--                          columnName="id"-->
-<!--                          columnDataType="bigint"-->
-<!--                          startWith="0"-->
-<!--                          incrementBy="1"/>-->
-<!--    </changeSet>-->
+            <column name="is_confirmed" type="boolean">
+                <constraints nullable="false"/>
+            </column>
 
-<!--    <changeSet id="2019.08.07_1_2" author="aplotnikov">-->
-<!--        <addForeignKeyConstraint baseTableName="berth"-->
-<!--                                 baseColumnNames="account_id"-->
-<!--                                 constraintName="fk_berth_user_info"-->
-<!--                                 referencedTableName="user_info"-->
-<!--                                 referencedColumnNames="account_id"-->
-<!--                                 onDelete="CASCADE"/>-->
-<!--    </changeSet>-->
+            <column name="is_deleted" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="change_user" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="change_date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
 
-<!--    <changeSet id="2019.08.07_1_3" author="aplotnikov">-->
-<!--        <createTable tableName="berth_photo">-->
-<!--            <column name="berth_id" type="bigint">-->
-<!--                <constraints nullable="false"/>-->
-<!--            </column>-->
-<!--            <column name="num" type="int">-->
-<!--                <constraints nullable="false"/>-->
-<!--            </column>-->
-<!--            <column name="file_name" type="varchar(42)">-->
-<!--                <constraints nullable="false"/>-->
-<!--            </column>-->
-<!--        </createTable>-->
+        <addAutoIncrement tableName="berth"
+                          columnName="id"
+                          columnDataType="bigint"
+                          startWith="0"
+                          incrementBy="1"/>
+    </changeSet>
 
-<!--        <addPrimaryKey tableName="berth_photo"-->
-<!--                       columnNames="berth_id, num"-->
-<!--                       constraintName="pk_berth_photo"/>-->
-
-<!--        <addForeignKeyConstraint baseTableName="berth_photo"-->
-<!--                                 baseColumnNames="berth_id"-->
-<!--                                 constraintName="fk_berth_photo_berth"-->
-<!--                                 referencedTableName="berth"-->
-<!--                                 referencedColumnNames="id"-->
-<!--                                 onDelete="CASCADE"/>-->
-<!--    </changeSet>-->
+    <changeSet id="2019.08.07_1_2" author="aplotnikov">
+        <addForeignKeyConstraint baseTableName="berth"
+                                 baseColumnNames="owner_id"
+                                 constraintName="fk_berth_account"
+                                 referencedTableName="account"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
 
 </databaseChangeLog>

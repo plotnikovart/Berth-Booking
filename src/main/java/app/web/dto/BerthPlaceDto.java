@@ -12,6 +12,9 @@ public class BerthPlaceDto {
     private Long id;
 
     @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
+    private String name;
+
+    @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
     @Range(message = ValidationUtils.RANGE_MESSAGE)
     private Double length;
 
@@ -23,6 +26,16 @@ public class BerthPlaceDto {
     @Range(message = ValidationUtils.RANGE_MESSAGE)
     private Double width;
 
+    @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
     @Range(message = ValidationUtils.RANGE_MESSAGE)
     private Double price;
+
+    @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
+    private Double x_coord;
+    @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
+    private Double y_coord;
+    @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
+    private Double rotate;
+    @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
+    private String color;
 }

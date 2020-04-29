@@ -1,10 +1,14 @@
-package app.web.dto;
+package app.service.berth.dto;
 
 import app.config.validation.ValidationUtils;
+import app.service.file.dto.FileInfoDto;
+import app.web.dto.BerthPlaceDto;
+import app.web.dto.DictAmenityDto;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -26,26 +30,21 @@ public class BerthDto {
     @Range(min = -180, max = 180, message = ValidationUtils.RANGE_MESSAGE)
     private Double lng;     // долгота
 
-    @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
-    @Range(message = ValidationUtils.RANGE_MESSAGE)
-    private Double standardPrice;
+    @Valid
+    private List<FileInfoDto> photoList;
 
-    private List<ConvenienceDto> convenienceList;
+    @Valid
+    private List<DictAmenityDto> amenityList;
 
+    @Valid
     private List<BerthPlaceDto> placeList;
 
-    @Data
-    public static class Req extends BerthDto {
-
-        private List<String> photoList;
-    }
 
     @Data
     public static class Resp extends BerthDto {
 
         private Long id;
         private Integer rating;
-        private List<String> photoList;     // ссылки
 
 
         @Data

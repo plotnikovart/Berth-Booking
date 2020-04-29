@@ -41,19 +41,20 @@ public class BookingFacade {
 
     @Transactional
     public synchronized Long createBooking(BookingDto.Req bookingRequest) {
-        UserInfo owner = berthPlaceRepository.findById(bookingRequest.getBerthPlaceId()).orElseThrow(NotFoundException::new)
-                .getBerth().getUserInfo();
-        UserInfo renter = userInfoRepository.findCurrent();
-
-        var booking = bookingConverter.toEntity(bookingRequest)
-                .setOwner(owner)
-                .setRenter(renter)
-                .setStatus(BookingStatus.NEW);
-
-        validateBooking(booking);
-        Long id = bookingRepository.save(booking).getId();
-        emailService.sendBookingCreate(booking);
-        return id;
+//        UserInfo owner = berthPlaceRepository.findById(bookingRequest.getBerthPlaceId()).orElseThrow(NotFoundException::new)
+//                .getBerth();//.getUserInfo();
+//        UserInfo renter = userInfoRepository.findCurrent();
+//
+//        var booking = bookingConverter.toEntity(bookingRequest)
+//                .setOwner(owner)
+//                .setRenter(renter)
+//                .setStatus(BookingStatus.NEW);
+//
+//        validateBooking(booking);
+//        Long id = bookingRepository.save(booking).getId();
+//        emailService.sendBookingCreate(booking);
+//        return id;
+        return -1L;
     }
 
     @Transactional
@@ -153,7 +154,7 @@ public class BookingFacade {
     }
 
     private Double calcTotalPrice(Booking booking) {        // todo хранить в бд
-        Double price = booking.getBerthPlace().getFactPrice();
+        Double price = 0.0;//booking.getBerthPlace().getFactPrice();
         return price * DAYS.between(booking.getStartDate(), booking.getEndDate());
     }
 }

@@ -33,7 +33,7 @@
 //        var userPh1 = fileStorageService.saveImage(new byte[]{1, 3, 4}, "userPh1.jpg", ImageKind.USER);
 //        var userPhOld = fileStorageService.saveImage(new byte[]{1, 3, 4}, "userPh1.jpg", ImageKind.USER);
 //
-//        userInfo.setPhotoName(userPh1.getName());
+//        userInfo.setPhotoName(userPh1.getValue());
 //        userInfoRepository.save(userInfo);
 //
 //        var shipPh1 = fileStorageService.saveImage(new byte[]{1, 3, 4}, "ship1.jpg", ImageKind.SHIP);
@@ -45,11 +45,11 @@
 //
 //        var ship = new Ship()
 //                .setUserInfo(userInfo)
-//                .setName("ship1")
+//                .setValue("ship1")
 //                .setDraft(12.0)
 //                .setLength(12.0)
 //                .setWidth(1.0);
-//        ship.setPhotos(List.of(new ShipPhoto(ship, 0 , shipPh1.getName()), new ShipPhoto(ship, 1, shipPh2.getName())));
+//        ship.setPhotos(List.of(new ShipPhoto(ship, 0 , shipPh1.getValue()), new ShipPhoto(ship, 1, shipPh2.getValue())));
 //        shipRepository.save(ship);
 //
 //

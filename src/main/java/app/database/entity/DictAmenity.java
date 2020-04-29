@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Immutable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -11,12 +12,11 @@ import javax.persistence.Id;
 @Getter
 @Entity
 @Immutable
-public class Convenience {
+public class DictAmenity {
 
     @Id
-    private Integer id;
+    private String key;
 
-    private String code;
-
-    private String name;
+    @Column(nullable = false)
+    private String value;
 }

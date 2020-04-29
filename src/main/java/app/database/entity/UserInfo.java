@@ -45,9 +45,6 @@ public class UserInfo {
     @OneToMany(mappedBy = "userInfo", cascade = DETACH, orphanRemoval = true)
     private List<Ship> ships = new ArrayList<>();
 
-    @OneToMany(mappedBy = "userInfo", cascade = DETACH, orphanRemoval = true)
-    private List<Berth> berths = new ArrayList<>();
-
     @OneToMany(mappedBy = "renter", cascade = DETACH)
     @OrderBy("startDate desc")
     private List<Booking> bookings = new ArrayList<>();

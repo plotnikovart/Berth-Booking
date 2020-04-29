@@ -29,17 +29,17 @@
 //        conv1 = new Convenience()
 //                .setId(1)
 //                .setCode("1")
-//                .setName("1");
+//                .setValue("1");
 //
 //        conv2 = new Convenience()
 //                .setId(2)
 //                .setCode("2")
-//                .setName("2");
+//                .setValue("2");
 //
 //        conv3 = new Convenience()
 //                .setId(3)
 //                .setCode("3")
-//                .setName("3");
+//                .setValue("3");
 //
 //        convenienceRepository.saveAll(List.of(conv1, conv2, conv3));
 //        commitAndStartNewTransaction();

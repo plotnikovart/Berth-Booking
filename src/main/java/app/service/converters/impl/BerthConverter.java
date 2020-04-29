@@ -2,20 +2,20 @@ package app.service.converters.impl;
 
 import app.config.exception.impl.NotFoundException;
 import app.database.entity.Berth;
-import app.database.entity.BerthPhoto;
 import app.database.entity.BerthPlace;
-import app.database.entity.Convenience;
+import app.database.entity.DictAmenity;
 import app.database.repository.BerthRepository;
+import app.service.berth.dto.BerthDto;
 import app.service.converters.AbstractConverter;
-import app.web.dto.BerthDto;
+import app.service.file.FileInfoService;
+import app.service.file.dto.FileInfoDto;
 import app.web.dto.BerthPlaceDto;
-import app.web.dto.ConvenienceDto;
+import app.web.dto.DictAmenityDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -23,32 +23,29 @@ import static java.util.stream.Collectors.toList;
 
 @Component
 @RequiredArgsConstructor
-public class BerthConverter extends AbstractConverter<Berth, BerthDto.Resp, BerthDto.Req> {
+public class BerthConverter extends AbstractConverter<Berth, BerthDto.Resp, BerthDto> {
 
-    private final ConvenienceConverter convenienceConverter;
+    private final DictAmenityConverter dictAmenityConverter;
     private final BerthPlaceConverter berthPlaceConverter;
     private final BerthRepository berthRepository;
     private final EntityManager em;
+    private final FileInfoService fileInfoService;
 
-    public BerthDto.Resp toDto(BerthDto.Resp dto, Berth e, boolean convertPlaces, boolean convertConveniences) {
-        List<String> photoList = e.getPhotos().stream()
-                .map(photo -> "")//MessageFormat.format("/api/images/{0}/{1}/{2}", ImageKind.BERTH.name().toLowerCase(), e.getOwnerId(), photo.getFileName()))
-                .collect(toList());
-
+    public BerthDto.Resp toDto(BerthDto.Resp dto, Berth e, boolean convertPlaces, boolean convertAmenities) {
         List<BerthPlaceDto> places = convertPlaces ? berthPlaceConverter.toDtos(e.getBerthPlaces()) : null;
-        List<ConvenienceDto> conveniences = convertConveniences ? convenienceConverter.toDtos(e.getConveniences()) : null;
+        List<DictAmenityDto> conveniences = convertAmenities ? dictAmenityConverter.toDtos(e.getAmenities()) : null;
+        List<FileInfoDto> photos = e.getPhotos().stream().map(fileInfoService::get).collect(Collectors.toUnmodifiableList());
 
         return (BerthDto.Resp) dto
                 .setId(e.getId())
-                .setRating(e.getRating())
-                .setPhotoList(photoList)
+//                .setRating(e.getRating())
+                .setPhotoList(photos)
                 .setPlaceList(places)
                 .setName(e.getName())
                 .setDescription(e.getDescription())
                 .setLat(e.getLat())
                 .setLng(e.getLng())
-                .setStandardPrice(e.getStandardPrice())
-                .setConvenienceList(conveniences);
+                .setAmenityList(conveniences);
     }
 
     @Override
@@ -57,22 +54,22 @@ public class BerthConverter extends AbstractConverter<Berth, BerthDto.Resp, Bert
     }
 
     @Override
-    public Berth toEntity(Berth entity, BerthDto.Req dto) {
+    public Berth toEntity(Berth entity, BerthDto dto) {
         if (dto.getPhotoList() != null) {
-            var i = new AtomicInteger();
-            var newPhotos = dto.getPhotoList().stream()
-                    .map(photoName -> new BerthPhoto(entity, i.getAndIncrement(), photoName))
-                    .collect(toList());
+            List<UUID> photos = dto.getPhotoList().stream()
+                    .peek(it -> fileInfoService.get(it.getFileId()))
+                    .map(FileInfoDto::getFileId)
+                    .collect(Collectors.toUnmodifiableList());
 
-            entity.setPhotos(newPhotos);
+            entity.setPhotos(photos);
         }
 
-        if (dto.getConvenienceList() != null) {
-            var conveniences = dto.getConvenienceList().stream()
-                    .map(conv -> em.getReference(Convenience.class, conv.getId()))
+        if (dto.getAmenityList() != null) {
+            List<DictAmenity> amenities = dto.getAmenityList().stream()
+                    .map(it -> em.getReference(DictAmenity.class, it.getKey()))
                     .collect(toList());
 
-            entity.setConveniences(conveniences);
+            entity.setAmenities(amenities);
         }
 
         if (dto.getPlaceList() != null) {
@@ -100,8 +97,7 @@ public class BerthConverter extends AbstractConverter<Berth, BerthDto.Resp, Bert
                 .setName(dto.getName())
                 .setDescription(dto.getDescription())
                 .setLng(dto.getLng())
-                .setLat(dto.getLat())
-                .setStandardPrice(dto.getStandardPrice());
+                .setLat(dto.getLat());
     }
 
     @Override

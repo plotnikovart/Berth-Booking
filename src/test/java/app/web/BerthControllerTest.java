@@ -56,7 +56,7 @@
 //
 //        var dto = (BerthDto.Req) new BerthDto.Req()
 //                .setPhotoList(List.of("photo1", "photo2"))
-//                .setName("1")
+//                .setValue("1")
 //                .setDescription("asada")
 //                .setStandardPrice(12.5)
 //                .setLat(12.0)
@@ -88,7 +88,7 @@
 //                .andExpect(content().string(mapper.writeValueAsString(dtoResp)));
 //
 //        // put
-//        dto.setName("122");
+//        dto.setValue("122");
 //        dto.setPhotoList(List.of("photo1", "photo3"));
 //        dto.setPlaceList(List.of(placeList.get(0).setLength(2.0), new BerthPlaceDto().setDraft(1.0).setWidth(1.0).setLength(1.0).setPrice(1.0)));
 //        dto.setConvenienceList(List.of(convConverter.toDto(conv1)));
@@ -121,12 +121,12 @@
 //
 //    private void syncDto(BerthDto.Req req, BerthDto.Resp resp) {
 //        var photoList = req.getPhotoList().stream()
-//                .map(photo -> MessageFormat.format("/api/images/{0}/{1}/{2}", ImageKind.BERTH.name().toLowerCase(), account.getId(), photo))
+//                .map(photo -> MessageFormat.format("/api/images/{0}/{1}/{2}", ImageKind.BERTH.value().toLowerCase(), account.getId(), photo))
 //                .collect(Collectors.toList());
 //
 //        resp
 //                .setPhotoList(photoList)
-//                .setName(req.getName())
+//                .setValue(req.getValue())
 //                .setDescription(req.getDescription())
 //                .setStandardPrice(req.getStandardPrice())
 //                .setLat(req.getLat())
