@@ -17,7 +17,8 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import static app.config.DBConfig.NOT_DELETED;
-import static javax.persistence.CascadeType.*;
+import static javax.persistence.CascadeType.DETACH;
+import static javax.persistence.CascadeType.PERSIST;
 
 @Getter
 @Setter
@@ -50,12 +51,17 @@ public class Berth extends AuditEntity implements EntityWithOwner {
     @Column(nullable = false)
     private Double lng;
 
+    private String site;
+    private String radio;
+    private String phCode;
+    private String phNumber;
+
     private String photos;
 
     @Column(nullable = false)
     private Boolean isConfirmed;
 
-    @OneToMany(mappedBy = "berth", cascade = {PERSIST, DETACH, MERGE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "berth", cascade = {PERSIST, DETACH}, orphanRemoval = true)
     @OrderBy("id")
     private List<BerthPlace> berthPlaces = new ArrayList<>();
 

@@ -22,15 +22,6 @@ public class BerthFacade {
     private final PermissionService permissionService;
     private final BerthConverter converter;
 
-    @Transactional
-    public Long createBerthApplication(BerthDto dto) {
-        var userInfo = userInfoRepository.findCurrent();
-
-        var berth = new Berth();//(userInfo);
-//        converter.toEntity(berth, dto);
-
-        return berthRepository.save(berth).getId();
-    }
 
     @Transactional
     public void updateBerth(Long berthId, BerthDto dto) {

@@ -1,6 +1,5 @@
 package app;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +18,23 @@ public abstract class ApplicationTest {
     protected TransactionTemplate tpl;
 
     @Autowired
-    public void configureTestObjectMapper(ObjectMapper mapper) {
-        mapper.setSerializationInclusion(JsonInclude.Include.ALWAYS);
-    }
+    protected ObjectMapper mapper;
 
     protected void commitAndStartNewTransaction() {
-        TestTransaction.flagForCommit();
-        TestTransaction.end();
-        TestTransaction.start();
+        commitTransaction();
+        startTransaction();
+    }
+
+    protected void startTransaction() {
+        if (!TestTransaction.isActive()) {
+            TestTransaction.start();
+        }
+    }
+
+    protected void commitTransaction() {
+        if (TestTransaction.isActive()) {
+            TestTransaction.flagForCommit();
+            TestTransaction.end();
+        }
     }
 }

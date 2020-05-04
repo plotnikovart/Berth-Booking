@@ -1,9 +1,9 @@
 package app.service.berth.dto;
 
-import app.config.validation.ValidationUtils;
 import app.service.file.dto.FileInfoDto;
 import app.web.dto.BerthPlaceDto;
 import app.web.dto.DictAmenityDto;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
@@ -12,32 +12,46 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+import static app.config.validation.ValidationUtils.*;
+
 @Data
 public class BerthDto {
 
-    @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
-    @Length(max = 64, message = ValidationUtils.LENGTH_MESSAGE)
+    @ApiModelProperty(required = true)
+    @NotNull(message = NOT_NULL_MESSAGE)
+    @Length(max = 64, message = LENGTH_MESSAGE)
     private String name;
 
-    @Length(max = 2048, message = ValidationUtils.LENGTH_MESSAGE)
+    @Length(max = 2048, message = LENGTH_MESSAGE)
     private String description;
 
-    @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
-    @Range(min = -90, max = 90, message = ValidationUtils.RANGE_MESSAGE)
+    @ApiModelProperty(required = true)
+    @NotNull(message = NOT_NULL_MESSAGE)
+    @Range(min = -90, max = 90, message = RANGE_MESSAGE)
     private Double lat;     // широта
 
-    @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
-    @Range(min = -180, max = 180, message = ValidationUtils.RANGE_MESSAGE)
+    @ApiModelProperty(required = true)
+    @NotNull(message = NOT_NULL_MESSAGE)
+    @Range(min = -180, max = 180, message = RANGE_MESSAGE)
     private Double lng;     // долгота
 
-    @Valid
-    private List<FileInfoDto> photoList;
+    @Length(max = 256, message = LENGTH_MESSAGE)
+    private String site;
+    @Length(max = 32, message = LENGTH_MESSAGE)
+    private String radio;
+    @Length(max = 3, message = LENGTH_MESSAGE)
+    private String phCode;
+    @Length(max = 20, message = LENGTH_MESSAGE)
+    private String phNumber;
 
     @Valid
-    private List<DictAmenityDto> amenityList;
+    private List<FileInfoDto> photos;
 
     @Valid
-    private List<BerthPlaceDto> placeList;
+    private List<DictAmenityDto> amenities;
+
+    @Valid
+    private List<BerthPlaceDto> places;
 
 
     @Data

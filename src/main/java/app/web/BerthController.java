@@ -2,10 +2,14 @@ package app.web;
 
 import app.config.validation.ValidationUtils;
 import app.service.berth.BerthFacade;
+import app.service.berth.UserBerthApplicationService;
+import app.service.berth.dto.BerthApplicationDto;
 import app.service.berth.dto.BerthDto;
 import app.service.facade.ReviewFacade;
 import app.web.dto.ReviewDto;
 import app.web.dto.response.IdResponse;
+import app.web.dto.response.ListResp;
+import app.web.dto.response.ObjectResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,18 +22,19 @@ public class BerthController {
 
     private final BerthFacade berthFacade;
     private final ReviewFacade reviewFacade;
+    private final UserBerthApplicationService berthApplicationService;
 
     @PostMapping("/applications")
-    public IdResponse<Long> createApplication(@RequestBody BerthDto berthDto) {
-        validateBerthDto(berthDto);
-        long id = berthFacade.createBerthApplication(berthDto);
-        return new IdResponse<>(id);
+    public ObjectResp<BerthApplicationDto.Resp> createApplication(@RequestBody BerthApplicationDto.Req applicationDto) {
+        long id = berthApplicationService.create(applicationDto);
+        BerthApplicationDto.Resp resp = berthApplicationService.get(id);
+        return new ObjectResp<>(resp);
     }
 
     @GetMapping("/applications")
-    public List getApplications(@RequestBody BerthDto berthDto) {
-        long id = berthFacade.createBerthApplication(berthDto);
-        return List.of();
+    public ListResp<BerthApplicationDto.Resp> getApplications() {
+        List<BerthApplicationDto.Resp> resp = berthApplicationService.get();
+        return new ListResp<>(resp);
     }
 
     @PutMapping("/{id}")
@@ -76,7 +81,7 @@ public class BerthController {
 
     private void validateBerthDto(BerthDto berthDto) {
         ValidationUtils.validateEntity(berthDto);
-        ValidationUtils.validateCollection(berthDto.getPlaceList());
-        ValidationUtils.validateCollection(berthDto.getAmenityList());
+        ValidationUtils.validateCollection(berthDto.getPlaces());
+        ValidationUtils.validateCollection(berthDto.getAmenities());
     }
 }

@@ -1,50 +1,80 @@
-//package app.web;
-//
-//import app.database.repository.AbstractConvenienceTest;
-//import app.database.repository.BerthRepository;
-//import app.service.file.ImageKind;
-//import app.web.dto.BerthDto;
-//import app.web.dto.BerthPlaceDto;
-//import app.web.dto.response.IdResponse;
-//import com.fasterxml.jackson.databind.ObjectMapper;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.http.MediaType;
-//import org.springframework.test.web.servlet.MockMvc;
-//import org.springframework.test.web.servlet.MvcResult;
-//import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-//import org.springframework.transaction.annotation.Transactional;
-//
-//import java.text.MessageFormat;
-//import java.util.List;
-//import java.util.stream.Collectors;
-//
-//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+package app.web;
 
-//@Transactional
-//class BerthControllerTest extends AbstractConvenienceTest {
-//
-//    private MockMvc mvc;
-//
-//    @Autowired
-//    ObjectMapper mapper;
-//    @Autowired
-//    BerthRepository berthRepository;
-//    @Autowired
-//    private BerthController shipController;
-//
-//    @Override
-//    @BeforeEach
-//    public void setUp() {
-//        super.setUp();
-//        mvc = MockMvcBuilders.standaloneSetup(shipController).build();
-//        berthRepository.deleteAll();
-//        commitAndStartNewTransaction();
-//    }
-//
+import app.config.security.OperationContext;
+import app.database.entity.enums.BerthApplicationStatus;
+import app.database.repository.AbstractAmenityTest;
+import app.database.repository.BerthApplicationRepository;
+import app.database.repository.BerthRepository;
+import app.service.berth.dto.BerthApplicationDto;
+import app.service.berth.dto.BerthDto;
+import app.service.file.FileStorageService;
+import app.service.file.dto.FileInfoDto;
+import app.util.CompareHelper;
+import app.web.dto.DictAmenityDto;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
+
+class BerthControllerTest extends AbstractAmenityTest {
+
+    @Autowired
+    BerthRepository berthRepository;
+    @Autowired
+    BerthApplicationRepository berthApplicationRepository;
+    @Autowired
+    BerthController berthController;
+    @Autowired
+    FileStorageService fileStorageService;
+
+    private FileInfoDto file1;
+    private FileInfoDto file2;
+
+    @Override
+    @BeforeEach
+    public void setUp() {
+        super.setUp();
+        berthApplicationRepository.deleteAll();
+        berthRepository.deleteAll();
+
+        file1 = fileStorageService.saveFile(new byte[]{1}, "файл1.jpg");
+        file2 = fileStorageService.saveFile(new byte[]{2}, "файл2.jpg");
+
+        OperationContext.accountId(userAccount.getId());
+    }
+
+    @Test
+    void application() {
+        // create
+        var berthDto = new BerthDto()
+                .setName("Причал")
+                .setDescription("Описание")
+                .setLat(0.0)
+                .setLng(0.0)
+                .setAmenities(List.of(DictAmenityDto.of(amenity1)))
+                .setPhotos(List.of(file1, file2));
+
+        var applicationDto = (BerthApplicationDto.Req) new BerthApplicationDto.Req()
+                .setBerth(berthDto)
+                .setAttachments(List.of(file1, file2))
+                .setDescription("Описание заявки");
+
+        var actual = berthController.createApplication(applicationDto).getData();
+
+        var expected = (BerthApplicationDto.Resp) new BerthApplicationDto.Resp()
+                .setStatus(BerthApplicationStatus.NEW)
+                .setTitle(berthDto.getName())
+                .setDescription(applicationDto.getDescription())
+                .setAttachments(applicationDto.getAttachments());
+
+        Assertions.assertTrue(CompareHelper.areEqual(expected, actual));
+
+        var allApplications = berthController.getApplications().getData();
+        Assertions.assertEquals(1, allApplications.size());
+    }
+
 //    @Test
 //    void crud() throws Exception {
 //        var placeList = List.of(
@@ -134,5 +164,4 @@
 //                .setPlaceList(req.getPlaceList())
 //                .setConvenienceList(req.getConvenienceList());
 //    }
-//
-//}
+}

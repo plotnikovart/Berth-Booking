@@ -12,6 +12,7 @@ import app.service.file.dto.FileInfoDto;
 import app.web.dto.BerthPlaceDto;
 import app.web.dto.DictAmenityDto;
 import lombok.RequiredArgsConstructor;
+import one.util.streamex.StreamEx;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
@@ -34,18 +35,22 @@ public class BerthConverter extends AbstractConverter<Berth, BerthDto.Resp, Bert
     public BerthDto.Resp toDto(BerthDto.Resp dto, Berth e, boolean convertPlaces, boolean convertAmenities) {
         List<BerthPlaceDto> places = convertPlaces ? berthPlaceConverter.toDtos(e.getBerthPlaces()) : null;
         List<DictAmenityDto> conveniences = convertAmenities ? dictAmenityConverter.toDtos(e.getAmenities()) : null;
-        List<FileInfoDto> photos = e.getPhotos().stream().map(fileInfoService::get).collect(Collectors.toUnmodifiableList());
+        List<FileInfoDto> photos = StreamEx.of(e.getPhotos()).map(fileInfoService::get).toList();
 
         return (BerthDto.Resp) dto
                 .setId(e.getId())
 //                .setRating(e.getRating())
-                .setPhotoList(photos)
-                .setPlaceList(places)
+                .setPhotos(photos)
+                .setPlaces(places)
                 .setName(e.getName())
                 .setDescription(e.getDescription())
                 .setLat(e.getLat())
                 .setLng(e.getLng())
-                .setAmenityList(conveniences);
+                .setPhCode(e.getPhCode())
+                .setPhNumber(e.getPhNumber())
+                .setSite(e.getSite())
+                .setRadio(e.getRadio())
+                .setAmenities(conveniences);
     }
 
     @Override
@@ -55,8 +60,8 @@ public class BerthConverter extends AbstractConverter<Berth, BerthDto.Resp, Bert
 
     @Override
     public Berth toEntity(Berth entity, BerthDto dto) {
-        if (dto.getPhotoList() != null) {
-            List<UUID> photos = dto.getPhotoList().stream()
+        if (dto.getPhotos() != null) {
+            List<UUID> photos = dto.getPhotos().stream()
                     .peek(it -> fileInfoService.get(it.getFileId()))
                     .map(FileInfoDto::getFileId)
                     .collect(Collectors.toUnmodifiableList());
@@ -64,19 +69,19 @@ public class BerthConverter extends AbstractConverter<Berth, BerthDto.Resp, Bert
             entity.setPhotos(photos);
         }
 
-        if (dto.getAmenityList() != null) {
-            List<DictAmenity> amenities = dto.getAmenityList().stream()
+        if (dto.getAmenities() != null) {
+            List<DictAmenity> amenities = dto.getAmenities().stream()
                     .map(it -> em.getReference(DictAmenity.class, it.getKey()))
                     .collect(toList());
 
             entity.setAmenities(amenities);
         }
 
-        if (dto.getPlaceList() != null) {
+        if (dto.getPlaces() != null) {
             List<BerthPlace> oldPlaces = new ArrayList<>(entity.getBerthPlaces());
             Map<Long, BerthPlace> idToPlace = oldPlaces.stream().collect(Collectors.toMap(BerthPlace::getId, Function.identity()));
 
-            List<BerthPlace> newPlaces = dto.getPlaceList().stream()
+            List<BerthPlace> newPlaces = dto.getPlaces().stream()
                     .map(placeDto -> {
                         if (placeDto.getId() != null) {
                             var oldPlace = Optional.ofNullable(idToPlace.get(placeDto.getId()))
@@ -97,7 +102,11 @@ public class BerthConverter extends AbstractConverter<Berth, BerthDto.Resp, Bert
                 .setName(dto.getName())
                 .setDescription(dto.getDescription())
                 .setLng(dto.getLng())
-                .setLat(dto.getLat());
+                .setLat(dto.getLat())
+                .setPhCode(dto.getPhCode())
+                .setPhNumber(dto.getPhNumber())
+                .setSite(dto.getSite())
+                .setRadio(dto.getRadio());
     }
 
     @Override

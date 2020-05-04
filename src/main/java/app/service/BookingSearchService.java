@@ -89,7 +89,7 @@ public class BookingSearchService {
         return (BerthDto.Resp.Search) berthSearch
                 .setDistance(distance)
                 .setMinPrice(minPrice)
-                .setPlaceList(places);
+                .setPlaces(places);
     }
 
     private Set<DictAmenity> extractAmenities(BookingSearchRequest req) {

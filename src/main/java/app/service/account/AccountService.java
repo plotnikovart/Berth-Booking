@@ -70,7 +70,8 @@ public class AccountService {
     }
 
 
-    Account createEmailAccount(String email, byte[] passwordHash, byte[] salt, AccountRole... roles) {
+    @Transactional
+    public Account createEmailAccount(String email, byte[] passwordHash, byte[] salt, AccountRole... roles) {
         var account = new Account()
                 .setKind(AccountKind.EMAIL)
                 .setEmail(email)
@@ -90,7 +91,8 @@ public class AccountService {
         return account;
     }
 
-    Account createGoogleAccount(String gmail, AccountRole... roles) {
+    @Transactional
+    public Account createGoogleAccount(String gmail, AccountRole... roles) {
         var account = new Account()
                 .setKind(AccountKind.GOOGLE)
                 .setGoogleMail(gmail)
