@@ -1,8 +1,6 @@
 package app.service.berth.dto;
 
 import app.service.file.dto.FileInfoDto;
-import app.web.dto.BerthPlaceDto;
-import app.web.dto.DictAmenityDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

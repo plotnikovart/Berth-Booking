@@ -1,8 +1,8 @@
 package app.service.converters.impl;
 
 import app.database.entity.BerthPlace;
+import app.service.berth.dto.BerthPlaceDto;
 import app.service.converters.AbstractSingleConverter;
-import app.web.dto.BerthPlaceDto;
 import org.springframework.stereotype.Component;
 
 @Component

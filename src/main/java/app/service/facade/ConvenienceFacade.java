@@ -1,8 +1,8 @@
 package app.service.facade;
 
 import app.database.repository.DictAmenityRepository;
+import app.service.berth.dto.DictAmenityDto;
 import app.service.converters.impl.DictAmenityConverter;
-import app.web.dto.DictAmenityDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

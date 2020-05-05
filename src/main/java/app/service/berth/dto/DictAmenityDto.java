@@ -1,4 +1,4 @@
-package app.web.dto;
+package app.service.berth.dto;
 
 import app.config.validation.ValidationUtils;
 import app.database.entity.DictAmenity;

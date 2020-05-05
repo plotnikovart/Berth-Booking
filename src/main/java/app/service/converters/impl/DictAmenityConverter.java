@@ -1,8 +1,8 @@
 package app.service.converters.impl;
 
 import app.database.entity.DictAmenity;
+import app.service.berth.dto.DictAmenityDto;
 import app.service.converters.AbstractRespConverter;
-import app.web.dto.DictAmenityDto;
 import org.springframework.stereotype.Component;
 
 @Component

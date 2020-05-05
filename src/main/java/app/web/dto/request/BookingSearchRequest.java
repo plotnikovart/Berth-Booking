@@ -1,7 +1,7 @@
 package app.web.dto.request;
 
 import app.config.validation.ValidationUtils;
-import app.web.dto.DictAmenityDto;
+import app.service.berth.dto.DictAmenityDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.hibernate.validator.constraints.Range;

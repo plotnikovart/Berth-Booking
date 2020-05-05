@@ -2,7 +2,7 @@ package app.util;
 
 import app.service.berth.dto.BerthApplicationDto;
 import app.service.berth.dto.BerthDto;
-import app.web.dto.BerthPlaceDto;
+import app.service.berth.dto.BerthPlaceDto;
 import one.util.streamex.StreamEx;
 import org.apache.commons.lang3.tuple.Pair;
 
