@@ -6,7 +6,6 @@ import app.database.entity.Booking;
 import app.database.entity.Ship;
 import app.database.repository.BerthPlaceRepository;
 import app.database.repository.ShipRepository;
-import app.service.berth.dto.BerthDto;
 import app.service.converters.AbstractConverter;
 import app.web.dto.BookingDto;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +33,7 @@ public class BookingConverter extends AbstractConverter<Booking, BookingDto.Resp
     public BookingDto.Resp toDto(BookingDto.Resp dto, Booking e) {
         return (BookingDto.Resp) dto
                 .setId(e.getId())
-                .setBerth(berthConverter.toDto(new BerthDto.Resp(), e.getBerthPlace().getBerth(), false, false))
+//                .setBerth(berthConverter.toDto(new BerthDto.Resp(), e.getBerthPlace().getBerth(), false, false))
                 .setBerthPlace(berthPlaceConverter.toDto(e.getBerthPlace()))
                 .setShip(shipConverter.toDto(e.getShip()))
                 .setOwner(userInfoConverter.toDto(e.getOwner()))

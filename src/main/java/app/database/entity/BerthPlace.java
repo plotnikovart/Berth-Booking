@@ -38,9 +38,9 @@ public class BerthPlace extends AuditEntity implements EntityWithOwner {
     private Double price;
 
     @Column(nullable = false)
-    private Double x_coord;
+    private Double xCoord;
     @Column(nullable = false)
-    private Double y_coord;
+    private Double yCoord;
     @Column(nullable = false)
     private Double rotate;
     @Column(nullable = false)

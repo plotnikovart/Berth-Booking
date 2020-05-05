@@ -28,6 +28,7 @@ public class SwaggerConfig {
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo())
+                .useDefaultResponseMessages(false)
                 .securityContexts(List.of(securityContext()))
                 .securitySchemes(List.of(apiKey()));
     }

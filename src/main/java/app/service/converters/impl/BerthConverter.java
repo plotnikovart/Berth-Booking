@@ -5,6 +5,7 @@ import app.database.entity.Berth;
 import app.database.entity.BerthPlace;
 import app.database.entity.DictAmenity;
 import app.database.repository.BerthRepository;
+import app.service.berth.BerthPart;
 import app.service.berth.dto.BerthDto;
 import app.service.converters.AbstractConverter;
 import app.service.file.FileInfoService;
@@ -20,6 +21,8 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static app.service.berth.BerthPart.AMENITIES;
+import static app.service.berth.BerthPart.PLACES;
 import static java.util.stream.Collectors.toList;
 
 @Component
@@ -32,14 +35,30 @@ public class BerthConverter extends AbstractConverter<Berth, BerthDto.Resp, Bert
     private final EntityManager em;
     private final FileInfoService fileInfoService;
 
-    public BerthDto.Resp toDto(BerthDto.Resp dto, Berth e, boolean convertPlaces, boolean convertAmenities) {
-        List<BerthPlaceDto> places = convertPlaces ? berthPlaceConverter.toDtos(e.getBerthPlaces()) : null;
-        List<DictAmenityDto> conveniences = convertAmenities ? dictAmenityConverter.toDtos(e.getAmenities()) : null;
+    @Override
+    public BerthDto.Resp toDto(BerthDto.Resp dto, Berth entity) {
+        return toDto(dto, entity, new BerthPart[0]);
+    }
+
+    public BerthDto.Resp toDto(Berth entity, BerthPart... include) {
+        return toDto(new BerthDto.Resp(), entity, include);
+    }
+
+    public BerthDto.Resp toDto(BerthDto.Resp dto, Berth e, BerthPart... include) {
+        List<BerthPlaceDto> places = StreamEx.of(include).has(PLACES) ?
+                berthPlaceConverter.toDtos(e.getBerthPlaces()) :
+                null;
+
+        List<DictAmenityDto> amenities = StreamEx.of(include).has(AMENITIES) ?
+                StreamEx.of(dictAmenityConverter.toDtos(e.getAmenities())).sortedBy(DictAmenityDto::getKey).toList() :
+                null;
+
         List<FileInfoDto> photos = StreamEx.of(e.getPhotos()).map(fileInfoService::get).toList();
 
         return (BerthDto.Resp) dto
                 .setId(e.getId())
 //                .setRating(e.getRating())
+                .setIsConfirmed(e.getIsConfirmed())
                 .setPhotos(photos)
                 .setPlaces(places)
                 .setName(e.getName())
@@ -50,12 +69,7 @@ public class BerthConverter extends AbstractConverter<Berth, BerthDto.Resp, Bert
                 .setPhNumber(e.getPhNumber())
                 .setSite(e.getSite())
                 .setRadio(e.getRadio())
-                .setAmenities(conveniences);
-    }
-
-    @Override
-    public BerthDto.Resp toDto(BerthDto.Resp dto, Berth e) {
-        return toDto(dto, e, true, true);
+                .setAmenities(amenities);
     }
 
     @Override
@@ -109,14 +123,17 @@ public class BerthConverter extends AbstractConverter<Berth, BerthDto.Resp, Bert
                 .setRadio(dto.getRadio());
     }
 
-    @Override
-    public List<BerthDto.Resp> toDtos(Collection<Berth> entities) {
+    public List<BerthDto.Resp> toDtos(Collection<Berth> entities, BerthPart... include) {
         if (!entities.isEmpty()) {
-            berthRepository.loadPhotos(entities);
-            berthRepository.loadConveniences(entities);
-            berthRepository.loadPlaces(entities);
+            if (StreamEx.of(include).has(AMENITIES)) {
+                berthRepository.loadAmenities(entities);
+            }
+
+            if (StreamEx.of(include).has(PLACES)) {
+                berthRepository.loadPlaces(entities);
+            }
         }
 
-        return super.toDtos(entities);
+        return StreamEx.of(entities).map(it -> toDto(it, include)).toList();
     }
 }

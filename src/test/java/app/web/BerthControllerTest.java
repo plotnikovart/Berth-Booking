@@ -1,5 +1,6 @@
 package app.web;
 
+import app.config.exception.impl.NotFoundException;
 import app.config.security.OperationContext;
 import app.database.entity.enums.BerthApplicationStatus;
 import app.database.repository.AbstractAmenityTest;
@@ -10,7 +11,9 @@ import app.service.berth.dto.BerthDto;
 import app.service.file.FileStorageService;
 import app.service.file.dto.FileInfoDto;
 import app.util.CompareHelper;
+import app.web.dto.BerthPlaceDto;
 import app.web.dto.DictAmenityDto;
+import one.util.streamex.StreamEx;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -75,93 +78,117 @@ class BerthControllerTest extends AbstractAmenityTest {
         Assertions.assertEquals(1, allApplications.size());
     }
 
-//    @Test
-//    void crud() throws Exception {
-//        var placeList = List.of(
-//                new BerthPlaceDto().setDraft(1.0).setWidth(1.0).setLength(1.0),
-//                new BerthPlaceDto().setDraft(1.0).setWidth(1.0).setLength(1.0).setPrice(11.0)
-//        );
-//
-//        var convenienceList = List.of(convConverter.toDto(conv1), convConverter.toDto(conv2));
-//
-//        var dto = (BerthDto.Req) new BerthDto.Req()
-//                .setPhotoList(List.of("photo1", "photo2"))
-//                .setValue("1")
-//                .setDescription("asada")
-//                .setStandardPrice(12.5)
-//                .setLat(12.0)
-//                .setLng(13.0)
-//                .setPlaceList(placeList)
-//                .setConvenienceList(convenienceList);
-//
-//
-//        // post
-//        MvcResult actual = mvc.perform(post("/api/berths")
-//                .contentType(MediaType.APPLICATION_JSON_UTF8)
-//                .content(mapper.writeValueAsString(dto)))
-//                .andExpect(status().isOk())
-//                .andReturn();
-//
-//        var response = mapper.readValue(actual.getResponse().getContentAsString(), IdResponse.class);
-//        var dtoResp = new BerthDto.Resp()
-//                .setId(Long.valueOf((Integer) response.getId()));
-//        syncDto(dto, dtoResp);
-//
-//        placeList.get(0).setId(0L);
-//        placeList.get(1).setId(1L);
-//
-//        commitAndStartNewTransaction();
-//
-//        // get
-//        mvc.perform(get("/api/berths/" + dtoResp.getId()))
-//                .andExpect(status().isOk())
-//                .andExpect(content().string(mapper.writeValueAsString(dtoResp)));
-//
-//        // put
-//        dto.setValue("122");
-//        dto.setPhotoList(List.of("photo1", "photo3"));
-//        dto.setPlaceList(List.of(placeList.get(0).setLength(2.0), new BerthPlaceDto().setDraft(1.0).setWidth(1.0).setLength(1.0).setPrice(1.0)));
-//        dto.setConvenienceList(List.of(convConverter.toDto(conv1)));
-//
-//        mvc.perform(put("/api/berths/" + dtoResp.getId())
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(mapper.writeValueAsString(dto)))
-//                .andExpect(status().isOk());
-//
-//        syncDto(dto, dtoResp);
-//        dto.getPlaceList().get(1).setId(2L);
-//
-//        commitAndStartNewTransaction();
-//
-//        // get
-//        mvc.perform(get("/api/berths/" + dtoResp.getId()))
-//                .andExpect(status().isOk())
-//                .andExpect(content().string(mapper.writeValueAsString(dtoResp)));
-//
-//        // delete
-//        mvc.perform(delete("/api/berths/" + dtoResp.getId()))
-//                .andExpect(status().isOk());
-//        commitAndStartNewTransaction();
-//
-//        // GET ALL
-//        mvc.perform(get("/api/berths"))
-//                .andExpect(content().json((mapper.writeValueAsString(List.of()))));
-//    }
-//
-//
-//    private void syncDto(BerthDto.Req req, BerthDto.Resp resp) {
-//        var photoList = req.getPhotoList().stream()
-//                .map(photo -> MessageFormat.format("/api/images/{0}/{1}/{2}", ImageKind.BERTH.value().toLowerCase(), account.getId(), photo))
-//                .collect(Collectors.toList());
-//
-//        resp
-//                .setPhotoList(photoList)
-//                .setValue(req.getValue())
-//                .setDescription(req.getDescription())
-//                .setStandardPrice(req.getStandardPrice())
-//                .setLat(req.getLat())
-//                .setLng(req.getLng())
-//                .setPlaceList(req.getPlaceList())
-//                .setConvenienceList(req.getConvenienceList());
-//    }
+    @Test
+    void crud() throws Exception {
+        var places = List.of(
+                new BerthPlaceDto()
+                        .setName("Место 1")
+                        .setDraft(1.0)
+                        .setWidth(1.0)
+                        .setLength(1.0)
+                        .setPrice(11.0)
+                        .setXCoord(0.0)
+                        .setYCoord(0.0)
+                        .setRotate(0.0)
+                        .setColor("color"),
+                new BerthPlaceDto()
+                        .setName("Место 2")
+                        .setDraft(1.0)
+                        .setWidth(1.0)
+                        .setLength(1.0)
+                        .setPrice(11.0)
+                        .setXCoord(0.0)
+                        .setYCoord(0.0)
+                        .setRotate(0.0)
+                        .setColor("color")
+        );
+
+        var amenities = List.of(
+                DictAmenityDto.of(amenity1),
+                DictAmenityDto.of(amenity2)
+        );
+
+        var berthDto = new BerthDto()
+                .setName("Причал")
+                .setDescription("Описание")
+                .setLat(0.0)
+                .setLng(0.0)
+                .setRadio("radio")
+                .setSite("site")
+                .setPhCode("ru")
+                .setPhNumber("88888888")
+                .setAmenities(amenities)
+                .setPlaces(places)
+                .setPhotos(List.of(file1, file2));
+
+        var applicationDto = new BerthApplicationDto.Req()
+                .setBerth(berthDto);
+
+        var berthId = berthController.createApplication(applicationDto).getData().getBerthId();
+
+        // GET ONE
+        var expected = (BerthDto.Resp) new BerthDto.Resp()
+                .setIsConfirmed(false)
+                .setName(berthDto.getName())
+                .setDescription(berthDto.getDescription())
+                .setLat(berthDto.getLat())
+                .setLng(berthDto.getLng())
+                .setRadio(berthDto.getRadio())
+                .setSite(berthDto.getSite())
+                .setPhCode(berthDto.getPhCode())
+                .setPhNumber(berthDto.getPhNumber())
+                .setAmenities(StreamEx.of(berthDto.getAmenities()).sortedBy(DictAmenityDto::getKey).toList())
+                .setPlaces(berthDto.getPlaces())
+                .setPhotos(berthDto.getPhotos());
+
+        var actual = berthController.getBerth(berthId, null).getData();
+        Assertions.assertFalse(CompareHelper.areEqual(expected, actual));
+
+        actual = berthController.getBerth(berthId, List.of("places")).getData();
+        Assertions.assertFalse(CompareHelper.areEqual(expected, actual));
+
+        actual = berthController.getBerth(berthId, List.of("places", "amenities")).getData();
+        Assertions.assertTrue(CompareHelper.areEqual(expected, actual));
+
+        // GET ALL
+        var expected2 = List.of(expected);
+
+        var actual2 = berthController.getAllBerths(null).getData();
+        Assertions.assertFalse(CompareHelper.areEqualBerths(expected2, actual2));
+
+        actual2 = berthController.getAllBerths(List.of("places")).getData();
+        Assertions.assertFalse(CompareHelper.areEqualBerths(expected2, actual2));
+
+        actual2 = berthController.getAllBerths(List.of("places", "amenities")).getData();
+        Assertions.assertTrue(CompareHelper.areEqualBerths(expected2, actual2));
+
+        // GET PLACES
+        var pl = berthController.getBerthPlaces(berthId).getData();
+        Assertions.assertTrue(CompareHelper.areEqualPlaces(expected.getPlaces(), pl));
+
+        // GET AMENITIES
+        var am = berthController.getBerthAmenities(berthId).getData();
+        Assertions.assertEquals(expected.getAmenities(), am);
+
+
+        // UPDATE
+        berthDto
+                .setPlaces(List.of())
+                .setSite(null);
+
+        var expected3 = (BerthDto.Resp) expected
+                .setPlaces(berthDto.getPlaces())
+                .setSite(berthDto.getSite());
+
+        var actual3 = berthController.updateBerth(berthDto, berthId).getData();
+        Assertions.assertTrue(CompareHelper.areEqual(expected3, actual3));
+
+
+        // DELETE
+        berthController.deleteBerth(berthId);
+        Assertions.assertThrows(NotFoundException.class, () -> berthController.getBerth(berthId, null));
+        Assertions.assertEquals(0, berthController.getAllBerths(null).getData().size());
+        Assertions.assertThrows(NotFoundException.class, () -> berthController.getBerthPlaces(berthId).getData().size());
+        Assertions.assertThrows(NotFoundException.class, () -> berthController.getBerthAmenities(berthId).getData().size());
+    }
 }

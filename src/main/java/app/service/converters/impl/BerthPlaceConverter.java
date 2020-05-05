@@ -17,8 +17,8 @@ public class BerthPlaceConverter extends AbstractSingleConverter<BerthPlace, Ber
                 .setDraft(e.getDraft())
                 .setWidth(e.getWidth())
                 .setPrice(e.getPrice())
-                .setX_coord(e.getX_coord())
-                .setY_coord(e.getY_coord())
+                .setXCoord(e.getXCoord())
+                .setYCoord(e.getYCoord())
                 .setRotate(e.getRotate())
                 .setColor(e.getColor());
     }
@@ -31,8 +31,8 @@ public class BerthPlaceConverter extends AbstractSingleConverter<BerthPlace, Ber
                 .setDraft(dto.getDraft())
                 .setWidth(dto.getWidth())
                 .setPrice(dto.getPrice())
-                .setX_coord(dto.getX_coord())
-                .setY_coord(dto.getY_coord())
+                .setXCoord(dto.getXCoord())
+                .setYCoord(dto.getYCoord())
                 .setRotate(dto.getRotate())
                 .setColor(dto.getColor());
     }

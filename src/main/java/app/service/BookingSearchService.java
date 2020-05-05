@@ -100,8 +100,7 @@ public class BookingSearchService {
     private void loadData(Collection<Berth> berths) {
         if (!berths.isEmpty()) {
             berthRepository.loadPlaces(berths);
-            berthRepository.loadConveniences(berths);
-            berthRepository.loadPhotos(berths);
+            berthRepository.loadAmenities(berths);
         }
     }
 }

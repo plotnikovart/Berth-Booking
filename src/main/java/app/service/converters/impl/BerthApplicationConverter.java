@@ -42,10 +42,14 @@ public class BerthApplicationConverter extends AbstractConverter<BerthApplicatio
 
     @Override
     public BerthApplication toEntity(BerthApplication entity, BerthApplicationDto.Req dto) {
-        List<UUID> attachments = StreamEx.of(dto.getAttachments())
-                .map(FileInfoDto::getFileId)
-                .peek(fileInfoService::get)
-                .toList();
+        List<UUID> attachments = ofNullable(dto.getAttachments())
+                .map(it ->
+                        StreamEx.of(it)
+                                .map(FileInfoDto::getFileId)
+                                .peek(fileInfoService::get)
+                                .toList()
+                )
+                .orElse(null);
 
         return entity
                 .setDescription(dto.getDescription())
