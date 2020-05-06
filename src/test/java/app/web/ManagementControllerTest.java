@@ -8,6 +8,7 @@ import app.database.repository.AbstractAccountTest;
 import app.database.repository.BerthApplicationRepository;
 import app.database.repository.BerthRepository;
 import app.service.berth.dto.BerthApplicationFilter;
+import app.service.berth.dto.management.BerthApplicationDecision;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -93,6 +94,45 @@ class ManagementControllerTest extends AbstractAccountTest {
         resp = managementController.getApplications(filter).getData().getItems();
         Assertions.assertEquals(1, resp.size());
         Assertions.assertEquals(application1, resp.get(0).getId());
+    }
+
+    @Test
+    void changeStatus() {
+        Long applicationId = createApplication("Причал", NEW);
+        BerthApplication application = berthApplicationRepository.findById(applicationId).orElseThrow();
+
+        OperationContext.accountId(moderatorAccount.getId());
+
+        managementController.startWorkWithApplication(applicationId);
+        application = berthApplicationRepository.findById(applicationId).orElseThrow();
+
+        Assertions.assertEquals(IN_PROGRESS, application.getStatus());
+        Assertions.assertEquals(moderatorAccount.getId(), application.getModerator().getId());
+        Assertions.assertNull(application.getDecision());
+
+        var decision = new BerthApplicationDecision().setDecision("Плохая заявка");
+
+        managementController.rejectApplication(applicationId, decision);
+        application = berthApplicationRepository.findById(applicationId).orElseThrow();
+
+        Assertions.assertEquals(REJECTED, application.getStatus());
+        Assertions.assertEquals(moderatorAccount.getId(), application.getModerator().getId());
+        Assertions.assertEquals(decision.getDecision(), application.getDecision());
+
+
+        managementController.approveApplication(applicationId, decision);
+        application = berthApplicationRepository.findById(applicationId).orElseThrow();
+
+        Assertions.assertEquals(APPROVED, application.getStatus());
+        Assertions.assertEquals(moderatorAccount.getId(), application.getModerator().getId());
+        Assertions.assertEquals(decision.getDecision(), application.getDecision());
+
+        managementController.startWorkWithApplication(applicationId);
+        application = berthApplicationRepository.findById(applicationId).orElseThrow();
+
+        Assertions.assertEquals(IN_PROGRESS, application.getStatus());
+        Assertions.assertEquals(moderatorAccount.getId(), application.getModerator().getId());
+        Assertions.assertNull(application.getDecision());
     }
 
 
