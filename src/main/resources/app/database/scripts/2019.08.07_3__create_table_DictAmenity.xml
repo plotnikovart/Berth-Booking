@@ -6,7 +6,7 @@
 
     <changeSet id="2019.08.07_3_1" author="aplotnikov">
         <createTable tableName="dict_amenity">
-            <column name="key" type="char(16)">
+            <column name="key" type="varchar(16)">
                 <constraints primaryKey="true" primaryKeyName="pk_dict_amenity"/>
             </column>
             <column name="value" type="varchar(64)">
