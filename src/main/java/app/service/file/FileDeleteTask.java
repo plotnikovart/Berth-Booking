@@ -1,7 +1,7 @@
 package app.service.file;
 
+import app.database.repository.BerthRepository;
 import app.database.repository.FileInfoRepository;
-import app.database.repository.ShipPhotoRepository;
 import app.database.repository.UserInfoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ public class FileDeleteTask {
 
     private final FileInfoRepository fileInfoRepository;
     private final UserInfoRepository userInfoRepository;
-    private final ShipPhotoRepository shipPhotoRepository;
+    private final BerthRepository berthRepository;
 
 
     @Scheduled(cron = "0 0 2 * * ?")    // каждый день в 2 ночи
@@ -40,7 +40,7 @@ public class FileDeleteTask {
 
             Stream<UUID> userInfoPhotos = userInfoRepository.findUpdatedPhotos(sinceDate).stream();
             Stream<UUID> shipFiles = Stream.of();//shipPhotoRepository.findAll().stream().map(ShipPhoto::getFileName);
-            Stream<UUID> berthFiles = Stream.of();//berthPhotoRepository.findAll().stream().map(BerthPhoto::getFileName);
+            Stream<UUID> berthFiles = berthRepository.findChanged(sinceDate).stream().flatMap(it -> it.getPhotos().stream());
 
             var usedFiles = Stream.of(userInfoPhotos, shipFiles, berthFiles)
                     .flatMap(s -> s)
