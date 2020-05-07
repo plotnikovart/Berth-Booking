@@ -47,7 +47,8 @@ public class ManagementBerthApplicationService {
 
     @Transactional
     public StartApplicationResp startApplication(long id) {
-        modifyApplication(id, IN_PROGRESS, null);
+        BerthApplication application = modifyApplication(id, IN_PROGRESS, null);
+        application.getBerth().setIsConfirmed(false);
 
         // todo создание чата, присоединение к чату
         return (StartApplicationResp) new StartApplicationResp()
@@ -57,14 +58,18 @@ public class ManagementBerthApplicationService {
 
     @Transactional
     public ChangeApplicationStatusResp rejectApplication(long id, String decision) {
-        modifyApplication(id, REJECTED, decision);
+        BerthApplication application = modifyApplication(id, REJECTED, decision);
+        application.getBerth().setIsConfirmed(false);
+
         return new ChangeApplicationStatusResp()
                 .setNewStatus(REJECTED);
     }
 
     @Transactional
     public ChangeApplicationStatusResp approveApplication(long id, String decision) {
-        modifyApplication(id, APPROVED, decision);
+        BerthApplication application = modifyApplication(id, APPROVED, decision);
+        application.getBerth().setIsConfirmed(true);
+
         return new ChangeApplicationStatusResp()
                 .setNewStatus(APPROVED);
     }
