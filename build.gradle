@@ -20,6 +20,7 @@ dependencies {
             'org.springframework.boot:spring-boot-starter-web',
             'org.springframework.boot:spring-boot-starter-data-jpa',
             'org.springframework.boot:spring-boot-starter-mail',
+            'org.springframework.boot:spring-boot-starter-logging',
 
 //            DATABASE
             'org.hibernate:hibernate-search-orm:5.11.2.Final',
@@ -35,7 +36,6 @@ dependencies {
 //            COMMON
             'com.google.guava:guava:28.0-jre',
             'org.apache.commons:commons-lang3:3.9',
-            'org.slf4j:slf4j-log4j12:1.7.26',
             'com.google.apis:google-api-services-oauth2:v2-rev157-1.25.0',
             'com.fasterxml.uuid:java-uuid-generator:3.2.0',
             'one.util:streamex:0.7.2',
@@ -64,8 +64,7 @@ dependencies {
 }
 
 configurations {
-    compile.exclude module: 'spring-boot-starter-logging'
-    compile.exclude module: 'logback-classic'
+    compile.exclude module: 'junit'
 }
 
 test {

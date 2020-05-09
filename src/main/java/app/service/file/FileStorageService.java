@@ -4,7 +4,7 @@ import app.config.exception.impl.NotFoundException;
 import app.config.exception.impl.ServiceException;
 import app.service.file.dto.FileInfoDto;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ import java.util.UUID;
 
 import static app.common.SMessageSource.message;
 
-@Log4j
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FileStorageService {
@@ -42,7 +42,7 @@ public class FileStorageService {
 
             return fileInfo;
         } catch (Exception e) {
-            log.error(e);
+            log.error(e.getMessage(), e);
             throw new ServiceException(message("file.not_save"), e);
         }
     }

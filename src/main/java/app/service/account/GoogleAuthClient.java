@@ -11,13 +11,13 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.oauth2.Oauth2;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.FileReader;
 
-@Log4j
+@Slf4j
 @Component
 public class GoogleAuthClient {
 
@@ -53,7 +53,7 @@ public class GoogleAuthClient {
                     .setLastName(userInfo.getFamilyName())
                     .setPhotoLink(userInfo.getPicture());
         } catch (Exception e) {
-            log.error(e);
+            log.error(e.getMessage(), e);
             throw new UnauthorizedException();
         }
     }
