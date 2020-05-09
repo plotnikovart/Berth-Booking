@@ -9,7 +9,7 @@
             <column name="id" type="bigint">
                 <constraints primaryKey="true" primaryKeyName="pk_ship"/>
             </column>
-            <column name="account_id" type="bigint">
+            <column name="owner_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
             <column name="name" type="varchar(256)">
@@ -41,10 +41,20 @@
             <column name="insurance_file" type="uuid"/>
 
             <column name="photos" type="clob"/>
+
+            <column name="is_deleted" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="change_user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="change_date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
 
         <addForeignKeyConstraint baseTableName="ship"
-                                 baseColumnNames="account_id"
+                                 baseColumnNames="owner_id"
                                  constraintName="fk_ship_account"
                                  referencedTableName="account"
                                  referencedColumnNames="id"

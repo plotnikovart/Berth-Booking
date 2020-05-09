@@ -1,43 +1,113 @@
 package ru.hse.coursework.berth.web.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 import ru.hse.coursework.berth.config.validation.ValidationUtils;
+import ru.hse.coursework.berth.database.entity.enums.ShipType;
+import ru.hse.coursework.berth.service.file.dto.FileInfoDto;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
 public class ShipDto {
 
+    @ApiModelProperty(required = true, position = 1)
     @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
-    @Length(max = 40, message = ValidationUtils.LENGTH_MESSAGE)
+    @Length(max = 256, message = ValidationUtils.LENGTH_MESSAGE)
     private String name;
 
+    @ApiModelProperty(position = 2)
+    private ShipType type;
+
+    @ApiModelProperty(position = 3, required = true)
     @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
-    @Range(message = ValidationUtils.RANGE_MESSAGE)
-    private Double length;
+    private Dimensions dimensions;
 
+    @ApiModelProperty(position = 4, required = true)
     @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
-    @Range(message = ValidationUtils.RANGE_MESSAGE)
-    private Double draft;
+    private Model model;
 
+    @ApiModelProperty(position = 5, required = true)
     @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
-    @Range(message = ValidationUtils.RANGE_MESSAGE)
-    private Double width;
+    private Registration registration;
 
-    @Data
-    public static class Req extends ShipDto {
+    @ApiModelProperty(position = 6, required = true)
+    @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
+    private Insurance insurance;
 
-        private List<String> photoList = new ArrayList<>();
-    }
+    @ApiModelProperty(position = 7, notes = "Если не передать этот параметр, то фотографии не будут изменены")
+    private List<FileInfoDto> photos;
+
 
     @Data
     public static class Resp extends ShipDto {
 
+        @ApiModelProperty(required = true, position = -1)
         private Long id;
-        private List<String> photoList = new ArrayList<>();
+    }
+
+    @Data
+    public static class Dimensions {
+
+        @ApiModelProperty(required = true, position = 1)
+        @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
+        @Range(message = ValidationUtils.RANGE_MESSAGE)
+        private Double length;
+
+        @ApiModelProperty(required = true, position = 2)
+        @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
+        @Range(message = ValidationUtils.RANGE_MESSAGE)
+        private Double draft;
+
+        @ApiModelProperty(required = true, position = 3)
+        @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
+        @Range(message = ValidationUtils.RANGE_MESSAGE)
+        private Double width;
+    }
+
+    @Data
+    public static class Model {
+
+        @ApiModelProperty(position = 1)
+        private String producer;
+
+        @ApiModelProperty(position = 2)
+        private String model;
+
+        @ApiModelProperty(position = 3)
+        private Integer year;
+    }
+
+    @Data
+    public static class Registration {
+
+        @ApiModelProperty(position = 1)
+        private String number;
+
+        @ApiModelProperty(position = 2)
+        private LocalDate expire;
+
+        @ApiModelProperty(position = 3)
+        private FileInfoDto file;
+    }
+
+    @Data
+    public static class Insurance {
+
+        @ApiModelProperty(position = 1)
+        private String company;
+
+        @ApiModelProperty(position = 2)
+        private String number;
+
+        @ApiModelProperty(position = 3)
+        private LocalDate expire;
+
+        @ApiModelProperty(position = 4)
+        private FileInfoDto file;
     }
 }
