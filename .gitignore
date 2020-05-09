@@ -27,5 +27,7 @@ hs_err_pid*
 build/
 *.iml
 launch.bat
-!/google_secret.json
-!/config.properties
+
+/config.properties
+/google_secret.json
+/indexes/
