@@ -5,7 +5,7 @@ plugins {
     id 'idea'
 }
 
-group = 'hse.courseWork'
+group = 'ru.hse.coursework'
 version = '2.0'
 sourceCompatibility = '11'
 

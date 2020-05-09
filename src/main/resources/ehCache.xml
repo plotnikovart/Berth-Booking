@@ -1,6 +1,6 @@
 <ehcache>
     <cache
-            name="app.database.entity.FileInfo"
+            name="ru.hse.coursework.berth.database.entity.FileInfo"
             maxElementsInMemory="1000"
             eternal="false"
             timeToIdleSeconds="86400"
