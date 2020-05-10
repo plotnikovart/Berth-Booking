@@ -59,10 +59,14 @@
 
     <changeSet id="2019.08.17_1_3" author="aplotnikov">
         <addColumn tableName="berth">
-            <column name="avg_rating" type="double">
-                <constraints nullable="false"/>
-            </column>
+            <column name="avg_rating" type="double"/>
         </addColumn>
+
+        <update tableName="berth">
+            <column name="avg_rating" value="0"/>
+        </update>
+
+        <addNotNullConstraint tableName="berth" columnName="avg_rating" columnDataType="double"/>
     </changeSet>
 
 </databaseChangeLog>
