@@ -133,9 +133,9 @@ public class BookingFacade {
     }
 
     private void validateBooking(Booking booking) {
-        if (booking.getShip().getUserInfo() != booking.getRenter()) {
-            throw new AccessException();
-        }
+//        if (booking.getShip().getUserInfo() != booking.getRenter()) {
+//            throw new AccessException();
+//        }
 
         if (booking.getEndDate().isBefore(booking.getStartDate())) {
             throw new ServiceException(SMessageSource.message("booking.date"));

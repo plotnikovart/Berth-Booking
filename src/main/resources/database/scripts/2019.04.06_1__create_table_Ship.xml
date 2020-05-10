@@ -4,65 +4,69 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-<!--    <changeSet id="2019.04.06_1_1" author="aplotnikov">-->
-<!--        <createTable tableName="ship">-->
-<!--            <column value="id" type="bigint">-->
-<!--                <constraints primaryKey="true" primaryKeyName="pk_ship"/>-->
-<!--            </column>-->
-<!--            <column value="account_id" type="bigint">-->
-<!--                <constraints nullable="false"/>-->
-<!--            </column>-->
-<!--            <column value="value" type="varchar(40)">-->
-<!--                <constraints nullable="false"/>-->
-<!--            </column>-->
-<!--            <column value="length" type="double">-->
-<!--                <constraints nullable="false"/>-->
-<!--            </column>-->
-<!--            <column value="draft" type="double">-->
-<!--                <constraints nullable="false"/>-->
-<!--            </column>-->
-<!--            <column value="width" type="double">-->
-<!--                <constraints nullable="false"/>-->
-<!--            </column>-->
-<!--        </createTable>-->
+    <changeSet id="2019.04.06_1_1" author="aplotnikov">
+        <createTable tableName="ship">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="pk_ship"/>
+            </column>
+            <column name="owner_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(256)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="smallint">
+                <constraints nullable="false"/>
+            </column>
 
-<!--        <addForeignKeyConstraint baseTableName="ship"-->
-<!--                                 baseColumnNames="account_id"-->
-<!--                                 constraintName="fk_ship_user_info"-->
-<!--                                 referencedTableName="user_info"-->
-<!--                                 referencedColumnNames="account_id"-->
-<!--                                 onDelete="CASCADE"/>-->
+            <column name="length" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="draft" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="width" type="double">
+                <constraints nullable="false"/>
+            </column>
 
-<!--        <addAutoIncrement tableName="ship"-->
-<!--                          columnName="id"-->
-<!--                          columnDataType="bigint"-->
-<!--                          startWith="0"-->
-<!--                          incrementBy="1"/>-->
-<!--    </changeSet>-->
+            <column name="producer" type="varchar(64)"/>
+            <column name="model" type="varchar(128)"/>
+            <column name="year" type="int"/>
 
-<!--    <changeSet id="2019.04.06_1_2" author="aplotnikov">-->
-<!--        <createTable tableName="ship_photo">-->
-<!--            <column value="ship_id" type="bigint">-->
-<!--                <constraints nullable="false"/>-->
-<!--            </column>-->
-<!--            <column value="num" type="int">-->
-<!--                <constraints nullable="false"/>-->
-<!--            </column>-->
-<!--            <column value="file_name" type="varchar(42)">-->
-<!--                <constraints nullable="false"/>-->
-<!--            </column>-->
-<!--        </createTable>-->
+            <column name="registration_number" type="varchar(128)"/>
+            <column name="registration_expire" type="date"/>
+            <column name="registration_file" type="uuid"/>
 
-<!--        <addPrimaryKey tableName="ship_photo"-->
-<!--                       columnNames="ship_id, num"-->
-<!--                       constraintName="pk_ship_photo"/>-->
+            <column name="insurance_company" type="varchar(128)"/>
+            <column name="insurance_number" type="varchar(128)"/>
+            <column name="insurance_expire" type="date"/>
+            <column name="insurance_file" type="uuid"/>
 
-<!--        <addForeignKeyConstraint baseTableName="ship_photo"-->
-<!--                                 baseColumnNames="ship_id"-->
-<!--                                 constraintName="fk_ship_photo_ship"-->
-<!--                                 referencedTableName="ship"-->
-<!--                                 referencedColumnNames="id"-->
-<!--                                 onDelete="CASCADE"/>-->
-<!--    </changeSet>-->
+            <column name="photos" type="clob"/>
+
+            <column name="is_deleted" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="change_user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="change_date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="ship"
+                                 baseColumnNames="owner_id"
+                                 constraintName="fk_ship_account"
+                                 referencedTableName="account"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+
+        <addAutoIncrement tableName="ship"
+                          columnName="id"
+                          columnDataType="bigint"
+                          startWith="0"
+                          incrementBy="1"/>
+    </changeSet>
 
 </databaseChangeLog>

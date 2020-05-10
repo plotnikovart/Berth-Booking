@@ -21,6 +21,7 @@ public class FileInfoService {
 
     private final TimeBasedGenerator uuidGenerator = Generators.timeBasedGenerator();
     private final FileInfoRepository fileInfoRepository;
+//    private final Ehcache ehcache;
 
     public FileInfoDto save(String fileName) {
         Generators.timeBasedGenerator();

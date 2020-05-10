@@ -14,8 +14,8 @@ import java.lang.reflect.Parameter;
 @Component
 public class HttpBodyValidationHandler {
 
-    @Before("within(app.web.*)")
-    public void logAround(JoinPoint joinPoint) {
+    @Before("within(ru.hse.coursework.berth.web.*)")
+    public void checkBody(JoinPoint joinPoint) {
         Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
         Parameter[] parameters = method.getParameters();
 

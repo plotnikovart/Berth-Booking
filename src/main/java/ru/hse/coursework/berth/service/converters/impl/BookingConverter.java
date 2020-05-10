@@ -64,7 +64,6 @@ public class BookingConverter extends AbstractConverter<Booking, BookingDto.Resp
             List<BerthPlace> places = entities.stream().map(Booking::getBerthPlace).collect(Collectors.toList());
             List<Ship> ships = entities.stream().map(Booking::getShip).collect(Collectors.toList());
 
-            shipRepository.loadPhotos(ships);
             berthPlaceRepository.loadBerthsWithPhotos(places);
         }
 
