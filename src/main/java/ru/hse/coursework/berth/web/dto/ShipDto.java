@@ -9,6 +9,7 @@ import ru.hse.coursework.berth.database.entity.enums.ShipType;
 import ru.hse.coursework.berth.service.file.dto.FileInfoDto;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -52,7 +53,7 @@ public class ShipDto {
     }
 
     @Data
-    public static class Dimensions {
+    public static class Dimensions implements Serializable {
 
         @ApiModelProperty(required = true, position = 1)
         @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
@@ -71,7 +72,7 @@ public class ShipDto {
     }
 
     @Data
-    public static class Model {
+    public static class Model implements Serializable {
 
         @ApiModelProperty(position = 1)
         private String producer;
@@ -84,7 +85,7 @@ public class ShipDto {
     }
 
     @Data
-    public static class Registration {
+    public static class Registration implements Serializable {
 
         @ApiModelProperty(position = 1)
         private String number;
@@ -97,7 +98,7 @@ public class ShipDto {
     }
 
     @Data
-    public static class Insurance {
+    public static class Insurance implements Serializable {
 
         @ApiModelProperty(position = 1)
         private String company;

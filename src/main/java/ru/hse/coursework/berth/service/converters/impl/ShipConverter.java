@@ -20,7 +20,9 @@ public class ShipConverter extends AbstractConverter<Ship, ShipDto.Resp, ShipDto
 
     @Override
     public ShipDto.Resp toDto(ShipDto.Resp dto, Ship e) {
-        List<FileInfoDto> photos = fileInfoService.get(e.getPhotos());
+        List<FileInfoDto> photos = StreamEx.of(e.getPhotos())
+                .map(fileInfoService::get)
+                .toList();
 
         var dimensions = new ShipDto.Dimensions()
                 .setDraft(e.getDraft())
@@ -84,7 +86,7 @@ public class ShipConverter extends AbstractConverter<Ship, ShipDto.Resp, ShipDto
 
                 .setInsuranceCompany(dto.getInsurance().getCompany())
                 .setInsuranceNumber(dto.getInsurance().getNumber())
-                .setRegistrationExpire(dto.getInsurance().getExpire())
+                .setInsuranceExpire(dto.getInsurance().getExpire())
                 .setInsuranceFile(dto.getInsurance().getFile().getFileId());
     }
 }

@@ -11,7 +11,6 @@ import ru.hse.coursework.berth.database.entity.FileInfo;
 import ru.hse.coursework.berth.database.repository.FileInfoRepository;
 import ru.hse.coursework.berth.service.file.dto.FileInfoDto;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -40,15 +39,6 @@ public class FileInfoService {
     public FileInfoDto get(UUID fileId) {
         FileInfo fileInfo = fileInfoRepository.findById(fileId).orElseThrow(NotFoundException::new);
         return toDto(fileInfo);
-    }
-
-    public List<FileInfoDto> get(List<UUID> filesIds) {
-        if (filesIds.isEmpty()) {
-            return List.of();
-        }
-
-        return List.of();
-//        Map<UUID, FileInfo> uuidFileInfoMap = StreamEx.of(fileInfoRepository.findAllById(filesIds)).toMap(FileInfo::getId, Function.identity());
     }
 
     public FileInfoDto getWithCheck(UUID fileId, String code) throws NotFoundException {

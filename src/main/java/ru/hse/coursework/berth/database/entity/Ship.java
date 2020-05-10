@@ -4,6 +4,7 @@ import com.google.api.client.repackaged.com.google.common.base.Splitter;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.Where;
 import ru.hse.coursework.berth.common.EntityWithOwner;
 import ru.hse.coursework.berth.database.entity.enums.ShipType;
 
@@ -14,9 +15,12 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import static ru.hse.coursework.berth.config.DBConfig.NOT_DELETED;
+
 @Setter
 @Getter
 @Entity
+@Where(clause = NOT_DELETED)
 public class Ship extends AuditEntity implements EntityWithOwner {
 
     @Id

@@ -38,12 +38,6 @@ public class ShipController {
         return new ListResp<>(resp);
     }
 
-    @GetMapping("/{id}")
-    public ObjectResp<ShipDto.Resp> getShip(@PathVariable Long id) {
-        ShipDto.Resp resp = shipCRUDService.get(id);
-        return new ObjectResp<>(resp);
-    }
-
     @DeleteMapping("/{id}")
     public EmptyResp deleteShip(@PathVariable Long id) {
         shipCRUDService.delete(id);
