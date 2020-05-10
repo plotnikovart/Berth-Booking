@@ -24,7 +24,7 @@ public class SwaggerConfig {
     public Docket swagger() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("app"))
+                .apis(RequestHandlerSelectors.basePackage("ru.hse.coursework.berth"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo())
