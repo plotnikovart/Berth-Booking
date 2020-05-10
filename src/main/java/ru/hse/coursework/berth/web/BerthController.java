@@ -11,7 +11,10 @@ import ru.hse.coursework.berth.service.berth.dto.BerthApplicationDto;
 import ru.hse.coursework.berth.service.berth.dto.BerthDto;
 import ru.hse.coursework.berth.service.berth.dto.BerthPlaceDto;
 import ru.hse.coursework.berth.service.berth.dto.DictAmenityDto;
-import ru.hse.coursework.berth.service.facade.ReviewFacade;
+import ru.hse.coursework.berth.service.dto.ListCount;
+import ru.hse.coursework.berth.service.review.ReviewService;
+import ru.hse.coursework.berth.service.review.dto.ReviewDto;
+import ru.hse.coursework.berth.service.review.dto.ReviewFilter;
 import ru.hse.coursework.berth.web.dto.response.EmptyResp;
 import ru.hse.coursework.berth.web.dto.response.ListResp;
 import ru.hse.coursework.berth.web.dto.response.ObjectResp;
@@ -25,7 +28,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class BerthController {
 
-    private final ReviewFacade reviewFacade;
+    private final ReviewService reviewService;
     private final UserBerthApplicationService berthApplicationService;
     private final BerthCRUDService berthCRUDService;
 
@@ -83,26 +86,24 @@ public class BerthController {
         return new ListResp<>(resp);
     }
 
+    @PostMapping("{berthId}/reviews")
+    public ObjectResp<ReviewDto.Resp> createReview(@PathVariable Long berthId, @RequestBody ReviewDto reviewDto) {
+        long reviewId = reviewService.createReview(berthId, reviewDto);
+        ReviewDto.Resp resp = reviewService.getReview(reviewId);
+        return new ObjectResp<>(resp);
+    }
 
+    @PostMapping("{berthId}/reviews")
+    public ObjectResp<ListCount<ReviewDto.Resp>> getReviews(@PathVariable Long berthId, @RequestBody ReviewFilter filter) {
+        ListCount<ReviewDto.Resp> resp = reviewService.getReviews(berthId, filter);
+        return new ObjectResp<>(resp);
+    }
 
-//    @PostMapping("{id}/reviews")
-//    public IdResponse<Long> createReview(@PathVariable Long id, @RequestBody ReviewDto.Req reviewDto) {
-//        reviewDto.setBerthId(id);
-//
-//        ValidationUtils.validateEntity(reviewDto);
-//        long reviewId = reviewFacade.createReview(reviewDto);
-//        return new IdResponse<>(reviewId);
-//    }
-//
-//    @GetMapping("{id}/reviews")
-//    public List<ReviewDto.Resp> getReviews(@PathVariable Long id) {
-//        return reviewFacade.getReviews(id);
-//    }
-//
-//    @DeleteMapping("{id}/reviews/{reviewId}")
-//    public void deleteReview(@PathVariable Long id, @PathVariable Long reviewId) {
-//        reviewFacade.deleteReview(reviewId);
-//    }
+    @DeleteMapping("{berthId}/reviews/{reviewId}")
+    public EmptyResp deleteReview(@PathVariable Long berthId, @PathVariable Long reviewId) {
+        reviewService.deleteReview(reviewId);
+        return new EmptyResp();
+    }
 
     private BerthPart[] toBerthParts(@Nullable List<String> parts) {
         if (parts == null) {

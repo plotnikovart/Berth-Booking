@@ -7,7 +7,7 @@ import ru.hse.coursework.berth.database.entity.Ship;
 import ru.hse.coursework.berth.service.converters.AbstractConverter;
 import ru.hse.coursework.berth.service.file.FileInfoService;
 import ru.hse.coursework.berth.service.file.dto.FileInfoDto;
-import ru.hse.coursework.berth.web.dto.ShipDto;
+import ru.hse.coursework.berth.service.ship.dto.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,22 +24,22 @@ public class ShipConverter extends AbstractConverter<Ship, ShipDto.Resp, ShipDto
                 .map(fileInfoService::get)
                 .toList();
 
-        var dimensions = new ShipDto.Dimensions()
+        var dimensions = new Dimensions()
                 .setDraft(e.getDraft())
                 .setLength(e.getLength())
                 .setWidth(e.getWidth());
 
-        var model = new ShipDto.Model()
+        var model = new Model()
                 .setModel(e.getModel())
                 .setProducer(e.getProducer())
                 .setYear(e.getYear());
 
-        var registration = new ShipDto.Registration()
+        var registration = new Registration()
                 .setNumber(e.getRegistrationNumber())
                 .setExpire(e.getRegistrationExpire())
                 .setFile(fileInfoService.get(e.getRegistrationFile()));
 
-        var insurance = new ShipDto.Insurance()
+        var insurance = new Insurance()
                 .setCompany(e.getInsuranceCompany())
                 .setExpire(e.getInsuranceExpire())
                 .setNumber(e.getInsuranceNumber())

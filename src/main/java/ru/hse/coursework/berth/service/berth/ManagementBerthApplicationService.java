@@ -19,7 +19,7 @@ import ru.hse.coursework.berth.service.berth.dto.BerthApplicationFilter;
 import ru.hse.coursework.berth.service.berth.dto.management.ChangeApplicationStatusResp;
 import ru.hse.coursework.berth.service.berth.dto.management.StartApplicationResp;
 import ru.hse.coursework.berth.service.converters.impl.BerthApplicationConverter;
-import ru.hse.coursework.berth.web.dto.response.ListCount;
+import ru.hse.coursework.berth.service.dto.ListCount;
 
 import javax.persistence.criteria.Predicate;
 import java.util.LinkedList;

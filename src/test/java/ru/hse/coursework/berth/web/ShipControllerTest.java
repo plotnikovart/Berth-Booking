@@ -12,7 +12,7 @@ import ru.hse.coursework.berth.database.repository.AbstractAccountTest;
 import ru.hse.coursework.berth.database.repository.ShipRepository;
 import ru.hse.coursework.berth.service.file.FileStorageService;
 import ru.hse.coursework.berth.service.file.dto.FileInfoDto;
-import ru.hse.coursework.berth.web.dto.ShipDto;
+import ru.hse.coursework.berth.service.ship.dto.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -44,20 +44,20 @@ class ShipControllerTest extends AbstractAccountTest {
     void crud() {
         OperationContext.accountId(moderatorAccount.getId());
 
-        var dimensions = new ShipDto.Dimensions()
+        var dimensions = new Dimensions()
                 .setWidth(1.0)
                 .setLength(2.0)
                 .setDraft(3.0);
-        var insurance = new ShipDto.Insurance()
+        var insurance = new Insurance()
                 .setFile(file1)
                 .setNumber("number 1")
                 .setExpire(LocalDate.now())
                 .setCompany("company");
-        var registration = new ShipDto.Registration()
+        var registration = new Registration()
                 .setFile(file1)
                 .setExpire(LocalDate.now().plusDays(1))
                 .setNumber("number2");
-        var model = new ShipDto.Model()
+        var model = new Model()
                 .setYear(2020)
                 .setProducer("producer 1")
                 .setModel("model 1");
