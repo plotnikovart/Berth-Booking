@@ -57,7 +57,7 @@ public class BerthConverter extends AbstractConverter<Berth, BerthDto.Resp, Bert
 
         return (BerthDto.Resp) dto
                 .setId(e.getId())
-//                .setRating(e.getRating())
+                .setAvgRating(e.getAvgRating().intValue())
                 .setIsConfirmed(e.getIsConfirmed())
                 .setPhotos(photos)
                 .setPlaces(places)

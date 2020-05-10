@@ -129,6 +129,7 @@ class BerthControllerTest extends AbstractAmenityTest {
         // GET ONE
         var expected = (BerthDto.Resp) new BerthDto.Resp()
                 .setIsConfirmed(false)
+                .setAvgRating(0)
                 .setName(berthDto.getName())
                 .setDescription(berthDto.getDescription())
                 .setLat(berthDto.getLat())

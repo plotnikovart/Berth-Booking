@@ -21,6 +21,7 @@ import ru.hse.coursework.berth.service.account.dto.UserInfoDto;
 import ru.hse.coursework.berth.service.converters.impl.ReviewConverter;
 import ru.hse.coursework.berth.service.converters.impl.UserInfoConverter;
 import ru.hse.coursework.berth.service.dto.ListCount;
+import ru.hse.coursework.berth.service.event.EventPublisher;
 import ru.hse.coursework.berth.service.file.dto.FileInfoDto;
 import ru.hse.coursework.berth.service.review.dto.ReviewDto;
 import ru.hse.coursework.berth.service.review.dto.ReviewFilter;
@@ -43,6 +44,7 @@ public class ReviewService {
     private final ReviewConverter converter;
     private final SoftDeleteService softDeleteService;
     private final UserInfoConverter userInfoConverter;
+    private final EventPublisher eventPublisher;
 
     public Long createReview(Long berthId, ReviewDto reviewDto) {
         var review = new Review()
@@ -50,7 +52,10 @@ public class ReviewService {
                 .setBerth(berthRepository.getOne(berthId));
 
         converter.toEntity(review, reviewDto);
-        return reviewRepository.save(review).getId();
+        reviewRepository.save(review);
+
+        eventPublisher.reviewPublish(review.getBerth().getId(), review.getId());
+        return review.getId();
     }
 
     public ListCount<ReviewDto.Resp> getReviews(Long berthId, ReviewFilter reviewFilter) {
@@ -77,6 +82,9 @@ public class ReviewService {
         Review review = reviewRepository.findById(reviewId).orElseThrow(NotFoundException::new);
         permissionService.check(review);
         softDeleteService.delete(review);
+        reviewRepository.save(review);
+
+        eventPublisher.reviewDelete(review.getBerth().getId(), review.getId());
     }
 
     private void fillReviewersInfo(List<ReviewDto.Resp> dtos) {

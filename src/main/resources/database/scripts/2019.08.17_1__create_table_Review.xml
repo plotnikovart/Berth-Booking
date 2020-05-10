@@ -57,4 +57,12 @@
                                  onDelete="CASCADE"/>
     </changeSet>
 
+    <changeSet id="2019.08.17_1_3" author="aplotnikov">
+        <addColumn tableName="berth">
+            <column name="avg_rating" type="double">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

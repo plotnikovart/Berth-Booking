@@ -39,7 +39,7 @@ public final class CompareHelper {
     public static boolean areEqual(BerthDto.Resp e, BerthDto.Resp a) {
         return equalsId(e.getId(), a.getId()) &&
                 equals(e.getIsConfirmed(), a.getIsConfirmed()) &&
-                equals(e.getRating(), a.getRating()) &&
+                equals(e.getAvgRating(), a.getAvgRating()) &&
                 equals(e.getName(), a.getName()) &&
                 equals(e.getDescription(), a.getDescription()) &&
                 equals(e.getLat(), a.getLat()) &&

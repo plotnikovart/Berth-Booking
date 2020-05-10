@@ -46,7 +46,7 @@ public class ReviewControllerTest extends AbstractAccountTest {
     }
 
     @Test
-    void test() {
+    void test() throws InterruptedException {
         OperationContext.accountId(user1Account.getId());
 
         var reviewDto = new ReviewDto()
@@ -93,5 +93,10 @@ public class ReviewControllerTest extends AbstractAccountTest {
         Assertions.assertEquals(2, allActual.getTotalCount());
         Assertions.assertEquals(actual2.getId(), allActual.getItems().get(0).getId());
         Assertions.assertEquals(actual.getId(), allActual.getItems().get(1).getId());
+
+
+        Thread.sleep(100);
+        berth = berthRepository.findById(berth.getId()).orElseThrow();
+        Assertions.assertEquals((actual.getRating() + actual2.getRating()) / 2.0, berth.getAvgRating(), 0.1);
     }
 }

@@ -75,7 +75,7 @@ public class BookingSearchService {
         } else if (req.getSorting() == Sorting.PRICE) {
             result = result.sorted(Comparator.comparing(BerthDto.Resp.Search::getMinPrice));
         } else if (req.getSorting() == Sorting.RATING) {
-            result = result.sorted(Comparator.comparing(BerthDto.Resp.Search::getRating));
+            result = result.sorted(Comparator.comparing(BerthDto.Resp.Search::getAvgRating));
         }
 
         return result.collect(Collectors.toList());
