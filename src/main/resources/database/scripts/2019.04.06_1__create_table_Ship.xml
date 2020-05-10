@@ -15,7 +15,9 @@
             <column name="name" type="varchar(256)">
                 <constraints nullable="false"/>
             </column>
-            <column name="type" type="smallint"/>
+            <column name="type" type="smallint">
+                <constraints nullable="false"/>
+            </column>
 
             <column name="length" type="double">
                 <constraints nullable="false"/>

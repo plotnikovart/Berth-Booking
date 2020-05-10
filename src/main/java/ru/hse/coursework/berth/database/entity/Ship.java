@@ -31,6 +31,7 @@ public class Ship extends AuditEntity implements EntityWithOwner {
     private String name;
 
     @Convert(converter = ShipType.Converter.class)
+    @Column(nullable = false)
     private ShipType type;
 
     @Column(nullable = false)

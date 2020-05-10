@@ -20,7 +20,8 @@ public class ShipDto {
     @Length(max = 256, message = ValidationUtils.LENGTH_MESSAGE)
     private String name;
 
-    @ApiModelProperty(position = 2)
+    @ApiModelProperty(position = 2, required = true)
+    @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
     private ShipType type;
 
     @ApiModelProperty(position = 3, required = true)
