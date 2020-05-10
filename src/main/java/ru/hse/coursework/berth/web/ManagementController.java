@@ -18,7 +18,7 @@ public class ManagementController {
 
     private final ManagementBerthApplicationService managementBerthApplicationService;
 
-    @PostMapping("/berths/applications")
+    @PostMapping("/berths/applications/filter")
     public ObjectResp<ListCount<BerthApplicationDto.Resp>> getApplications(@RequestBody BerthApplicationFilter filter) {
         ListCount<BerthApplicationDto.Resp> resp = managementBerthApplicationService.getApplications(filter);
         return new ObjectResp<>(resp);

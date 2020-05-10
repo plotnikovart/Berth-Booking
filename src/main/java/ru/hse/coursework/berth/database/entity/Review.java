@@ -4,14 +4,18 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Where;
 import ru.hse.coursework.berth.common.EntityWithOwner;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+import static ru.hse.coursework.berth.config.DBConfig.NOT_DELETED;
+
 @Getter
 @Setter
 @Entity
+@Where(clause = NOT_DELETED)
 public class Review extends AuditEntity implements EntityWithOwner {
 
     @Id

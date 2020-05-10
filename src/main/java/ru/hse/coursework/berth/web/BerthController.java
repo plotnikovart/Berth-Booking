@@ -93,7 +93,7 @@ public class BerthController {
         return new ObjectResp<>(resp);
     }
 
-    @PostMapping("{berthId}/reviews")
+    @PostMapping("{berthId}/reviews/filter")
     public ObjectResp<ListCount<ReviewDto.Resp>> getReviews(@PathVariable Long berthId, @RequestBody ReviewFilter filter) {
         ListCount<ReviewDto.Resp> resp = reviewService.getReviews(berthId, filter);
         return new ObjectResp<>(resp);
