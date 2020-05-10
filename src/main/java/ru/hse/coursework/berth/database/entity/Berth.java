@@ -1,6 +1,7 @@
 package ru.hse.coursework.berth.database.entity;
 
 import com.google.api.client.repackaged.com.google.common.base.Splitter;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
@@ -71,9 +72,9 @@ public class Berth extends AuditEntity implements EntityWithOwner {
             inverseJoinColumns = @JoinColumn(name = "amenity_key"))
     private Set<DictAmenity> amenities = new HashSet<>();
 
-//    @Formula("(select avg(r.rating) from review as r WHERE r.berth_id = id)")   // todo lazy loading
-//    private Integer rating;
-
+    @Column(nullable = false)
+    @Setter(AccessLevel.PRIVATE)
+    private Double avgRating = 0.0;
 
     public Berth setBerthPlaces(Collection<BerthPlace> newPlaces) {
         getBerthPlaces().clear();

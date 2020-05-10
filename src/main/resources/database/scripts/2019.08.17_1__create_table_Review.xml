@@ -4,49 +4,69 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-<!--    <changeSet id="2019.08.17_1_1" author="aplotnikov">-->
-<!--        <createTable tableName="review">-->
-<!--            <column value="id" type="bigint">-->
-<!--                <constraints primaryKey="true" primaryKeyName="pk_review"/>-->
-<!--            </column>-->
-<!--            <column value="berth_id" type="bigint">-->
-<!--                <constraints nullable="false"/>-->
-<!--            </column>-->
-<!--            <column value="account_id" type="bigint">-->
-<!--                <constraints nullable="false"/>-->
-<!--            </column>-->
-<!--            <column value="rating" type="tinyint">-->
-<!--                <constraints nullable="false"/>-->
-<!--            </column>-->
-<!--            <column value="text" type="varchar(1024)">-->
-<!--                <constraints nullable="false"/>-->
-<!--            </column>-->
-<!--            <column value="date_time" type="datetime">-->
-<!--                <constraints nullable="false"/>-->
-<!--            </column>-->
-<!--        </createTable>-->
+    <changeSet id="2019.08.17_1_1" author="aplotnikov">
+        <createTable tableName="review">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="pk_review"/>
+            </column>
+            <column name="reviewer_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="berth_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rating" type="tinyint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="text" type="varchar(1024)"/>
+            <column name="created_at" type="datetime">
+                <constraints nullable="false"/>
+            </column>
 
-<!--        <addAutoIncrement tableName="review"-->
-<!--                          columnName="id"-->
-<!--                          columnDataType="bigint"-->
-<!--                          startWith="0"-->
-<!--                          incrementBy="1"/>-->
-<!--    </changeSet>-->
+            <column name="is_deleted" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="change_user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="change_date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
 
-<!--    <changeSet id="2019.08.17_1_2" author="aplotnikov">-->
-<!--        <addForeignKeyConstraint baseTableName="review"-->
-<!--                                 baseColumnNames="berth_id"-->
-<!--                                 constraintName="fk_review_berth"-->
-<!--                                 referencedTableName="berth"-->
-<!--                                 referencedColumnNames="id"-->
-<!--                                 onDelete="CASCADE"/>-->
+        <addAutoIncrement tableName="review"
+                          columnName="id"
+                          columnDataType="bigint"
+                          startWith="0"
+                          incrementBy="1"/>
+    </changeSet>
 
-<!--        <addForeignKeyConstraint baseTableName="review"-->
-<!--                                 baseColumnNames="account_id"-->
-<!--                                 constraintName="fk_booking_account"-->
-<!--                                 referencedTableName="user_info"-->
-<!--                                 referencedColumnNames="account_id"-->
-<!--                                 onDelete="CASCADE"/>-->
-<!--    </changeSet>-->
+    <changeSet id="2019.08.17_1_2" author="aplotnikov">
+        <addForeignKeyConstraint baseTableName="review"
+                                 baseColumnNames="berth_id"
+                                 constraintName="fk_review_berth"
+                                 referencedTableName="berth"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="review"
+                                 baseColumnNames="reviewer_id"
+                                 constraintName="fk_booking_account"
+                                 referencedTableName="account"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="2019.08.17_1_3" author="aplotnikov">
+        <addColumn tableName="berth">
+            <column name="avg_rating" type="double"/>
+        </addColumn>
+
+        <update tableName="berth">
+            <column name="avg_rating" value="0"/>
+        </update>
+
+        <addNotNullConstraint tableName="berth" columnName="avg_rating" columnDataType="double"/>
+    </changeSet>
 
 </databaseChangeLog>

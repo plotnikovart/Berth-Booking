@@ -7,6 +7,7 @@ import ru.hse.coursework.berth.database.entity.enums.BookingStatus;
 import ru.hse.coursework.berth.service.account.dto.UserInfoDto;
 import ru.hse.coursework.berth.service.berth.dto.BerthDto;
 import ru.hse.coursework.berth.service.berth.dto.BerthPlaceDto;
+import ru.hse.coursework.berth.service.ship.dto.ShipDto;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;

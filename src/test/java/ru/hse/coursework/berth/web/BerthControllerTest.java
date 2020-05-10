@@ -45,7 +45,7 @@ class BerthControllerTest extends AbstractAmenityTest {
         file1 = fileStorageService.saveFile(new byte[]{1}, "файл1.jpg");
         file2 = fileStorageService.saveFile(new byte[]{2}, "файл2.jpg");
 
-        OperationContext.accountId(userAccount.getId());
+        OperationContext.accountId(user1Account.getId());
     }
 
     @Test
@@ -129,6 +129,7 @@ class BerthControllerTest extends AbstractAmenityTest {
         // GET ONE
         var expected = (BerthDto.Resp) new BerthDto.Resp()
                 .setIsConfirmed(false)
+                .setAvgRating(0)
                 .setName(berthDto.getName())
                 .setDescription(berthDto.getDescription())
                 .setLat(berthDto.getLat())

@@ -1,4 +1,4 @@
-package ru.hse.coursework.berth.service;
+package ru.hse.coursework.berth.service.ship;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -7,8 +7,10 @@ import ru.hse.coursework.berth.config.exception.impl.NotFoundException;
 import ru.hse.coursework.berth.database.entity.Ship;
 import ru.hse.coursework.berth.database.repository.AccountRepository;
 import ru.hse.coursework.berth.database.repository.ShipRepository;
+import ru.hse.coursework.berth.service.PermissionService;
+import ru.hse.coursework.berth.service.SoftDeleteService;
 import ru.hse.coursework.berth.service.converters.impl.ShipConverter;
-import ru.hse.coursework.berth.web.dto.ShipDto;
+import ru.hse.coursework.berth.service.ship.dto.ShipDto;
 
 import java.util.List;
 

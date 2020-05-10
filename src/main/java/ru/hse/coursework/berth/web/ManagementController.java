@@ -8,7 +8,7 @@ import ru.hse.coursework.berth.service.berth.dto.BerthApplicationFilter;
 import ru.hse.coursework.berth.service.berth.dto.management.BerthApplicationDecision;
 import ru.hse.coursework.berth.service.berth.dto.management.ChangeApplicationStatusResp;
 import ru.hse.coursework.berth.service.berth.dto.management.StartApplicationResp;
-import ru.hse.coursework.berth.web.dto.response.ListCount;
+import ru.hse.coursework.berth.service.dto.ListCount;
 import ru.hse.coursework.berth.web.dto.response.ObjectResp;
 
 @RestController
@@ -18,7 +18,7 @@ public class ManagementController {
 
     private final ManagementBerthApplicationService managementBerthApplicationService;
 
-    @PostMapping("/berths/applications")
+    @PostMapping("/berths/applications/filter")
     public ObjectResp<ListCount<BerthApplicationDto.Resp>> getApplications(@RequestBody BerthApplicationFilter filter) {
         ListCount<BerthApplicationDto.Resp> resp = managementBerthApplicationService.getApplications(filter);
         return new ObjectResp<>(resp);

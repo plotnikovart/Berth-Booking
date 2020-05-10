@@ -2,8 +2,11 @@ package ru.hse.coursework.berth.database.repository;
 
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.hse.coursework.berth.database.entity.Account;
 import ru.hse.coursework.berth.database.entity.Berth;
 
@@ -26,4 +29,10 @@ public interface BerthRepository extends JpaRepository<Berth, Long> {
 
     @Query("select b from Berth b where b.changeDate >= ?1")
     List<Berth> findChanged(LocalDateTime since);
+
+
+    @Modifying
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Query("update Berth set avgRating = (select avg(r.rating) from Review r WHERE r.berth = ?1)")
+    void updateRating(Berth berth);
 }

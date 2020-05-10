@@ -73,7 +73,7 @@ public class BerthDto {
         @ApiModelProperty(required = true, position = 1)
         private Boolean isConfirmed;
         @ApiModelProperty(required = true, position = 2)
-        private Integer rating;
+        private Integer avgRating;
 
 
         @Data

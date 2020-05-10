@@ -3,8 +3,8 @@ package ru.hse.coursework.berth.web;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.hse.coursework.berth.service.ShipCRUDService;
-import ru.hse.coursework.berth.web.dto.ShipDto;
+import ru.hse.coursework.berth.service.ship.ShipCRUDService;
+import ru.hse.coursework.berth.service.ship.dto.ShipDto;
 import ru.hse.coursework.berth.web.dto.response.EmptyResp;
 import ru.hse.coursework.berth.web.dto.response.ListResp;
 import ru.hse.coursework.berth.web.dto.response.ObjectResp;

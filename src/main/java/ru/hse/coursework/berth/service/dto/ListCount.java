@@ -1,4 +1,4 @@
-package ru.hse.coursework.berth.web.dto.response;
+package ru.hse.coursework.berth.service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
