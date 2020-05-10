@@ -54,7 +54,7 @@ public class ReviewControllerTest extends AbstractAccountTest {
                 .setText("adasd");
 
         // CREATE
-        ReviewDto.Resp actual = berthController.createReview(berth.getId(), reviewDto).getData();
+        ReviewDto.Resp actual = berthController.publishReview(berth.getId(), reviewDto).getData();
 
         var reviewerDto = new ReviewerDto()
                 .setAccountId(user1Info.getId())
@@ -74,8 +74,8 @@ public class ReviewControllerTest extends AbstractAccountTest {
         // CREATE 2, 3
         var reviewDto2 = new ReviewDto().setRating(0);
         var reviewDto3 = new ReviewDto().setRating(100);
-        ReviewDto.Resp actual2 = berthController.createReview(berth.getId(), reviewDto2).getData();
-        ReviewDto.Resp actual3 = berthController.createReview(berth.getId(), reviewDto3).getData();
+        ReviewDto.Resp actual2 = berthController.publishReview(berth.getId(), reviewDto2).getData();
+        ReviewDto.Resp actual3 = berthController.publishReview(berth.getId(), reviewDto3).getData();
 
         // GET ALL
         var filter = (ReviewFilter) new ReviewFilter().setPageNum(0).setPageSize(2);

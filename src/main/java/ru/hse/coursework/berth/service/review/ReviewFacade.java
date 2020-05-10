@@ -34,7 +34,7 @@ import static one.util.streamex.StreamEx.of;
 
 @Component
 @RequiredArgsConstructor
-public class ReviewService {
+public class ReviewFacade {
 
     private final UserInfoRepository userInfoRepository;
     private final AccountRepository accountRepository;
@@ -46,7 +46,7 @@ public class ReviewService {
     private final UserInfoConverter userInfoConverter;
     private final EventPublisher eventPublisher;
 
-    public Long createReview(Long berthId, ReviewDto reviewDto) {
+    public Long publishReview(Long berthId, ReviewDto reviewDto) {
         var review = new Review()
                 .setReviewer(accountRepository.findCurrent())
                 .setBerth(berthRepository.getOne(berthId));

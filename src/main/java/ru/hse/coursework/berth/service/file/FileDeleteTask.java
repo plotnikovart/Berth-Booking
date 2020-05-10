@@ -5,15 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import ru.hse.coursework.berth.common.SMessageSource;
-import ru.hse.coursework.berth.database.repository.BerthRepository;
-import ru.hse.coursework.berth.database.repository.FileInfoRepository;
-import ru.hse.coursework.berth.database.repository.UserInfoRepository;
+import ru.hse.coursework.berth.database.entity.UserInfo;
+import ru.hse.coursework.berth.database.repository.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -25,23 +23,24 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class FileDeleteTask {
 
-    final static long EXPIRE_FILE_TIME = 24 * 60 * 60 * 1000;   // 1 day in millis
+    final static long EXPIRE_FILE_TIME = 2 * 60 * 60 * 1000;   // 2 hour in millis
 
     private final FileInfoRepository fileInfoRepository;
     private final UserInfoRepository userInfoRepository;
     private final BerthRepository berthRepository;
+    private final ShipRepository shipRepository;
+    private final BerthApplicationRepository berthApplicationRepository;
 
 
     @Scheduled(cron = "0 0 2 * * ?")    // каждый день в 2 ночи
     public void run() {
         try {
-            var sinceDate = LocalDateTime.now().minusDays(1L);
+            Stream<UUID> userInfoPhotos = userInfoRepository.findAll().stream().map(UserInfo::getPhoto);
+            Stream<UUID> shipFiles = shipRepository.findAll().stream().flatMap(it -> it.getPhotos().stream());
+            Stream<UUID> berthFiles = berthRepository.findAll().stream().flatMap(it -> it.getPhotos().stream());
+            Stream<UUID> berthApplicationFiles = berthApplicationRepository.findAll().stream().flatMap(it -> it.getAttachements().stream());
 
-            Stream<UUID> userInfoPhotos = userInfoRepository.findUpdatedPhotos(sinceDate).stream();
-            Stream<UUID> shipFiles = Stream.of();//shipPhotoRepository.findAll().stream().map(ShipPhoto::getFileName);
-            Stream<UUID> berthFiles = berthRepository.findChanged(sinceDate).stream().flatMap(it -> it.getPhotos().stream());
-
-            var usedFiles = Stream.of(userInfoPhotos, shipFiles, berthFiles)
+            var usedFiles = Stream.of(userInfoPhotos, shipFiles, berthFiles, berthApplicationFiles)
                     .flatMap(s -> s)
                     .map(UUID::toString)
                     .collect(Collectors.toSet());

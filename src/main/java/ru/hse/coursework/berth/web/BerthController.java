@@ -12,7 +12,7 @@ import ru.hse.coursework.berth.service.berth.dto.BerthDto;
 import ru.hse.coursework.berth.service.berth.dto.BerthPlaceDto;
 import ru.hse.coursework.berth.service.berth.dto.DictAmenityDto;
 import ru.hse.coursework.berth.service.dto.ListCount;
-import ru.hse.coursework.berth.service.review.ReviewService;
+import ru.hse.coursework.berth.service.review.ReviewFacade;
 import ru.hse.coursework.berth.service.review.dto.ReviewDto;
 import ru.hse.coursework.berth.service.review.dto.ReviewFilter;
 import ru.hse.coursework.berth.web.dto.response.EmptyResp;
@@ -28,7 +28,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class BerthController {
 
-    private final ReviewService reviewService;
+    private final ReviewFacade reviewFacade;
     private final UserBerthApplicationService berthApplicationService;
     private final BerthCRUDService berthCRUDService;
 
@@ -87,21 +87,21 @@ public class BerthController {
     }
 
     @PostMapping("{berthId}/reviews")
-    public ObjectResp<ReviewDto.Resp> createReview(@PathVariable Long berthId, @RequestBody ReviewDto reviewDto) {
-        long reviewId = reviewService.createReview(berthId, reviewDto);
-        ReviewDto.Resp resp = reviewService.getReview(reviewId);
+    public ObjectResp<ReviewDto.Resp> publishReview(@PathVariable Long berthId, @RequestBody ReviewDto reviewDto) {
+        long reviewId = reviewFacade.publishReview(berthId, reviewDto);
+        ReviewDto.Resp resp = reviewFacade.getReview(reviewId);
         return new ObjectResp<>(resp);
     }
 
     @PostMapping("{berthId}/reviews/filter")
     public ObjectResp<ListCount<ReviewDto.Resp>> getReviews(@PathVariable Long berthId, @RequestBody ReviewFilter filter) {
-        ListCount<ReviewDto.Resp> resp = reviewService.getReviews(berthId, filter);
+        ListCount<ReviewDto.Resp> resp = reviewFacade.getReviews(berthId, filter);
         return new ObjectResp<>(resp);
     }
 
     @DeleteMapping("{berthId}/reviews/{reviewId}")
     public EmptyResp deleteReview(@PathVariable Long berthId, @PathVariable Long reviewId) {
-        reviewService.deleteReview(reviewId);
+        reviewFacade.deleteReview(reviewId);
         return new EmptyResp();
     }
 

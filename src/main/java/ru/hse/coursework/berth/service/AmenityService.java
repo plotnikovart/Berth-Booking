@@ -1,4 +1,4 @@
-package ru.hse.coursework.berth.service.facade;
+package ru.hse.coursework.berth.service;
 
 import lombok.RequiredArgsConstructor;
 import one.util.streamex.StreamEx;
@@ -12,7 +12,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class AmenityFacade {
+public class AmenityService {
 
     private final DictAmenityRepository repository;
     private final DictAmenityConverter converter;
