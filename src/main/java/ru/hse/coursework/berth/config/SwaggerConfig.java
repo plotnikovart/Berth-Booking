@@ -49,5 +49,4 @@ public class SwaggerConfig {
         return new ApiInfo("Berth-Booking",
                 null, null, null, null, null, null, Collections.emptyList());
     }
-
 }

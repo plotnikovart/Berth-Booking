@@ -1,5 +1,6 @@
 package ru.hse.coursework.berth.web.dto;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -45,7 +46,7 @@ public class ShipDto {
     private List<FileInfoDto> photos;
 
 
-    @Data
+    @ApiModel("ShipDtoResp")
     public static class Resp extends ShipDto {
 
         @ApiModelProperty(required = true, position = -1)
