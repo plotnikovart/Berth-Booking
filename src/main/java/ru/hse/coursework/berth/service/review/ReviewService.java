@@ -21,12 +21,14 @@ import ru.hse.coursework.berth.service.account.dto.UserInfoDto;
 import ru.hse.coursework.berth.service.converters.impl.ReviewConverter;
 import ru.hse.coursework.berth.service.converters.impl.UserInfoConverter;
 import ru.hse.coursework.berth.service.dto.ListCount;
+import ru.hse.coursework.berth.service.file.dto.FileInfoDto;
 import ru.hse.coursework.berth.service.review.dto.ReviewDto;
 import ru.hse.coursework.berth.service.review.dto.ReviewFilter;
 
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Optional.ofNullable;
 import static one.util.streamex.StreamEx.of;
 
 @Component
@@ -48,11 +50,9 @@ public class ReviewService {
                 .setBerth(berthRepository.getOne(berthId));
 
         converter.toEntity(review, reviewDto);
-
         return reviewRepository.save(review).getId();
     }
 
-    @Transactional(readOnly = true)
     public ListCount<ReviewDto.Resp> getReviews(Long berthId, ReviewFilter reviewFilter) {
         Berth berth = berthRepository.getOne(berthId);
         Pageable pageable = createPageable(reviewFilter);
@@ -93,7 +93,7 @@ public class ReviewService {
             it.getReviewer()
                     .setFirstName(info.getFirstName())
                     .setLastName(info.getLastName())
-                    .setPhotoLink(info.getPhoto().getFileLink());
+                    .setPhotoLink(ofNullable(info.getPhoto()).map(FileInfoDto::getFileLink).orElse(null));
         });
     }
 

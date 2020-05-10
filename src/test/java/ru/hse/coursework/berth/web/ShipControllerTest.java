@@ -99,7 +99,7 @@ class ShipControllerTest extends AbstractAccountTest {
         Assertions.assertEquals(expected, actual);
 
         // UPDATE ANOTHER USER SHIP
-        OperationContext.accountId(userAccount.getId());
+        OperationContext.accountId(user1Account.getId());
         Assertions.assertThrows(AccessException.class, () -> shipController.updateShip(shipId, shipDto));
         OperationContext.accountId(moderatorAccount.getId());
 
@@ -109,7 +109,7 @@ class ShipControllerTest extends AbstractAccountTest {
         Assertions.assertEquals(expected2, actual2);
 
         // DELETE ANOTHER USER SHIP
-        OperationContext.accountId(userAccount.getId());
+        OperationContext.accountId(user1Account.getId());
         Assertions.assertThrows(AccessException.class, () -> shipController.deleteShip(shipId));
         OperationContext.accountId(moderatorAccount.getId());
 

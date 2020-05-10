@@ -34,10 +34,10 @@ class ManagementControllerTest extends AbstractAccountTest {
         berthApplicationRepository.deleteAll();
         berthRepository.deleteAll();
 
-        OperationContext.accountId(userAccount.getId());
+        OperationContext.accountId(user1Account.getId());
 
         berth = new Berth()
-                .setOwner(userAccount)
+                .setOwner(user1Account)
                 .setIsConfirmed(false)
                 .setLng(0.0)
                 .setLat(0.0)
@@ -147,7 +147,7 @@ class ManagementControllerTest extends AbstractAccountTest {
     private Long createApplication(String title, BerthApplicationStatus status) {
         var application = new BerthApplication()
                 .setBerth(berth)
-                .setApplicant(userAccount)
+                .setApplicant(user1Account)
                 .setStatus(status)
                 .setTitle(title);
 
