@@ -18,6 +18,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.Optional.ofNullable;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -36,7 +38,12 @@ public class FileDeleteTask {
     public void run() {
         try {
             Stream<UUID> userInfoPhotos = userInfoRepository.findAll().stream().map(UserInfo::getPhoto);
-            Stream<UUID> shipFiles = shipRepository.findAll().stream().flatMap(it -> it.getPhotos().stream());
+            Stream<UUID> shipFiles = shipRepository.findAll().stream().flatMap(it -> {
+                var files = new LinkedList<>(it.getPhotos());
+                ofNullable(it.getInsuranceFile()).ifPresent(files::add);
+                ofNullable(it.getRegistrationFile()).ifPresent(files::add);
+                return files.stream();
+            });
             Stream<UUID> berthFiles = berthRepository.findAll().stream().flatMap(it -> it.getPhotos().stream());
             Stream<UUID> berthApplicationFiles = berthApplicationRepository.findAll().stream().flatMap(it -> it.getAttachements().stream());
 
