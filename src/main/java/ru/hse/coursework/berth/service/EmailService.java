@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.hse.coursework.berth.common.SMessageSource;
 import ru.hse.coursework.berth.database.entity.Booking;
-import ru.hse.coursework.berth.database.entity.UserInfo;
 
 @Slf4j
 @Service
@@ -31,21 +30,21 @@ public class EmailService {
     }
 
     public void sendBookingApprove(Booking booking) {
-        UserInfo owner = booking.getOwner();
-        UserInfo renter = booking.getRenter();
-        String text = SMessageSource.message("booking.approve", booking.getId(), booking.getBerthPlace().getBerth().getName(),
-                owner.getFirstName(), owner.getLastName());
-
-        emailSender.sendMessage(renter.getAccount().getEmail(), "Бронирование подтверждено", text);
+//        UserInfo owner = booking.getOwner();
+//        UserInfo renter = booking.getRenter();
+//        String text = SMessageSource.message("booking.approve", booking.getId(), booking.getBerthPlace().getBerth().getName(),
+//                owner.getFirstName(), owner.getLastName());
+//
+//        emailSender.sendMessage(renter.getAccount().getEmail(), "Бронирование подтверждено", text);
     }
 
     public void sendBookingCreate(Booking booking) {
-        UserInfo renter = booking.getRenter();
-        UserInfo owner = booking.getOwner();
-
-        String text = SMessageSource.message("booking.create", renter.getFirstName(), renter.getLastName(),
-                booking.getBerthPlace().getBerth().getName());
-
-        emailSender.sendMessage(owner.getAccount().getEmail(), "Новая заявка на бронирование", text);
+//        UserInfo renter = booking.getRenter();
+//        UserInfo owner = booking.getOwner();
+//
+//        String text = SMessageSource.message("booking.create", renter.getFirstName(), renter.getLastName(),
+//                booking.getBerthPlace().getBerth().getName());
+//
+//        emailSender.sendMessage(owner.getAccount().getEmail(), "Новая заявка на бронирование", text);
     }
 }

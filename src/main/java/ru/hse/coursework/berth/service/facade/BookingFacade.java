@@ -61,9 +61,9 @@ public class BookingFacade {
     public void cancelBooking(Long bookingId) {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(NotFoundException::new);
 
-        if (booking.getRenter() != userInfoRepository.findCurrent()) {
-            throw new AccessException();
-        }
+//        if (booking.getRenter() != userInfoRepository.findCurrent()) {
+//            throw new AccessException();
+//        }
 
         booking.setStatus(BookingStatus.CANCELLED);
     }
@@ -71,10 +71,10 @@ public class BookingFacade {
     @Transactional
     public synchronized void approveBooking(Long bookingId) {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(NotFoundException::new);
-
-        if (booking.getOwner() != userInfoRepository.findCurrent()) {
-            throw new AccessException();
-        }
+//
+//        if (booking.getOwner() != userInfoRepository.findCurrent()) {
+//            throw new AccessException();
+//        }
 
         if (booking.getStatus() == BookingStatus.CANCELLED) {
             throw new ServiceException(SMessageSource.message("booking.is_cancelled"));
@@ -93,10 +93,10 @@ public class BookingFacade {
     @Transactional
     public void rejectBooking(Long bookingId) {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(NotFoundException::new);
-
-        if (booking.getOwner() != userInfoRepository.findCurrent()) {
-            throw new AccessException();
-        }
+//
+//        if (booking.getOwner() != userInfoRepository.findCurrent()) {
+//            throw new AccessException();
+//        }
 
         if (booking.getStatus() == BookingStatus.CANCELLED) {
             throw new ServiceException(SMessageSource.message("booking.is_cancelled"));
@@ -110,9 +110,9 @@ public class BookingFacade {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(NotFoundException::new);
 
         UserInfo current = userInfoRepository.findCurrent();
-        if (booking.getOwner() == current || booking.getRenter() == current) {
-            return bookingConverter.toDto(booking);
-        }
+//        if (booking.getOwner() == current || booking.getRenter() == current) {
+//            return bookingConverter.toDto(booking);
+//        }
 
         throw new AccessException();
     }

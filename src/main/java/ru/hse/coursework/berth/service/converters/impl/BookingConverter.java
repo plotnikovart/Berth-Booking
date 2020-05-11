@@ -36,8 +36,8 @@ public class BookingConverter extends AbstractConverter<Booking, BookingDto.Resp
 //                .setBerth(berthConverter.toDto(new BerthDto.Resp(), e.getBerthPlace().getBerth(), false, false))
                 .setBerthPlace(berthPlaceConverter.toDto(e.getBerthPlace()))
                 .setShip(shipConverter.toDto(e.getShip()))
-                .setOwner(userInfoConverter.toDto(e.getOwner()))
-                .setRenter(userInfoConverter.toDto(e.getRenter()))
+//                .setOwner(userInfoConverter.toDto(e.getOwner()))
+//                .setRenter(userInfoConverter.toDto(e.getRenter()))
                 .setStatus(e.getStatus())
                 .setStartDate(DateHelper.convertToDate(e.getStartDate()))
                 .setEndDate(DateHelper.convertToDate(e.getEndDate()));
