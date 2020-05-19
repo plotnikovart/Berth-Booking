@@ -1,8 +1,10 @@
 package ru.hse.coursework.berth.database.repository;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import ru.hse.coursework.berth.database.entity.Account;
 import ru.hse.coursework.berth.database.entity.Berth;
 import ru.hse.coursework.berth.database.entity.BerthPlace;
 import ru.hse.coursework.berth.database.entity.Booking;
@@ -25,6 +27,11 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "where not (b.startDate > ?2 or b.endDate < ?1) " +
             "and b.status = ?3")
     Set<BerthPlace> findPlacesByDatesAndStatus(LocalDate startDate, LocalDate endDate, BookingStatus status);
+
+
+    @Query("select b from Booking b where b.renter = ?1")
+    @EntityGraph(attributePaths = {"berthPlace.berth.amenities", "ship"})
+    List<Booking> findAllByRenterLoadBerthWithAmenitiesAndShip(Account renter);
 
     default Set<BerthPlace> findApprovedPlacesByDates(LocalDate startDate, LocalDate endDate) {
         return findPlacesByDatesAndStatus(startDate, endDate, BookingStatus.APPROVED);

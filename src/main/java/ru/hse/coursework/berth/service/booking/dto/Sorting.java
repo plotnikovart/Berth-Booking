@@ -1,4 +1,4 @@
-package ru.hse.coursework.berth.web.dto.request;
+package ru.hse.coursework.berth.service.booking.dto;
 
 public enum Sorting {
 

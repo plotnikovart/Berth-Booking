@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.hse.coursework.berth.service.file.FileStorageService;
 import ru.hse.coursework.berth.service.file.dto.FileInfoDto;
-import ru.hse.coursework.berth.web.dto.response.ObjectResp;
+import ru.hse.coursework.berth.web.dto.resp.ObjectResp;
 
 import java.io.File;
 import java.io.IOException;

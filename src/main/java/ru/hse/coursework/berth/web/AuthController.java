@@ -9,8 +9,8 @@ import ru.hse.coursework.berth.service.account.dto.AuthToken;
 import ru.hse.coursework.berth.service.account.dto.EmailCredential;
 import ru.hse.coursework.berth.service.account.dto.GoogleCredential;
 import ru.hse.coursework.berth.service.account.dto.RefreshTokenReq;
-import ru.hse.coursework.berth.web.dto.response.EmptyResp;
-import ru.hse.coursework.berth.web.dto.response.ObjectResp;
+import ru.hse.coursework.berth.web.dto.resp.EmptyResp;
+import ru.hse.coursework.berth.web.dto.resp.ObjectResp;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;

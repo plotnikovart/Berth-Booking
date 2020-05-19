@@ -1,4 +1,4 @@
-package ru.hse.coursework.berth.web.dto.response;
+package ru.hse.coursework.berth.web.dto.resp;
 
 public class EmptyResp extends Response {
 

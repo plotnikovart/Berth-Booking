@@ -22,10 +22,6 @@ public class Booking extends AuditEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id", nullable = false)
-    private Account owner;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "renter_id", nullable = false)
     private Account renter;
 
@@ -47,6 +43,9 @@ public class Booking extends AuditEntity {
     @Column(nullable = false)
     @Convert(converter = BookingStatus.Converter.class)
     private BookingStatus status = BookingStatus.NEW;
+
+    @Column(nullable = false)
+    private Double totalPrice;
 
     @Deprecated // use state machine
     public Booking setStatus(BookingStatus status) {

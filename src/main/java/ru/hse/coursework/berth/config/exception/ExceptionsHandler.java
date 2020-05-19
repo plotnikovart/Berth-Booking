@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ru.hse.coursework.berth.config.exception.impl.ServiceException;
-import ru.hse.coursework.berth.web.dto.response.ErrorResp;
+import ru.hse.coursework.berth.web.dto.resp.ErrorResp;
 
 @Slf4j
 @ControllerAdvice

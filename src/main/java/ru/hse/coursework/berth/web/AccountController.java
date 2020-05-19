@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.hse.coursework.berth.service.account.AccountService;
 import ru.hse.coursework.berth.service.account.dto.AccountInfo;
 import ru.hse.coursework.berth.service.account.dto.UserInfoDto;
-import ru.hse.coursework.berth.web.dto.response.ObjectResp;
+import ru.hse.coursework.berth.web.dto.resp.ObjectResp;
 
 @RestController
 @RequestMapping("/api/accounts")

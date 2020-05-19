@@ -10,7 +10,7 @@ import ru.hse.coursework.berth.config.exception.ExceptionCode;
 import ru.hse.coursework.berth.config.exception.impl.ServiceException;
 import ru.hse.coursework.berth.config.exception.impl.UnauthorizedException;
 import ru.hse.coursework.berth.service.account.TokenService;
-import ru.hse.coursework.berth.web.dto.response.ErrorResp;
+import ru.hse.coursework.berth.web.dto.resp.ErrorResp;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
