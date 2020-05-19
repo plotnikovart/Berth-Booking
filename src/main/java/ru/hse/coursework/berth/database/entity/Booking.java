@@ -3,6 +3,7 @@ package ru.hse.coursework.berth.database.entity;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Where;
+import ru.hse.coursework.berth.common.fsm.StateField;
 import ru.hse.coursework.berth.database.entity.enums.BookingStatus;
 
 import javax.persistence.*;
@@ -42,7 +43,14 @@ public class Booking extends AuditEntity {
     @Column(nullable = false)
     private LocalDate endDate;
 
+    @StateField
     @Column(nullable = false)
     @Convert(converter = BookingStatus.Converter.class)
-    private BookingStatus status;
+    private BookingStatus status = BookingStatus.NEW;
+
+    @Deprecated // use state machine
+    public Booking setStatus(BookingStatus status) {
+        this.status = status;
+        return this;
+    }
 }
