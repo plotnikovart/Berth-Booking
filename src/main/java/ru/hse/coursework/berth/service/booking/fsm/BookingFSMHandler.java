@@ -1,9 +1,12 @@
 package ru.hse.coursework.berth.service.booking.fsm;
 
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.statemachine.StateMachine;
+import org.springframework.statemachine.action.Action;
 import org.springframework.statemachine.config.StateMachineBuilder;
 import org.springframework.statemachine.config.StateMachineBuilder.Builder;
+import org.springframework.statemachine.guard.Guard;
 import org.springframework.stereotype.Component;
 import ru.hse.coursework.berth.common.fsm.EntityFSMHandler;
 import ru.hse.coursework.berth.database.entity.Booking;
@@ -14,6 +17,7 @@ import java.util.EnumSet;
 import static ru.hse.coursework.berth.database.entity.enums.BookingStatus.*;
 import static ru.hse.coursework.berth.service.booking.fsm.BookingEvent.*;
 
+@Slf4j
 @Component
 public class BookingFSMHandler extends EntityFSMHandler<Booking, BookingStatus, BookingEvent> {
 
@@ -32,10 +36,16 @@ public class BookingFSMHandler extends EntityFSMHandler<Booking, BookingStatus, 
                 .source(NEW).target(REJECTED).event(REJECT)
                 .and()
                 .withExternal()
-                .source(NEW).target(APPROVED).event(APPROVE)
+                .source(NEW).target(APPROVED).event(APPROVE).guard(checkOtherNotApproved())
                 .and()
                 .withExternal()
-                .source(APPROVED).target(PAYED).event(PAY)
+                .source(NEW).target(CANCELLED).event(CANCEL)
+                .and()
+                .withExternal()
+                .source(APPROVED).target(REJECTED).event(REJECT)
+                .and()
+                .withExternal()
+                .source(APPROVED).target(PAYED).event(PAY).action(rejectOtherApplications())
                 .and()
                 .withExternal()
                 .source(APPROVED).target(CANCELLED).event(CANCEL)
@@ -44,5 +54,21 @@ public class BookingFSMHandler extends EntityFSMHandler<Booking, BookingStatus, 
                 .source(PAYED).target(CANCELLED).event(CANCEL);
 
         return builder.build();
+    }
+
+
+    Action<BookingStatus, BookingEvent> rejectOtherApplications() {
+        return createAction((booking, ctx) -> {
+            // todo
+            log.info("Other was rejected");
+        });
+    }
+
+    public Guard<BookingStatus, BookingEvent> checkOtherNotApproved() {
+        return createGuard((booking, ctx) -> {
+            // todo
+            log.info("check was completed");
+            return false;
+        });
     }
 }

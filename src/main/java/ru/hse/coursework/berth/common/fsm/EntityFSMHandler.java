@@ -8,13 +8,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.hibernate.Hibernate;
 import org.springframework.lang.NonNull;
+import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.StateMachine;
+import org.springframework.statemachine.action.Action;
+import org.springframework.statemachine.guard.Guard;
 import ru.hse.coursework.berth.config.exception.impl.ServiceException;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 
 @Slf4j
 @SuppressWarnings("unchecked")
@@ -24,6 +31,7 @@ public abstract class EntityFSMHandler<ENTITY,
 
     private final Field stateField;
     private final LoadingCache<RefSameObj<ENTITY>, StateMachine<STATE, EVENT>> fsmCache;
+    private final Map<StateMachine<STATE, EVENT>, ENTITY> invertedFSMCache;
 
 
     protected abstract StateMachine<STATE, EVENT> buildStateMachine(STATE baseState);
@@ -42,6 +50,7 @@ public abstract class EntityFSMHandler<ENTITY,
         stateField.setAccessible(true);
 
         fsmCache = buildCache();
+        invertedFSMCache = new ConcurrentHashMap<>();
     }
 
 
@@ -67,6 +76,7 @@ public abstract class EntityFSMHandler<ENTITY,
         return CacheBuilder.newBuilder()
                 .maximumSize(100)
                 .expireAfterWrite(10, TimeUnit.MINUTES)
+                .removalListener(t -> invertedFSMCache.remove(t.getValue()))
                 .build(buildCacheLoader());
     }
 
@@ -80,6 +90,8 @@ public abstract class EntityFSMHandler<ENTITY,
                 stateMachine.addStateListener(new FSMChangeStatusListener<>(key.getValue(), stateField));
                 stateMachine.start();
 
+                invertedFSMCache.put(stateMachine, key.getValue());
+
                 return stateMachine;
             }
         };
@@ -92,5 +104,18 @@ public abstract class EntityFSMHandler<ENTITY,
             log.error(e.getMessage());
             throw new ServiceException(e);
         }
+    }
+
+    private ENTITY getEntityByStateMachine(StateMachine<STATE, EVENT> stateMachine) {
+        return invertedFSMCache.get(stateMachine);
+    }
+
+
+    protected Action<STATE, EVENT> createAction(BiConsumer<ENTITY, StateContext<STATE, EVENT>> consumer) {
+        return context -> consumer.accept(getEntityByStateMachine(context.getStateMachine()), context);
+    }
+
+    public Guard<STATE, EVENT> createGuard(BiFunction<ENTITY, StateContext<STATE, EVENT>, Boolean> function) {
+        return context -> function.apply(getEntityByStateMachine(context.getStateMachine()), context);
     }
 }

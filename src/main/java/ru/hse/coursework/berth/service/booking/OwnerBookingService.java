@@ -57,7 +57,7 @@ public class OwnerBookingService {
                 .forEach(b -> b.setStatus(BookingStatus.REJECTED));
 
         booking.setStatus(BookingStatus.APPROVED);
-        emailService.sendBookingApprove(booking);
+//        emailService.sendBookingApprove(booking);
     }
 
     public void rejectBooking(long bookingId) {

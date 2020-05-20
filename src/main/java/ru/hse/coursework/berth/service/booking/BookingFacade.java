@@ -3,12 +3,8 @@ package ru.hse.coursework.berth.service.booking;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.hse.coursework.berth.database.entity.enums.BookingStatus;
-import ru.hse.coursework.berth.database.repository.BerthRepository;
-import ru.hse.coursework.berth.database.repository.BookingRepository;
-import ru.hse.coursework.berth.service.PermissionService;
 import ru.hse.coursework.berth.service.booking.dto.BookingDto;
 import ru.hse.coursework.berth.service.booking.dto.BookingStatusResp;
-import ru.hse.coursework.berth.service.converters.impl.RenterBookingConverter;
 import ru.hse.coursework.berth.service.event.EventPublisher;
 
 import java.util.List;
@@ -17,11 +13,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BookingFacade {
 
-    private final BookingRepository bookingRepository;
-    private final BerthRepository berthRepository;
-    private final BookingSearchService bookingSearchService;
-    private final PermissionService permissionService;
-    private final RenterBookingConverter bookingConverter;
     private final RenterBookingService renterBookingService;
     private final EventPublisher eventPublisher;
 
@@ -43,7 +34,7 @@ public class BookingFacade {
     }
 
     public List<BookingDto.RespRenter> getBookingsForBerth(Long berthId) {
-
+        return List.of();
     }
 
 
