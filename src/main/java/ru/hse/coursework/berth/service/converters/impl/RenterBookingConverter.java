@@ -29,6 +29,7 @@ public class RenterBookingConverter extends AbstractConverter<Booking, BookingDt
                 .setShip(shipConverter.toDto(e.getShip()))
                 .setStatus(e.getStatus())
                 .setTotalPrice(e.getTotalPrice())
+                .setServiceFee(e.getServiceFee())
                 .setStartDate(e.getStartDate())
                 .setEndDate(e.getEndDate());
     }

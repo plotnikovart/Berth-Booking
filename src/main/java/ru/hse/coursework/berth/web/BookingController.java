@@ -3,7 +3,6 @@ package ru.hse.coursework.berth.web;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.hse.coursework.berth.config.validation.ValidationUtils;
 import ru.hse.coursework.berth.service.berth.dto.BerthDto;
 import ru.hse.coursework.berth.service.booking.BookingFacade;
 import ru.hse.coursework.berth.service.booking.BookingSearchService;
@@ -35,7 +34,7 @@ public class BookingController {
     }
 
     @GetMapping("berths/{berthId}")
-    public List<BookingDto.RespRenter> getBookingsForBerth(@PathVariable Long berthId) {
+    public List<BookingDto.RespOwner> getBookingsForBerth(@PathVariable Long berthId) {
         return bookingFacade.getBookingsForBerth(berthId);
     }
 
@@ -59,13 +58,12 @@ public class BookingController {
 
     @PutMapping("{id}/pay")
     public ObjectResp<BookingPayLinkResp> payBooking(@PathVariable Long id) {
-        var resp = BookingPayLinkResp.of("");
+        var resp = bookingFacade.payBooking(id);
         return new ObjectResp<>(resp);
     }
 
     @PostMapping("search")
     public List<BerthDto.Resp.Search> search(@RequestBody BookingSearchReq req) {
-        ValidationUtils.validateEntity(req);
         return bookingSearchService.searchPlaces(req);
     }
 }

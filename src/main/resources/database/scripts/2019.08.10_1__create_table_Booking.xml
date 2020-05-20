@@ -33,6 +33,9 @@
             <column name="total_price" type="double">
                 <constraints nullable="false"/>
             </column>
+            <column name="service_fee" type="double">
+                <constraints nullable="false"/>
+            </column>
 
             <column name="is_deleted" type="boolean">
                 <constraints nullable="false"/>

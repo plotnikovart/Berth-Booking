@@ -21,7 +21,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "join BerthPlace bp on b.berthPlace = bp " +
             "where bp.berth = ?1 " +
             "order by b.id desc")
-    List<Booking> findAllByBerth(Berth berth);
+    @EntityGraph(attributePaths = {"berthPlace", "ship"})
+    List<Booking> findAllByBerthLoadBerthPlaceAndShip(Berth berth);
 
     @Query("select b.berthPlace from Booking b " +
             "where not (b.startDate > ?2 or b.endDate < ?1) " +

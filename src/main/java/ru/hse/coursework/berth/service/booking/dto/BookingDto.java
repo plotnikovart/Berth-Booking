@@ -4,7 +4,9 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import ru.hse.coursework.berth.config.validation.ValidationUtils;
 import ru.hse.coursework.berth.database.entity.enums.BookingStatus;
+import ru.hse.coursework.berth.service.account.dto.UserInfoDto;
 import ru.hse.coursework.berth.service.berth.dto.BerthDto;
+import ru.hse.coursework.berth.service.berth.dto.BerthPlaceDto;
 import ru.hse.coursework.berth.service.ship.dto.ShipDto;
 
 import javax.validation.constraints.NotNull;
@@ -37,20 +39,47 @@ public class BookingDto {
     @Data
     public static class RespRenter extends BookingDto {
 
-        @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
+        @ApiModelProperty(required = true, position = 1)
         private Long id;
 
-        @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
+        @ApiModelProperty(required = true, position = 2)
         private BerthDto.Resp berth;
 
-        @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
+        @ApiModelProperty(required = true, position = 3)
         private String berthPlaceName;
 
-        @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
+        @ApiModelProperty(required = true, position = 4)
         private ShipDto.Resp ship;
 
+        @ApiModelProperty(required = true, position = 5)
         private BookingStatus status;
 
+        @ApiModelProperty(required = true, position = 6)
+        private Double totalPrice;
+
+        @ApiModelProperty(required = true, position = 7)
+        private Double serviceFee;
+    }
+
+    @Data
+    public static class RespOwner extends BookingDto {
+
+        @ApiModelProperty(required = true, position = 1)
+        private Long id;
+
+        @ApiModelProperty(required = true, position = 2)
+        private UserInfoDto.Resp renter;
+
+        @ApiModelProperty(required = true, position = 3)
+        private BerthPlaceDto berthPlace;
+
+        @ApiModelProperty(required = true, position = 4)
+        private ShipDto.Resp ship;
+
+        @ApiModelProperty(required = true, position = 5)
+        private BookingStatus status;
+
+        @ApiModelProperty(required = true, position = 6)
         private Double totalPrice;
     }
 }

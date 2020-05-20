@@ -45,6 +45,9 @@ public class BookingFSMHandler extends EntityFSMHandler<Booking, BookingStatus, 
                 .source(APPROVED).target(REJECTED).event(REJECT)
                 .and()
                 .withExternal()
+                .source(APPROVED).target(APPROVED).event(PAY_PREPARE)
+                .and()
+                .withExternal()
                 .source(APPROVED).target(PAYED).event(PAY).action(rejectOtherApplications())
                 .and()
                 .withExternal()
@@ -59,6 +62,12 @@ public class BookingFSMHandler extends EntityFSMHandler<Booking, BookingStatus, 
 
     Action<BookingStatus, BookingEvent> rejectOtherApplications() {
         return createAction((booking, ctx) -> {
+            // Для других бронирований на пересекающиеся даты устанавливаем статус - отклонено
+//            booking.getBerthPlace().getBookingList().stream()
+//                    .filter(b -> b.getStatus() != BookingStatus.CANCELLED)
+//                    .filter(b -> DateHelper.isIntersect(b.getStartDate(), b.getEndDate(), booking.getStartDate(), booking.getEndDate()))
+//                    .forEach(b -> b.setStatus(BookingStatus.REJECTED));
+
             // todo
             log.info("Other was rejected");
         });

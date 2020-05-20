@@ -47,6 +47,9 @@ public class Booking extends AuditEntity {
     @Column(nullable = false)
     private Double totalPrice;
 
+    @Column(nullable = false)
+    private Double serviceFee;
+
     @Deprecated // use state machine
     public Booking setStatus(BookingStatus status) {
         this.status = status;

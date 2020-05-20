@@ -1,17 +1,17 @@
-package ru.hse.coursework.berth.service.event;
+package ru.hse.coursework.berth.service.event.review;
 
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.context.ApplicationEvent;
 
-@Setter
 @Getter
-public class ReviewPublishEvent extends ApplicationEvent {
+@Setter
+public class ReviewDeleteEvent extends ApplicationEvent {
 
     private Long berthId;
     private Long reviewId;
 
-    public ReviewPublishEvent(Object source) {
+    public ReviewDeleteEvent(Object source) {
         super(source);
     }
 }

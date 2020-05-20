@@ -43,6 +43,7 @@ public class RenterBookingService {
         Booking booking = converter.toEntity(bookingRequest);
         booking
                 .setTotalPrice(calcTotalPrice(booking))
+                .setServiceFee(calcServiceFee(booking))
                 .setRenter(renter);
 
         validateBooking(booking);
@@ -62,6 +63,9 @@ public class RenterBookingService {
         List<Booking> bookings = bookingRepository.findAllByRenterLoadBerthWithAmenitiesAndShip(account);
         return converter.toDtos(bookings);
     }
+
+
+
 
 
     @Transactional
@@ -101,5 +105,10 @@ public class RenterBookingService {
     private Double calcTotalPrice(Booking booking) {
         Double price = booking.getBerthPlace().getPrice();
         return price * DAYS.between(booking.getStartDate(), booking.getEndDate());
+    }
+
+    private Double calcServiceFee(Booking booking) {
+        Double total = calcTotalPrice(booking);
+        return total * 0.05;
     }
 }

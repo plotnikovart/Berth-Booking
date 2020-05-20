@@ -8,10 +8,11 @@ import ru.hse.coursework.berth.common.fsm.EventEnum;
 @AllArgsConstructor
 public enum BookingEvent implements EventEnum {
 
-    REJECT("Dockmaster reject booking"),
-    APPROVE("Dockmaster approve booking"),
-    PAY("Boater pay booking"),
-    CANCEL("Boater cancel booking");
+    REJECT("Dockmaster rejects booking"),
+    APPROVE("Dockmaster approves booking"),
+    PAY_PREPARE("Boater prepares to pay for booking"),
+    PAY("Boater pays booking"),
+    CANCEL("Boater cancels booking");
 
     private final String description;
 }
