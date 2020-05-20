@@ -22,6 +22,8 @@ import ru.hse.coursework.berth.service.converters.impl.DictAmenityConverter;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+import static java.util.Comparator.comparing;
+
 @Service
 @RequiredArgsConstructor
 public class BerthCRUDService {
@@ -43,7 +45,7 @@ public class BerthCRUDService {
     @Transactional(readOnly = true)
     public List<BerthDto.Resp> get(BerthPart... include) {
         List<Berth> berths = berthRepository.findAllByOwner(em.getReference(Account.class, OperationContext.accountId()));
-        berths = StreamEx.of(berths).sortedBy(Berth::getId).reverseSorted().toList();
+        berths = StreamEx.of(berths).sorted(comparing(Berth::getId).reversed()).toList();
         return berthConverter.toDtos(berths, include);
     }
 
