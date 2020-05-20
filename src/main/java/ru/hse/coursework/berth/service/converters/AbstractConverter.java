@@ -17,7 +17,7 @@ public abstract class AbstractConverter<E, DRESP, DREQ> {
 
     public DRESP toDto(E entity) {
         try {
-            DRESP dto = dtoClass.newInstance();
+            DRESP dto = dtoClass.getConstructor().newInstance();
             return toDto(dto, entity);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -27,7 +27,7 @@ public abstract class AbstractConverter<E, DRESP, DREQ> {
 
     public E toEntity(DREQ dto) {
         try {
-            E entity = entityClass.newInstance();
+            E entity = entityClass.getConstructor().newInstance();
             return toEntity(entity, dto);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
