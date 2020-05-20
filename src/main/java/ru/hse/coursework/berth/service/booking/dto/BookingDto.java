@@ -1,5 +1,6 @@
 package ru.hse.coursework.berth.service.booking.dto;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import ru.hse.coursework.berth.config.validation.ValidationUtils;
@@ -26,6 +27,7 @@ public class BookingDto {
 
 
     @Data
+    @ApiModel("BookingDtoReq")
     public static class Req extends BookingDto {
 
         @ApiModelProperty(required = true, position = 1)
@@ -38,6 +40,7 @@ public class BookingDto {
     }
 
     @Data
+    @ApiModel("BookingDtoRespRenter")
     public static class RespRenter extends BookingDto {
 
         @ApiModelProperty(required = true, position = 1)
@@ -61,11 +64,12 @@ public class BookingDto {
         @ApiModelProperty(required = true, position = 7)
         private Double serviceFee;
 
-        @ApiModelProperty(required = true, position = 7)
+        @ApiModelProperty(required = true, position = 8)
         private LocalDateTime createdAt;
     }
 
     @Data
+    @ApiModel("BookingDtoRespOwner")
     public static class RespOwner extends BookingDto {
 
         @ApiModelProperty(required = true, position = 1)
