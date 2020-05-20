@@ -21,6 +21,7 @@ public class OwnerBookingConverter extends AbstractRespConverter<Booking, Bookin
                 .setShip(shipConverter.toDto(entity.getShip()))
                 .setStatus(entity.getStatus())
                 .setTotalPrice(entity.getTotalPrice())
+                .setCreatedAt(entity.getCreatedAt())
                 .setStartDate(entity.getStartDate())
                 .setEndDate(entity.getEndDate());
     }

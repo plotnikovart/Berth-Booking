@@ -11,6 +11,7 @@ import ru.hse.coursework.berth.service.ship.dto.ShipDto;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 public class BookingDto {
@@ -59,6 +60,9 @@ public class BookingDto {
 
         @ApiModelProperty(required = true, position = 7)
         private Double serviceFee;
+
+        @ApiModelProperty(required = true, position = 7)
+        private LocalDateTime createdAt;
     }
 
     @Data
@@ -81,5 +85,8 @@ public class BookingDto {
 
         @ApiModelProperty(required = true, position = 6)
         private Double totalPrice;
+
+        @ApiModelProperty(required = true, position = 7)
+        private LocalDateTime createdAt;
     }
 }

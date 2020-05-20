@@ -10,6 +10,7 @@ import ru.hse.coursework.berth.service.booking.dto.BookingDto;
 import ru.hse.coursework.berth.service.booking.dto.BookingPayLinkResp;
 import ru.hse.coursework.berth.service.booking.dto.BookingSearchReq;
 import ru.hse.coursework.berth.service.booking.dto.BookingStatusResp;
+import ru.hse.coursework.berth.web.dto.resp.ListResp;
 import ru.hse.coursework.berth.web.dto.resp.ObjectResp;
 
 import java.util.List;
@@ -29,13 +30,15 @@ public class BookingController {
     }
 
     @GetMapping
-    public List<BookingDto.RespRenter> getAllBookings() {
-        return bookingFacade.getMyBookings();
+    public ListResp<BookingDto.RespRenter> getAllBookings() {
+        var resp = bookingFacade.getMyBookings();
+        return new ListResp<>(resp);
     }
 
     @GetMapping("berths/{berthId}")
-    public List<BookingDto.RespOwner> getBookingsForBerth(@PathVariable Long berthId) {
-        return bookingFacade.getBookingsForBerth(berthId);
+    public ListResp<BookingDto.RespOwner> getBookingsForBerth(@PathVariable Long berthId) {
+        var resp = bookingFacade.getBookingsForBerth(berthId);
+        return new ListResp<>(resp);
     }
 
     @PutMapping("{id}/reject")

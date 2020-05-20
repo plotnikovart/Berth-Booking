@@ -38,7 +38,7 @@ public class BookingSearchService {
     @Transactional(propagation = Propagation.MANDATORY)
     public boolean isReserved(BerthPlace berthPlace, LocalDate startDate, LocalDate endDate) {
         Optional<Booking> opt = berthPlace.getBookingList().stream()
-                .filter(b -> b.getStatus() == BookingStatus.APPROVED)
+                .filter(b -> b.getStatus() == BookingStatus.PAYED)
                 .filter(b -> DateHelper.isIntersect(startDate, endDate, b.getStartDate(), b.getEndDate()))
                 .findAny();
 

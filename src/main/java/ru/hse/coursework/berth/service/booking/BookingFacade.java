@@ -52,7 +52,7 @@ public class BookingFacade {
     }
 
     public BookingStatusResp rejectBooking(Long bookingId) {
-        BookingStatus status = renterBookingService.cancelBooking(bookingId);
+        BookingStatus status = ownerBookingService.rejectBooking(bookingId);
         eventPublisher.cancelBooking(bookingId);
         return BookingStatusResp.of(status);
     }

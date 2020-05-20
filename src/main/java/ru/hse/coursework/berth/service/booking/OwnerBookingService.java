@@ -21,6 +21,7 @@ import ru.hse.coursework.berth.service.booking.fsm.BookingFSMHandler;
 import ru.hse.coursework.berth.service.converters.impl.OwnerBookingConverter;
 import ru.hse.coursework.berth.service.converters.impl.UserInfoConverter;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +39,7 @@ public class OwnerBookingService {
     private final UserInfoConverter userInfoConverter;
     private final BookingFSMHandler bookingFSMHandler;
 
+    @Transactional(readOnly = true)
     public List<BookingDto.RespOwner> getBookingsForBerth(long berthId) {
         Berth berth = berthRepository.findById(berthId).orElseThrow(NotFoundException::new);
         permissionService.check(berth);
@@ -52,6 +54,7 @@ public class OwnerBookingService {
                 .toMap(UserInfo::getAccountId, it -> it);
 
         return of(bookings)
+                .sorted(Comparator.comparing(Booking::getId).reversed())
                 .map(it -> {
                     UserInfo userInfo = idToUserInfo.getOrDefault(it.getRenter().getId(), new UserInfo().setAccount(it.getRenter()));
                     UserInfoDto.Resp userInfoDto = userInfoConverter.toDto(userInfo);

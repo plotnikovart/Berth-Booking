@@ -12,7 +12,9 @@ public enum BookingEvent implements EventEnum {
     APPROVE("Dockmaster approves booking"),
     PAY_PREPARE("Boater prepares to pay for booking"),
     PAY("Boater pays booking"),
-    CANCEL("Boater cancels booking");
+    CANCEL("Boater cancels booking"),
+
+    OTHER_PAY("Other booking was payed");
 
     private final String description;
 }

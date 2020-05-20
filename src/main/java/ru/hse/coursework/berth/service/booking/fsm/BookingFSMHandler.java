@@ -8,6 +8,7 @@ import org.springframework.statemachine.config.StateMachineBuilder;
 import org.springframework.statemachine.config.StateMachineBuilder.Builder;
 import org.springframework.statemachine.guard.Guard;
 import org.springframework.stereotype.Component;
+import ru.hse.coursework.berth.common.DateHelper;
 import ru.hse.coursework.berth.common.fsm.EntityFSMHandler;
 import ru.hse.coursework.berth.database.entity.Booking;
 import ru.hse.coursework.berth.database.entity.enums.BookingStatus;
@@ -54,30 +55,41 @@ public class BookingFSMHandler extends EntityFSMHandler<Booking, BookingStatus, 
                 .source(APPROVED).target(CANCELLED).event(CANCEL)
                 .and()
                 .withExternal()
-                .source(PAYED).target(CANCELLED).event(CANCEL);
+                .source(PAYED).target(CANCELLED).event(CANCEL)
+
+                // other booking was payed
+                .and()
+                .withExternal()
+                .source(NEW).target(REJECTED).event(OTHER_PAY)
+                .and()
+                .withExternal()
+                .source(REJECTED).target(REJECTED).event(OTHER_PAY)
+                .and()
+                .withExternal()
+                .source(CANCELLED).target(CANCELLED).event(OTHER_PAY);
 
         return builder.build();
     }
 
 
-    Action<BookingStatus, BookingEvent> rejectOtherApplications() {
+    private Action<BookingStatus, BookingEvent> rejectOtherApplications() {
         return createAction((booking, ctx) -> {
-            // Для других бронирований на пересекающиеся даты устанавливаем статус - отклонено
-//            booking.getBerthPlace().getBookingList().stream()
-//                    .filter(b -> b.getStatus() != BookingStatus.CANCELLED)
-//                    .filter(b -> DateHelper.isIntersect(b.getStartDate(), b.getEndDate(), booking.getStartDate(), booking.getEndDate()))
-//                    .forEach(b -> b.setStatus(BookingStatus.REJECTED));
-
-            // todo
-            log.info("Other was rejected");
+            // другие бронирования на текущее место на пересекающиеся даты отклоняем
+            booking.getBerthPlace().getBookingList().stream()
+                    .filter(it -> !it.getId().equals(booking.getId()))
+                    .filter(b -> DateHelper.isIntersect(b.getStartDate(), b.getEndDate(), booking.getStartDate(), booking.getEndDate()))
+                    .forEach(b -> sendEvent(b, OTHER_PAY));
         });
     }
 
-    public Guard<BookingStatus, BookingEvent> checkOtherNotApproved() {
+
+    private Guard<BookingStatus, BookingEvent> checkOtherNotApproved() {
         return createGuard((booking, ctx) -> {
-            // todo
-            log.info("check was completed");
-            return false;
+            // для перевода в статус approved нужно, чтобы в этом статусе не было других заявок
+            return booking.getBerthPlace().getBookingList().stream()
+                    .filter(it -> !it.getId().equals(booking.getId()))
+                    .filter(b -> DateHelper.isIntersect(b.getStartDate(), b.getEndDate(), booking.getStartDate(), booking.getEndDate()))
+                    .noneMatch(b -> b.getStatus() == APPROVED);
         });
     }
 }

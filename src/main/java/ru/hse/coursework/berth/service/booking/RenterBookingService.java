@@ -11,27 +11,26 @@ import ru.hse.coursework.berth.config.security.OperationContext;
 import ru.hse.coursework.berth.database.entity.Account;
 import ru.hse.coursework.berth.database.entity.Booking;
 import ru.hse.coursework.berth.database.entity.enums.BookingStatus;
-import ru.hse.coursework.berth.database.repository.*;
-import ru.hse.coursework.berth.service.PermissionService;
+import ru.hse.coursework.berth.database.repository.AccountRepository;
+import ru.hse.coursework.berth.database.repository.BookingRepository;
 import ru.hse.coursework.berth.service.booking.dto.BookingDto;
 import ru.hse.coursework.berth.service.booking.fsm.BookingEvent;
 import ru.hse.coursework.berth.service.booking.fsm.BookingFSMHandler;
 import ru.hse.coursework.berth.service.converters.impl.RenterBookingConverter;
 
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 
 import static java.time.temporal.ChronoUnit.DAYS;
+import static one.util.streamex.StreamEx.of;
 
 @Service
 @RequiredArgsConstructor
 public class RenterBookingService {
 
     private final BookingRepository bookingRepository;
-    private final UserInfoRepository userInfoRepository;
-    private final BerthRepository berthRepository;
-    private final BerthPlaceRepository berthPlaceRepository;
     private final BookingSearchService bookingSearchService;
-    private final PermissionService permissionService;
     private final RenterBookingConverter converter;
     private final AccountRepository accountRepository;
     private final BookingFSMHandler bookingFSMHandler;
@@ -51,6 +50,7 @@ public class RenterBookingService {
         return bookingRepository.save(booking).getId();
     }
 
+    @Transactional(readOnly = true)
     public BookingDto.RespRenter getBooking(long id) {
         Booking booking = bookingRepository.findById(id).orElseThrow(NotFoundException::new);
         checkAccess(booking);
@@ -61,12 +61,11 @@ public class RenterBookingService {
     public List<BookingDto.RespRenter> getBookings() {
         Account account = accountRepository.findCurrent();
         List<Booking> bookings = bookingRepository.findAllByRenterLoadBerthWithAmenitiesAndShip(account);
-        return converter.toDtos(bookings);
+        return of(bookings)
+                .sorted(Comparator.comparing(Booking::getId).reversed())
+                .map(converter::toDto)
+                .toList();
     }
-
-
-
-
 
     @Transactional
     public BookingStatus cancelBooking(long bookingId) {
@@ -93,6 +92,10 @@ public class RenterBookingService {
             throw new ServiceException(SMessageSource.message("booking.date"));
         }
 
+        if (booking.getStartDate().isBefore(LocalDate.now())) {
+            throw new ServiceException("Start date is invalid");
+        }
+
         if (!bookingSearchService.isMatch(booking.getBerthPlace(), booking.getShip())) {
             throw new ServiceException(SMessageSource.message("booking.size"));
         }
@@ -104,7 +107,7 @@ public class RenterBookingService {
 
     private Double calcTotalPrice(Booking booking) {
         Double price = booking.getBerthPlace().getPrice();
-        return price * DAYS.between(booking.getStartDate(), booking.getEndDate());
+        return price * (DAYS.between(booking.getStartDate(), booking.getEndDate()) + 1);
     }
 
     private Double calcServiceFee(Booking booking) {

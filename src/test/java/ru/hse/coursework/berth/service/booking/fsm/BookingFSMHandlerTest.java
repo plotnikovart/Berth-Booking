@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.hse.coursework.berth.ApplicationTest;
 import ru.hse.coursework.berth.config.exception.impl.ServiceException;
+import ru.hse.coursework.berth.database.entity.BerthPlace;
 import ru.hse.coursework.berth.database.entity.Booking;
 import ru.hse.coursework.berth.database.entity.enums.BookingStatus;
 
@@ -14,6 +15,7 @@ class BookingFSMHandlerTest extends ApplicationTest {
     BookingFSMHandler bookingFSMHandler;
 
     @Test
+    @SuppressWarnings("deprecation")
     void test() {
         var booking = new Booking();
 
@@ -29,7 +31,8 @@ class BookingFSMHandlerTest extends ApplicationTest {
 
 
         var booking2 = new Booking()
-                .setStatus(BookingStatus.APPROVED);
+                .setStatus(BookingStatus.APPROVED)
+                .setBerthPlace(new BerthPlace());
 
         bookingFSMHandler.sendEvent(booking2, BookingEvent.PAY);
         Assertions.assertEquals(BookingStatus.PAYED, booking2.getStatus());

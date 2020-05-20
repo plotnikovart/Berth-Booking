@@ -9,9 +9,6 @@
             <column name="id" type="bigint">
                 <constraints primaryKey="true" primaryKeyName="pk_booking"/>
             </column>
-            <column name="owner_id" type="bigint">
-                <constraints nullable="false"/>
-            </column>
             <column name="renter_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
@@ -19,6 +16,9 @@
                 <constraints nullable="false"/>
             </column>
             <column name="ship_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="datetime">
                 <constraints nullable="false"/>
             </column>
             <column name="start_date" type="datetime">
@@ -56,13 +56,6 @@
     </changeSet>
 
     <changeSet id="2019.08.10_1_2" author="aplotnikov">
-        <addForeignKeyConstraint baseTableName="booking"
-                                 baseColumnNames="owner_id"
-                                 constraintName="fk_booking_owner"
-                                 referencedTableName="account"
-                                 referencedColumnNames="id"
-                                 onDelete="CASCADE"/>
-
         <addForeignKeyConstraint baseTableName="booking"
                                  baseColumnNames="renter_id"
                                  constraintName="fk_booking_renter"

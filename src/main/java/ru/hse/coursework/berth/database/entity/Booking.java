@@ -1,13 +1,16 @@
 package ru.hse.coursework.berth.database.entity;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Where;
 import ru.hse.coursework.berth.common.fsm.StateField;
 import ru.hse.coursework.berth.database.entity.enums.BookingStatus;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static ru.hse.coursework.berth.config.DBConfig.NOT_DELETED;
 
@@ -32,6 +35,11 @@ public class Booking extends AuditEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ship_id", nullable = false)
     private Ship ship;
+
+    @Setter(AccessLevel.NONE)
+    @CreationTimestamp
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
 
     @Column(nullable = false)
     private LocalDate startDate;

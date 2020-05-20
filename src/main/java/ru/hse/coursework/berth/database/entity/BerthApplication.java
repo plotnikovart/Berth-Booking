@@ -1,6 +1,7 @@
 package ru.hse.coursework.berth.database.entity;
 
 import com.google.api.client.repackaged.com.google.common.base.Splitter;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
@@ -35,6 +36,7 @@ public class BerthApplication extends AuditEntity {
     @JoinColumn(name = "berth_id", nullable = false)
     private Berth berth;
 
+    @Setter(AccessLevel.NONE)
     @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime creationDate;

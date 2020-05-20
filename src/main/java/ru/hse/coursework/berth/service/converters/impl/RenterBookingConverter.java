@@ -30,6 +30,7 @@ public class RenterBookingConverter extends AbstractConverter<Booking, BookingDt
                 .setStatus(e.getStatus())
                 .setTotalPrice(e.getTotalPrice())
                 .setServiceFee(e.getServiceFee())
+                .setCreatedAt(e.getCreatedAt())
                 .setStartDate(e.getStartDate())
                 .setEndDate(e.getEndDate());
     }
