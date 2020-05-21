@@ -25,8 +25,11 @@ public class EmailService {
         String url = backUrl + "/api/auth/registration/confirm" +
                 "?" + CONFIRM_CODE_PARAM + "=" + code +
                 "&" + EMAIL_PARAM + "=" + to;
-        String text = SMessageSource.message("account.confirm", url);
-        emailSender.sendMessage(to, "Подтверждение аккаунта", text);
+        String text = SMessageSource.message("account.confirm")
+                .replaceAll("\\{0}", url)
+                .replaceAll("\\{1}", to);
+
+        emailSender.sendMessage(to, "Account Confirmation", text);
     }
 
     public void sendBookingApprove(Booking booking) {
