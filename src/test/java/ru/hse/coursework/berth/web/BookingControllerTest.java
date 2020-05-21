@@ -4,19 +4,18 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import ru.hse.coursework.berth.config.exception.impl.AccessException;
 import ru.hse.coursework.berth.config.exception.impl.NotFoundException;
 import ru.hse.coursework.berth.config.exception.impl.ServiceException;
 import ru.hse.coursework.berth.config.security.OperationContext;
 import ru.hse.coursework.berth.database.entity.Berth;
 import ru.hse.coursework.berth.database.entity.BerthPlace;
+import ru.hse.coursework.berth.database.entity.Order;
 import ru.hse.coursework.berth.database.entity.Ship;
 import ru.hse.coursework.berth.database.entity.enums.BookingStatus;
 import ru.hse.coursework.berth.database.entity.enums.ShipType;
-import ru.hse.coursework.berth.database.repository.AbstractAccountTest;
-import ru.hse.coursework.berth.database.repository.BerthRepository;
-import ru.hse.coursework.berth.database.repository.BookingRepository;
-import ru.hse.coursework.berth.database.repository.ShipRepository;
+import ru.hse.coursework.berth.database.repository.*;
 import ru.hse.coursework.berth.service.berth.BerthPart;
 import ru.hse.coursework.berth.service.booking.dto.BookingDto;
 import ru.hse.coursework.berth.service.booking.dto.BookingPayLinkResp;
@@ -25,15 +24,13 @@ import ru.hse.coursework.berth.service.converters.impl.BerthConverter;
 import ru.hse.coursework.berth.service.converters.impl.BerthPlaceConverter;
 import ru.hse.coursework.berth.service.converters.impl.ShipConverter;
 import ru.hse.coursework.berth.service.converters.impl.UserInfoConverter;
-import ru.hse.coursework.berth.service.event.EventPublisher;
+import ru.hse.coursework.berth.service.payment.tinkoff.NotificationReq;
+import ru.hse.coursework.berth.service.payment.tinkoff.PaymentStatus;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public class BookingControllerTest extends AbstractAccountTest {
-
-    @Autowired
-    EventPublisher eventPublisher;
 
     @Autowired
     BerthRepository berthRepository;
@@ -43,6 +40,13 @@ public class BookingControllerTest extends AbstractAccountTest {
     ShipRepository shipRepository;
     @Autowired
     BookingController bookingController;
+    @Autowired
+    OrderRepository orderRepository;
+    @Autowired
+    PaymentController paymentController;
+
+    @Value("${tinkoff.terminalKey}")
+    private String terminalKey;
 
     @Autowired
     BerthConverter berthConverter;
@@ -67,6 +71,8 @@ public class BookingControllerTest extends AbstractAccountTest {
 
         bookingRepository.deleteAll();
         berthRepository.deleteAll();
+        orderRepository.deleteAll();
+        shipRepository.deleteAll();
 
         OperationContext.accountId(user1Account.getId());
 
@@ -295,7 +301,6 @@ public class BookingControllerTest extends AbstractAccountTest {
         Assertions.assertEquals(booking3, (long) renterBookings.get(0).getId());
 
 
-
         // owner get bookings
         OperationContext.accountId(user1Account.getId());
         List<BookingDto.RespOwner> ownerBookings = bookingController.getBookingsForBerth(berth.getId()).getData();
@@ -314,7 +319,7 @@ public class BookingControllerTest extends AbstractAccountTest {
         OperationContext.accountId(user2Account.getId());
 
         BookingPayLinkResp payLinkResp = bookingController.payBooking(booking1).getData();
-        eventPublisher.payBooking(booking1);
+        paymentController.tinkoffNotification(createNotification());
 
         Assertions.assertEquals(BookingStatus.PAYED, bookingRepository.findById(booking1).get().getStatus());
         Assertions.assertEquals(BookingStatus.REJECTED, bookingRepository.findById(booking2).get().getStatus());
@@ -331,5 +336,16 @@ public class BookingControllerTest extends AbstractAccountTest {
         BookingStatus status3 = bookingController.cancelBooking(booking3).getData().getNewStatus();
         Assertions.assertEquals(BookingStatus.CANCELLED, status3);
         Assertions.assertEquals(BookingStatus.CANCELLED, bookingRepository.findById(booking3).get().getStatus());
+    }
+
+
+    private NotificationReq createNotification() {
+        Order order = orderRepository.findAll().get(0);
+
+        return new NotificationReq()
+                .setOrderId(order.getId().toString())
+                .setStatus(PaymentStatus.CONFIRMED)
+                .setSuccess(true)
+                .setTerminalKey(terminalKey);
     }
 }
