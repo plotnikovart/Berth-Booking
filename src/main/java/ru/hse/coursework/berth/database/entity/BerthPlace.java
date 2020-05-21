@@ -6,6 +6,7 @@ import org.hibernate.annotations.Where;
 import ru.hse.coursework.berth.common.EntityWithOwner;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import static ru.hse.coursework.berth.config.DBConfig.NOT_DELETED;
@@ -47,7 +48,7 @@ public class BerthPlace extends AuditEntity implements EntityWithOwner {
     private String color;
 
     @OneToMany(mappedBy = "berthPlace", cascade = CascadeType.DETACH)
-    private List<Booking> bookingList;
+    private List<Booking> bookingList = new ArrayList<>();
 
     @Override
     public Long getOwnerId() {

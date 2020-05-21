@@ -1,8 +1,9 @@
-package ru.hse.coursework.berth.service;
+package ru.hse.coursework.berth.service.booking;
 
 import com.google.common.collect.Sets;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hse.coursework.berth.common.DateHelper;
 import ru.hse.coursework.berth.config.exception.impl.NotFoundException;
@@ -11,10 +12,10 @@ import ru.hse.coursework.berth.database.entity.enums.BookingStatus;
 import ru.hse.coursework.berth.database.repository.*;
 import ru.hse.coursework.berth.service.berth.dto.BerthDto;
 import ru.hse.coursework.berth.service.berth.dto.DictAmenityDto;
+import ru.hse.coursework.berth.service.booking.dto.BookingSearchReq;
+import ru.hse.coursework.berth.service.booking.dto.Sorting;
 import ru.hse.coursework.berth.service.converters.impl.BerthConverter;
 import ru.hse.coursework.berth.service.converters.impl.BerthPlaceConverter;
-import ru.hse.coursework.berth.web.dto.request.BookingSearchRequest;
-import ru.hse.coursework.berth.web.dto.request.Sorting;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -34,18 +35,22 @@ public class BookingSearchService {
     private final BerthPlaceConverter placeConverter;
 
 
-    @Transactional(readOnly = true)
+    @Transactional(propagation = Propagation.MANDATORY)
     public boolean isReserved(BerthPlace berthPlace, LocalDate startDate, LocalDate endDate) {
         Optional<Booking> opt = berthPlace.getBookingList().stream()
-                .filter(b -> b.getStatus() == BookingStatus.APPROVED)
+                .filter(b -> b.getStatus() == BookingStatus.PAYED)
                 .filter(b -> DateHelper.isIntersect(startDate, endDate, b.getStartDate(), b.getEndDate()))
                 .findAny();
 
         return opt.isPresent();
     }
 
+    public boolean isMatch(BerthPlace place, Ship ship) {
+        return ship.getLength() <= place.getLength() && ship.getWidth() <= place.getWidth() && ship.getDraft() <= place.getDraft();
+    }
+
     @Transactional(readOnly = true)
-    public List<BerthDto.Resp.Search> searchPlaces(BookingSearchRequest req) {
+    public List<BerthDto.Resp.Search> searchPlaces(BookingSearchReq req) {
         Ship ship = shipRepository.findById(req.getShipId()).orElseThrow(NotFoundException::new);
         Set<DictAmenity> requiredAmenities = extractAmenities(req);
 
@@ -92,7 +97,7 @@ public class BookingSearchService {
                 .setPlaces(places);
     }
 
-    private Set<DictAmenity> extractAmenities(BookingSearchRequest req) {
+    private Set<DictAmenity> extractAmenities(BookingSearchReq req) {
         List<String> requiredConvIds = req.getConvenienceList().stream().map(DictAmenityDto::getKey).collect(Collectors.toList());
         return Set.copyOf(dictAmenityRepository.findAllById(requiredConvIds));
     }

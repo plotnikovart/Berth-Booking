@@ -1,41 +1,66 @@
 package ru.hse.coursework.berth.database.entity;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Where;
+import ru.hse.coursework.berth.common.fsm.StateField;
 import ru.hse.coursework.berth.database.entity.enums.BookingStatus;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import static ru.hse.coursework.berth.config.DBConfig.NOT_DELETED;
 
 @Getter
 @Setter
 @Entity
-public class Booking {
+@Where(clause = NOT_DELETED)
+public class Booking extends AuditEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "owner_id")
-    private UserInfo owner;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "renter_id", nullable = false)
+    private Account renter;
 
-    @ManyToOne
-    @JoinColumn(name = "renter_id")
-    private UserInfo renter;
-
-    @ManyToOne
-    @JoinColumn(name = "berth_place_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "berth_place_id", nullable = false)
     private BerthPlace berthPlace;
 
-    @ManyToOne
-    @JoinColumn(name = "ship_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ship_id", nullable = false)
     private Ship ship;
 
+    @Setter(AccessLevel.NONE)
+    @CreationTimestamp
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(nullable = false)
     private LocalDate startDate;
 
+    @Column(nullable = false)
     private LocalDate endDate;
 
+    @StateField
+    @Column(nullable = false)
     @Convert(converter = BookingStatus.Converter.class)
-    private BookingStatus status;
+    private BookingStatus status = BookingStatus.NEW;
+
+    @Column(nullable = false)
+    private Double totalPrice;
+
+    @Column(nullable = false)
+    private Double serviceFee;
+
+    @Deprecated // use state machine
+    public Booking setStatus(BookingStatus status) {
+        this.status = status;
+        return this;
+    }
 }

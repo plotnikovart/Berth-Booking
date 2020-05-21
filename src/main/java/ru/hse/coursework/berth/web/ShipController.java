@@ -5,9 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.hse.coursework.berth.service.ship.ShipCRUDService;
 import ru.hse.coursework.berth.service.ship.dto.ShipDto;
-import ru.hse.coursework.berth.web.dto.response.EmptyResp;
-import ru.hse.coursework.berth.web.dto.response.ListResp;
-import ru.hse.coursework.berth.web.dto.response.ObjectResp;
+import ru.hse.coursework.berth.web.dto.resp.EmptyResp;
+import ru.hse.coursework.berth.web.dto.resp.ListResp;
+import ru.hse.coursework.berth.web.dto.resp.ObjectResp;
 
 import java.util.List;
 

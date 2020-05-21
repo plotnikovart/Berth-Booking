@@ -11,6 +11,7 @@ import ru.hse.coursework.berth.database.entity.FileInfo;
 import ru.hse.coursework.berth.database.repository.FileInfoRepository;
 import ru.hse.coursework.berth.service.file.dto.FileInfoDto;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 @Service
@@ -36,7 +37,11 @@ public class FileInfoService {
         return toDto(fileInfo);
     }
 
-    public FileInfoDto get(UUID fileId) {
+    @Nullable
+    public FileInfoDto get(@Nullable UUID fileId) {
+        if (fileId == null) {
+            return null;
+        }
         FileInfo fileInfo = fileInfoRepository.findById(fileId).orElseThrow(NotFoundException::new);
         return toDto(fileInfo);
     }

@@ -9,7 +9,7 @@ import ru.hse.coursework.berth.service.berth.dto.management.BerthApplicationDeci
 import ru.hse.coursework.berth.service.berth.dto.management.ChangeApplicationStatusResp;
 import ru.hse.coursework.berth.service.berth.dto.management.StartApplicationResp;
 import ru.hse.coursework.berth.service.dto.ListCount;
-import ru.hse.coursework.berth.web.dto.response.ObjectResp;
+import ru.hse.coursework.berth.web.dto.resp.ObjectResp;
 
 @RestController
 @RequestMapping("/api/management")

@@ -37,4 +37,9 @@
         <appender-ref ref="Console" />
     </logger>
 
+    <logger name="org.springframework.statemachine.support.LifecycleObjectSupport" level="error" additivity="false">
+        <appender-ref ref="RollingFile" />
+        <appender-ref ref="Console" />
+    </logger>
+
 </configuration>

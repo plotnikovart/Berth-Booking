@@ -6,8 +6,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import ru.hse.coursework.berth.database.entity.Berth;
 import ru.hse.coursework.berth.database.repository.BerthRepository;
-import ru.hse.coursework.berth.service.event.ReviewDeleteEvent;
-import ru.hse.coursework.berth.service.event.ReviewPublishEvent;
+import ru.hse.coursework.berth.service.event.review.ReviewDeleteEvent;
+import ru.hse.coursework.berth.service.event.review.ReviewPublishEvent;
 
 import static ru.hse.coursework.berth.config.AsyncConfig.RATING_CALCULATOR_EXECUTOR;
 

@@ -7,11 +7,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
-
-import static javax.persistence.CascadeType.DETACH;
 
 @Setter
 @Getter
@@ -42,9 +38,6 @@ public class UserInfo {
     @UpdateTimestamp
     private LocalDateTime changeDate = LocalDateTime.now();
 
-    @OneToMany(mappedBy = "renter", cascade = DETACH)
-    @OrderBy("startDate desc")
-    private List<Booking> bookings = new ArrayList<>();
 
     public Long getAccountId() {
         return id;

@@ -1,4 +1,4 @@
-package ru.hse.coursework.berth.web.dto.request;
+package ru.hse.coursework.berth.service.booking.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-public class BookingSearchRequest {
+public class BookingSearchReq {
 
     @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
     @Range(min = -90, max = 90, message = ValidationUtils.RANGE_MESSAGE)

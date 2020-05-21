@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.hse.coursework.berth.service.AmenityService;
 import ru.hse.coursework.berth.service.berth.dto.DictAmenityDto;
-import ru.hse.coursework.berth.web.dto.response.ListResp;
+import ru.hse.coursework.berth.web.dto.resp.ListResp;
 
 import java.util.List;
 

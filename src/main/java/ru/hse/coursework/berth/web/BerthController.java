@@ -15,9 +15,9 @@ import ru.hse.coursework.berth.service.dto.ListCount;
 import ru.hse.coursework.berth.service.review.ReviewFacade;
 import ru.hse.coursework.berth.service.review.dto.ReviewDto;
 import ru.hse.coursework.berth.service.review.dto.ReviewFilter;
-import ru.hse.coursework.berth.web.dto.response.EmptyResp;
-import ru.hse.coursework.berth.web.dto.response.ListResp;
-import ru.hse.coursework.berth.web.dto.response.ObjectResp;
+import ru.hse.coursework.berth.web.dto.resp.EmptyResp;
+import ru.hse.coursework.berth.web.dto.resp.ListResp;
+import ru.hse.coursework.berth.web.dto.resp.ObjectResp;
 
 import javax.annotation.Nullable;
 import java.util.List;
