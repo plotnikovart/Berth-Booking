@@ -77,9 +77,13 @@ public class BerthDto {
 
 
         @Data
+        @ApiModel("BerthDtoRespSearch")
         public static class Search extends Resp {
 
+            @ApiModelProperty(required = true, position = 100)
             private Double distance;
+
+            @ApiModelProperty(required = true, position = 100)
             private Double minPrice;
         }
     }

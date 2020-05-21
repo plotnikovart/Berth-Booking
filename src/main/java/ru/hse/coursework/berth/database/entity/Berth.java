@@ -44,11 +44,11 @@ public class Berth extends AuditEntity implements EntityWithOwner {
 
     private String description;
 
-    @Latitude(of = Berth.SPATIAL_FIELD)
+    @Latitude(of = SPATIAL_FIELD)
     @Column(nullable = false)
     private Double lat;
 
-    @Longitude(of = Berth.SPATIAL_FIELD)
+    @Longitude(of = SPATIAL_FIELD)
     @Column(nullable = false)
     private Double lng;
 

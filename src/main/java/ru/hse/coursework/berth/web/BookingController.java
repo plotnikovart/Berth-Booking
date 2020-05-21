@@ -3,10 +3,12 @@ package ru.hse.coursework.berth.web;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import ru.hse.coursework.berth.service.berth.dto.BerthDto;
 import ru.hse.coursework.berth.service.booking.BookingFacade;
 import ru.hse.coursework.berth.service.booking.BookingSearchService;
 import ru.hse.coursework.berth.service.booking.dto.BookingDto;
 import ru.hse.coursework.berth.service.booking.dto.BookingPayLinkResp;
+import ru.hse.coursework.berth.service.booking.dto.BookingSearchReq;
 import ru.hse.coursework.berth.service.booking.dto.BookingStatusResp;
 import ru.hse.coursework.berth.web.dto.resp.ListResp;
 import ru.hse.coursework.berth.web.dto.resp.ObjectResp;
@@ -61,8 +63,9 @@ public class BookingController {
         return new ObjectResp<>(resp);
     }
 
-//    @PostMapping("search")
-//    public List<BerthDto.Resp.Search> search(@RequestBody BookingSearchReq req) {
-//        return bookingSearchService.searchPlaces(req);
-//    }
+    @PostMapping("search")
+    public ListResp<BerthDto.Resp.Search> search(@RequestBody BookingSearchReq req) {
+        var resp = bookingSearchService.searchPlaces(req);
+        return new ListResp<>(resp);
+    }
 }
