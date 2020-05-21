@@ -34,7 +34,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @EntityGraph(attributePaths = {"berthPlace.berth.amenities", "ship"})
     List<Booking> findAllByRenterLoadBerthWithAmenitiesAndShip(Account renter);
 
-    default Set<BerthPlace> findApprovedPlacesByDates(LocalDate startDate, LocalDate endDate) {
-        return findPlacesByDatesAndStatus(startDate, endDate, BookingStatus.APPROVED);
+    default Set<BerthPlace> findPayedPlacesByDates(LocalDate startDate, LocalDate endDate) {
+        return findPlacesByDatesAndStatus(startDate, endDate, BookingStatus.PAYED);
     }
 }
