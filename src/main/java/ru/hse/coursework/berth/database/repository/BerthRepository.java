@@ -30,4 +30,8 @@ public interface BerthRepository extends JpaRepository<Berth, Long>, BerthReposi
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Query("update Berth set avgRating = (select avg(r.rating) from Review r WHERE r.berth = ?1)")
     void updateRating(Berth berth);
+
+
+    @Query("select count(bp) from BerthPlace bp where bp.berth = ?1")
+    Integer countBerthPlaces(Berth berth);
 }

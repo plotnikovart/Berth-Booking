@@ -37,4 +37,15 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     default Set<BerthPlace> findPayedPlacesByDates(LocalDate startDate, LocalDate endDate) {
         return findPlacesByDatesAndStatus(startDate, endDate, BookingStatus.PAYED);
     }
+
+
+    default Integer countBookedPlaces(Berth berth, LocalDate from, LocalDate to) {
+        return countBookedPlacesInner(berth, from, to, BookingStatus.PAYED);
+    }
+
+    @Query("select count(boo) from Booking boo " +
+            "join BerthPlace bp on boo.berthPlace = bp " +
+            "where boo.status = ?4 and bp.berth = ?1 " +
+            "and not (?3 < boo.startDate or ?2 > boo.endDate)")
+    Integer countBookedPlacesInner(Berth berth, LocalDate from, LocalDate to, BookingStatus status);
 }
