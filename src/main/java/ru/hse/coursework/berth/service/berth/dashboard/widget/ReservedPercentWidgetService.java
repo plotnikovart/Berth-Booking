@@ -25,7 +25,7 @@ public class ReservedPercentWidgetService implements WidgetService<ReservedPerce
         Berth berth = berthRepository.getOne(berthId);
 
         Integer totalPlaces = berthRepository.countBerthPlaces(berth);
-        Integer bookedPlaces = bookingRepository.countBookedPlaces(berth, LocalDate.now(clock), LocalDate.now(clock));
+        Integer bookedPlaces = bookingRepository.countPayedBookingsByDate(berth, LocalDate.now(clock));
 
         return new ReservedPercentDto()
                 .setReservedPlaceNum(bookedPlaces)
