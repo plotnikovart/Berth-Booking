@@ -44,9 +44,9 @@ public class BerthRepositoryCustomImpl implements BerthRepositoryCustom {
             int targetYear = startYear + (startMonth + i) / 12;
             int targetMonth = (startMonth + i) % 12;
 
-            if (startMonth + i % 12 == 0) {
+            if ((startMonth + i) % 12 == 0) {
                 targetYear--;
-                targetMonth++;
+                targetMonth = 12;
             }
 
             Double revenue = findRevenue(results, targetYear, targetMonth);
