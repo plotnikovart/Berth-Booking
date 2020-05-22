@@ -33,7 +33,7 @@ public class PlaceBookingMapWidgetService implements WidgetService<List<PlaceBoo
     private final BookingRepository bookingRepository;
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
     public List<PlaceBookingMapDto> getWidgetData(Long berthId) {
         Berth berth = berthRepository.findById(berthId).orElseThrow(NotFoundException::new);
 

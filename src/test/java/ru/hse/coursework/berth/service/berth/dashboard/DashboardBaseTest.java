@@ -61,8 +61,8 @@ public abstract class DashboardBaseTest extends AbstractAmenityTest {
         ////////////////////////////////
         berth2 = new Berth()
                 .setIsConfirmed(true)
-                .setLng(2.0)
-                .setLat(2.0)
+                .setLng(1.1)
+                .setLat(1.1)
                 .setOwner(user1Account)
                 .setName("berth 2");
 
