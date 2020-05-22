@@ -12,6 +12,7 @@ public enum WidgetEnum implements EnumWithIdentifier<String> {
     RESERVED_PERCENT("reserved_percent"),
     WEEK_RESERVED_PERCENT("week_reserved_percent"),
     RATING_TREND("rating_trend"),
+    //    YEAR_RATING_TREND("year_rating_rend"),
     PLACE_BOOKING_MAP("place_booking_map"),
     LOCATION("location");
 
