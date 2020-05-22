@@ -10,12 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.hse.coursework.berth.database.entity.Account;
 import ru.hse.coursework.berth.database.entity.Berth;
 
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
 @Repository
-public interface BerthRepository extends JpaRepository<Berth, Long> {
+public interface BerthRepository extends JpaRepository<Berth, Long>, BerthRepositoryCustom {
 
     @Query("select b from Berth b where b in (?1)")
     @EntityGraph(attributePaths = "berthPlaces")
@@ -26,10 +25,6 @@ public interface BerthRepository extends JpaRepository<Berth, Long> {
     List<Berth> loadAmenities(Collection<Berth> berths);
 
     List<Berth> findAllByOwner(Account owner);
-
-    @Query("select b from Berth b where b.changeDate >= ?1")
-    List<Berth> findChanged(LocalDateTime since);
-
 
     @Modifying
     @Transactional(propagation = Propagation.REQUIRES_NEW)
