@@ -30,7 +30,7 @@ public class LocationWidgetService implements WidgetService<LocationDto> {
     public LocationDto getWidgetData(Long berthId) {
         Berth berth = berthRepository.findById(berthId).orElseThrow(NotFoundException::new);
         List<Berth> neighbours = of(berthSearchRepository.findByCoordinates(berth.getLat(), berth.getLng(), DEFAULT_RADIUS).keySet())
-                .filter(it -> !it.getId().equals(berthId))
+                .filter(it -> !berthId.equals(it.getId()))
                 .toList();
 
         return new LocationDto()
