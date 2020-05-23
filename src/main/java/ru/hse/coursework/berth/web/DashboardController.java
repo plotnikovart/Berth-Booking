@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.hse.coursework.berth.service.berth.dashboard.DashboardFacade;
 import ru.hse.coursework.berth.service.berth.dashboard.dto.WidgetFullDto;
 import ru.hse.coursework.berth.service.berth.dashboard.dto.WidgetSettingsDto;
+import ru.hse.coursework.berth.service.berth.dashboard.widget.dto.AllWidgetsModel;
 import ru.hse.coursework.berth.web.dto.resp.ListResp;
 
 import java.util.List;
@@ -38,5 +39,10 @@ public class DashboardController {
     public ListResp<String> getWidgetList(@RequestParam Long berthId) {
         var resp = dashboardFacade.getWidgetList();
         return new ListResp<>(resp);
+    }
+
+    @GetMapping("model")
+    public AllWidgetsModel model() {
+        return new AllWidgetsModel();
     }
 }
