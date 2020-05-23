@@ -49,7 +49,20 @@
                                  baseColumnNames="berth_id"
                                  referencedTableName="berth"
                                  referencedColumnNames="id"
-                                 constraintName="fk_widget_settings_berth_berth"/>
+                                 constraintName="fk_widget_settings_berth_berth"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+
+    <changeSet id="2020.05.23_1_3" author="aplotnikov">
+        <sql>
+            insert into widget_settings_default values('year_revenue', -1, -1, false);
+            insert into widget_settings_default values('reserved_percent', -1, -1, false);
+            insert into widget_settings_default values('week_reserved_percent', -1, -1, true);
+            insert into widget_settings_default values('rating_trend', -1, -1, false);
+            insert into widget_settings_default values('place_booking_map', -1, -1, true);
+            insert into widget_settings_default values('location', -1, -1, true);
+        </sql>
     </changeSet>
 
 </databaseChangeLog>

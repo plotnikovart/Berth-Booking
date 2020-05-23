@@ -2,13 +2,13 @@ package ru.hse.coursework.berth.service.berth.dashboard;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import ru.hse.coursework.berth.common.enums.EnumHelper;
 import ru.hse.coursework.berth.service.berth.BerthAccessService;
 import ru.hse.coursework.berth.service.berth.dashboard.dto.WidgetDataDto;
 import ru.hse.coursework.berth.service.berth.dashboard.dto.WidgetFullDto;
 import ru.hse.coursework.berth.service.berth.dashboard.dto.WidgetSettingsDto;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -23,7 +23,6 @@ public class DashboardFacade {
     private final WidgetSettingsService widgetSettingsService;
     private final WidgetDataService widgetDataService;
 
-    @Transactional(readOnly = true)
     public List<WidgetFullDto> getDashboard(Long berthId) {
         berthAccessService.checkAccess(berthId);
         List<WidgetSettingsDto> widgetsSettings = widgetSettingsService.getSettings(berthId);
@@ -39,13 +38,11 @@ public class DashboardFacade {
         return mapSettingWithData(widgetsSettings, widgetsData);
     }
 
-    @Transactional(readOnly = true)
     public List<WidgetSettingsDto> getSettings(Long berthId) {
         berthAccessService.checkAccess(berthId);
         return widgetSettingsService.getSettings(berthId);
     }
 
-    @Transactional(readOnly = true)
     public List<WidgetSettingsDto> changeSettings(Long berthId, List<WidgetSettingsDto> settings) {
         berthAccessService.checkAccess(berthId);
         widgetSettingsService.updateSettings(berthId, settings);
@@ -58,7 +55,8 @@ public class DashboardFacade {
 
 
     private List<WidgetFullDto> mapSettingWithData(List<WidgetSettingsDto> settings, List<WidgetDataDto> data) {
-        Map<String, Object> dataMap = of(data).toMap(WidgetDataDto::getCode, it -> it);
+        Map<String, Object> dataMap = new HashMap<>();
+        data.forEach(it -> dataMap.put(it.getCode(), it.getData()));
 
         return of(settings)
                 .map(it -> new WidgetFullDto()

@@ -46,7 +46,12 @@ public class BerthSearchRepository {
             Map<Berth, Double> results = new HashMap<>();
             for (var o : hibQuery.getResultList()) {
                 Object[] objects = (Object[]) o;
-                results.put((Berth) objects[1], (Double) objects[0]);
+                Berth b = (Berth) objects[1];
+                Double d = (Double) objects[0];
+
+                if (b != null) {    // full text entity manager can't delete all entites from index????
+                    results.put(b, d);
+                }
             }
 
             return results;

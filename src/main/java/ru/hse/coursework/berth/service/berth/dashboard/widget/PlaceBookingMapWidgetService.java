@@ -50,6 +50,6 @@ public class PlaceBookingMapWidgetService implements WidgetService<List<PlaceBoo
 
     @Override
     public WidgetEnum getWidgetEnum() {
-        return null;
+        return WidgetEnum.PLACE_BOOKING_MAP;
     }
 }

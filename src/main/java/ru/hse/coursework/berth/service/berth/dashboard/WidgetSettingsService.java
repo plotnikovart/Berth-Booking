@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hse.coursework.berth.common.enums.EnumHelper;
 import ru.hse.coursework.berth.config.exception.impl.NotFoundException;
-import ru.hse.coursework.berth.database.entity.Berth;
 import ru.hse.coursework.berth.database.entity.WidgetSettings;
 import ru.hse.coursework.berth.database.entity.WidgetSettingsBerth;
 import ru.hse.coursework.berth.database.entity.WidgetSettingsDefault;
@@ -46,8 +45,7 @@ public class WidgetSettingsService {
 
     @Transactional
     public void updateSettings(Long berthId, List<WidgetSettingsDto> settings) {
-        Berth berth = berthRepository.getOne(berthId);
-        widgetSettingsBerthRepository.deleteAllByBerth(berth);
+        widgetSettingsBerthRepository.deleteAllByPkBerthId(berthId);
         widgetSettingsBerthRepository.flush();
 
         List<WidgetSettingsBerth> newWidgetSettings = of(settings)
@@ -57,7 +55,7 @@ public class WidgetSettingsService {
 
                     var pk = new WidgetSettingsBerth.PK()
                             .setBerthId(berthId)
-                            .setWidgetEnum(widgetEnum);
+                            .setCode(widgetEnum.getIdentifier());
 
                     return (WidgetSettingsBerth) new WidgetSettingsBerth()
                             .setPk(pk)
@@ -68,15 +66,14 @@ public class WidgetSettingsService {
                 .toList();
 
         widgetSettingsBerthRepository.saveAll(newWidgetSettings);
+        widgetSettingsBerthRepository.flush();
     }
 
 
     private List<WidgetSettingsDto> getBerthSettings(Long berthId) {
-        Berth berth = berthRepository.getOne(berthId);
-        List<WidgetSettingsBerth> all = widgetSettingsBerthRepository.findAllByBerth(berth);
-
+        List<WidgetSettingsBerth> all = widgetSettingsBerthRepository.findAllByPkBerthId(berthId);
         return of(all)
-                .map(it -> toDto(it.getPk().getWidgetEnum(), it))
+                .map(it -> toDto(it.getWidgetEnum(), it))
                 .toList();
     }
 

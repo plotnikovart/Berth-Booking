@@ -4,9 +4,12 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Immutable;
+import ru.hse.coursework.berth.common.enums.EnumHelper;
 import ru.hse.coursework.berth.service.berth.dashboard.WidgetEnum;
 
-import javax.persistence.*;
+import javax.persistence.Embeddable;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
 import java.io.Serializable;
 
 @Getter
@@ -18,19 +21,15 @@ public class WidgetSettingsBerth extends WidgetSettings {
     @EmbeddedId
     private PK pk;
 
-    @MapsId("accountId")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Berth berth;
-
+    public WidgetEnum getWidgetEnum() {
+        return EnumHelper.getEnumByIdentifier(pk.code, WidgetEnum.class);
+    }
 
     @Data
     @Embeddable
     public static class PK implements Serializable {
 
-        @Column(name = "code")
-        @Convert(converter = WidgetEnum.Converter.class)
-        private WidgetEnum widgetEnum;
-
+        private String code;
         private Long berthId;
     }
 }
