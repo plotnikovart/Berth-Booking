@@ -25,8 +25,11 @@ public class AbstractAccountTest extends ApplicationTest {
     protected UserInfo user1Info;
     protected UserInfo user2Info;
 
+    @Override
     @BeforeEach
     public void setUp() {
+        super.setUp();
+
         accountRepository.deleteAll();
 
         user1Account = accountService.createGoogleAccount("artpl98@gmail.com", AccountRole.USER);

@@ -13,6 +13,8 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.Clock;
+
 @Configuration
 @EnableScheduling
 public class AppConfig {
@@ -29,5 +31,10 @@ public class AppConfig {
     @Scope(scopeName = ConfigurableBeanFactory.SCOPE_PROTOTYPE, proxyMode = ScopedProxyMode.NO)
     RestTemplate restTemplate() {
         return new RestTemplate();
+    }
+
+    @Bean
+    public Clock clock() {
+        return Clock.systemDefaultZone();
     }
 }

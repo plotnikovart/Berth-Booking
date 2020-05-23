@@ -33,7 +33,7 @@ dependencies {
 //            AUTH
             'at.favre.lib:bcrypt:0.7.0',
             'com.auth0:java-jwt:3.3.0',
-            
+
 //            COMMON
             'com.google.guava:guava:28.0-jre',
             'org.apache.commons:commons-lang3:3.9',
@@ -54,6 +54,8 @@ dependencies {
     testCompile(
             'org.springframework.boot:spring-boot-starter-test',
             'org.junit.jupiter:junit-jupiter-api:5.3.2',
+            'org.junit.jupiter:junit-jupiter-params:5.3.2',
+            "org.mockito:mockito-core:2.+",
             'org.mockito:mockito-junit-jupiter:2.25.0',
             'com.h2database:h2:1.3.148',
             'org.unitils:unitils-core:3.4.6'
