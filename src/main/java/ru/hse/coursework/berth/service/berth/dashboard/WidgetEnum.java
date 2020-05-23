@@ -2,6 +2,7 @@ package ru.hse.coursework.berth.service.berth.dashboard;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import ru.hse.coursework.berth.common.enums.AbstractEnumConverter;
 import ru.hse.coursework.berth.common.enums.EnumWithIdentifier;
 
 @Getter
@@ -17,4 +18,7 @@ public enum WidgetEnum implements EnumWithIdentifier<String> {
     LOCATION("location");
 
     private final String identifier;
+
+    public static class Converter extends AbstractEnumConverter<WidgetEnum, String> {
+    }
 }

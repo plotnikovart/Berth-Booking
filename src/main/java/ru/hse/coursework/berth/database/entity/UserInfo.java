@@ -1,7 +1,6 @@
 package ru.hse.coursework.berth.database.entity;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -12,7 +11,6 @@ import java.util.UUID;
 @Setter
 @Getter
 @Entity
-@NoArgsConstructor
 public class UserInfo {
 
     @Id
