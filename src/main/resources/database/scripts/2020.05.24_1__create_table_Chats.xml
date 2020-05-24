@@ -24,6 +24,12 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
+        <addAutoIncrement tableName="chat"
+                          columnName="id"
+                          columnDataType="bigint"
+                          startWith="0"
+                          incrementBy="1"/>
     </changeSet>
 
 
@@ -43,6 +49,10 @@
         <addPrimaryKey columnNames="chat_id, account_id"
                        constraintName="pk_chat_account"
                        tableName="chat_account"/>
+
+        <createIndex tableName="chat_account" indexName="idx_chat_account_account">
+            <column name="account_id" type="bigint"/>
+        </createIndex>
 
         <addForeignKeyConstraint baseTableName="chat_account"
                                  baseColumnNames="chat_id"
@@ -94,10 +104,23 @@
             </column>
         </createTable>
 
+        <addAutoIncrement tableName="chat_message"
+                          columnName="id"
+                          columnDataType="bigint"
+                          startWith="0"
+                          incrementBy="1"/>
+
         <createIndex tableName="chat_message" indexName="idx_chat_message_chat_offset">
             <column name="chat_id" type="bigint"/>
             <column name="offset" type="bigint"/>
         </createIndex>
+
+        <addForeignKeyConstraint baseTableName="chat_message"
+                                 baseColumnNames="chat_id"
+                                 referencedTableName="chat"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_chat_message_chat"
+                                 onDelete="CASCADE"/>
     </changeSet>
 
     <changeSet id="2020.05.24_1_4" author="aplotnikov">
@@ -129,11 +152,24 @@
             </column>
         </createTable>
 
+        <addAutoIncrement tableName="chat_history"
+                          columnName="id"
+                          columnDataType="bigint"
+                          startWith="0"
+                          incrementBy="1"/>
+
         <createIndex tableName="chat_history" indexName="idx_chat_history_chat_offset">
             <column name="chat_id" type="bigint"/>
             <column name="offset_from" type="bigint"/>
             <column name="offset_to" type="bigint"/>
         </createIndex>
+
+        <addForeignKeyConstraint baseTableName="chat_history"
+                                 baseColumnNames="chat_id"
+                                 referencedTableName="chat"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_chat_history_chat"
+                                 onDelete="CASCADE"/>
     </changeSet>
 
 </databaseChangeLog>
