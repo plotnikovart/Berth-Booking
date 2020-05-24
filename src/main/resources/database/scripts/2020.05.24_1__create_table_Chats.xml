@@ -1,0 +1,139 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="2020.05.24_1_1" author="aplotnikov">
+        <createTable tableName="chat">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="pk_chat"/>
+            </column>
+            <column name="offset" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_message_id" type="bigint"/>
+
+            <column name="is_deleted" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="change_user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="change_date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+
+    <changeSet id="2020.05.24_1_2" author="aplotnikov">
+        <createTable tableName="chat_account">
+            <column name="chat_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="account_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="offset" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="chat_id, account_id"
+                       constraintName="pk_chat_account"
+                       tableName="chat_account"/>
+
+        <addForeignKeyConstraint baseTableName="chat_account"
+                                 baseColumnNames="chat_id"
+                                 referencedTableName="chat"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_chat_account_chat"
+                                 onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="chat_account"
+                                 baseColumnNames="account_id"
+                                 referencedTableName="account"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_chat_account_account"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+
+    <changeSet id="2020.05.24_1_3" author="aplotnikov">
+        <createTable tableName="chat_message">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="pk_chat_message"/>
+            </column>
+            <column name="chat_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="offset" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sender_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="send_date_time" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="message_type" type="smallint">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="message_text" type="clob"/>
+
+            <column name="is_deleted" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="change_user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="change_date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="chat_message" indexName="idx_chat_message_chat_offset">
+            <column name="chat_id" type="bigint"/>
+            <column name="offset" type="bigint"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="2020.05.24_1_4" author="aplotnikov">
+        <createTable tableName="chat_history">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" primaryKeyName="pk_chat_history"/>
+            </column>
+            <column name="chat_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="offset_from" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="offset_to" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="data" type="clob">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="is_deleted" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="change_user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="change_date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="chat_history" indexName="idx_chat_history_chat_offset">
+            <column name="chat_id" type="bigint"/>
+            <column name="offset_from" type="bigint"/>
+            <column name="offset_to" type="bigint"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
