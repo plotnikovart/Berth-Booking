@@ -6,6 +6,8 @@ import org.hibernate.annotations.Where;
 import ru.hse.coursework.berth.database.entity.AuditEntity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static ru.hse.coursework.berth.config.DBConfig.NOT_DELETED;
 
@@ -22,7 +24,16 @@ public class Chat extends AuditEntity {
     @Column(nullable = false)
     private Long offset;
 
-    @JoinColumn(name = "last_message_id", nullable = true)
+    @JoinColumn(name = "last_message_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private ChatMessage lastMessage;
+
+    @OneToMany(mappedBy = "chat", cascade = {CascadeType.DETACH, CascadeType.PERSIST})
+    private List<ChatAccount> accounts = new ArrayList<>();
+
+    public Chat setAccounts(List<ChatAccount> newAccounts) {
+        accounts.clear();
+        accounts.addAll(newAccounts);
+        return this;
+    }
 }

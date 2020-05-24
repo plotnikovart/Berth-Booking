@@ -3,7 +3,9 @@ package ru.hse.coursework.berth.service.event;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
+import ru.hse.coursework.berth.service.chat.dto.MessageDto;
 import ru.hse.coursework.berth.service.event.booking.*;
+import ru.hse.coursework.berth.service.event.chat.MessageSendEvent;
 import ru.hse.coursework.berth.service.event.review.ReviewDeleteEvent;
 import ru.hse.coursework.berth.service.event.review.ReviewPublishEvent;
 
@@ -56,6 +58,13 @@ public class EventPublisher {
     public void payBooking(long bookingId) {
         var event = new PayedBookingEvent(this)
                 .setBookingId(bookingId);
+        actionAfterTransaction(() -> eventPublisher.publishEvent(event));
+    }
+
+    public void sendMessage(long chatId, MessageDto.Resp messageDto) {
+        var event = new MessageSendEvent(this)
+                .setChatId(chatId)
+                .setMessageDto(messageDto);
         actionAfterTransaction(() -> eventPublisher.publishEvent(event));
     }
 }
