@@ -1,0 +1,35 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="2020.05.25_1_1" author="aplotnikov">
+        <renameColumn
+                tableName="widget_settings_default"
+                oldColumnName="column"
+                newColumnName="column_num"
+                columnDataType="smallint"/>
+
+        <renameColumn
+                tableName="widget_settings_default"
+                oldColumnName="row"
+                newColumnName="row_num"
+                columnDataType="smallint"/>
+    </changeSet>
+
+    <changeSet id="2020.05.25_1_2" author="aplotnikov">
+        <renameColumn
+                tableName="widget_settings_berth"
+                oldColumnName="column"
+                newColumnName="column_num"
+                columnDataType="smallint"/>
+
+        <renameColumn
+                tableName="widget_settings_berth"
+                oldColumnName="row"
+                newColumnName="row_num"
+                columnDataType="smallint"/>
+    </changeSet>
+
+</databaseChangeLog>

@@ -59,8 +59,8 @@ public class WidgetSettingsService {
 
                     return (WidgetSettingsBerth) new WidgetSettingsBerth()
                             .setPk(pk)
-                            .setColumn(it.getSettings().getColumn())
-                            .setRow(it.getSettings().getRow())
+                            .setColumnNum(it.getSettings().getColumn())
+                            .setRowNum(it.getSettings().getRow())
                             .setIsVisible(it.getSettings().getIsVisible());
                 })
                 .toList();
@@ -88,8 +88,8 @@ public class WidgetSettingsService {
         return new WidgetSettingsDto()
                 .setCode(widgetEnum.getIdentifier())
                 .setSettings(new SettingsDto()
-                        .setColumn(settings.getColumn())
-                        .setRow(settings.getRow())
+                        .setColumn(settings.getColumnNum())
+                        .setRow(settings.getRowNum())
                         .setIsVisible(settings.getIsVisible())
                 );
     }

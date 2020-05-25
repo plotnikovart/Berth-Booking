@@ -12,10 +12,10 @@ import javax.persistence.MappedSuperclass;
 public abstract class WidgetSettings {
 
     @Column(nullable = false)
-    private Integer column;
+    private Integer columnNum;
 
     @Column(nullable = false)
-    private Integer row;
+    private Integer rowNum;
 
     @Column(nullable = false)
     private Boolean isVisible;
