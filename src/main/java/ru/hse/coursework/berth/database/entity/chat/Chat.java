@@ -21,7 +21,7 @@ public class Chat extends AuditEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "offset_")
     private Long offset;
 
     @JoinColumn(name = "last_message_id")

@@ -29,7 +29,7 @@ public class ChatMessage extends AuditEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Chat chat;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "offset_")
     private Long offset;
 
     @JoinColumn(name = "sender_id", nullable = false)

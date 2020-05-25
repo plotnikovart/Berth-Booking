@@ -9,7 +9,7 @@
             <column name="id" type="bigint">
                 <constraints primaryKey="true" primaryKeyName="pk_chat"/>
             </column>
-            <column name="offset" type="bigint">
+            <column name="offset_" type="bigint">
                 <constraints nullable="false"/>
             </column>
             <column name="last_message_id" type="bigint"/>
@@ -41,7 +41,7 @@
             <column name="account_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
-            <column name="offset" type="bigint">
+            <column name="offset_" type="bigint">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -78,7 +78,7 @@
             <column name="chat_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
-            <column name="offset" type="bigint">
+            <column name="offset_" type="bigint">
                 <constraints nullable="false"/>
             </column>
             <column name="sender_id" type="bigint">
@@ -112,7 +112,7 @@
 
         <createIndex tableName="chat_message" indexName="idx_chat_message_chat_offset">
             <column name="chat_id" type="bigint"/>
-            <column name="offset" type="bigint"/>
+            <column name="offset_" type="bigint"/>
         </createIndex>
 
         <addForeignKeyConstraint baseTableName="chat_message"

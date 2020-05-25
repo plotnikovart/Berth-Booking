@@ -17,6 +17,7 @@ import ru.hse.coursework.berth.service.account.dto.UserInfoDto;
 import ru.hse.coursework.berth.service.chat.dto.ChatDto;
 import ru.hse.coursework.berth.service.chat.dto.ParticipantDto;
 import ru.hse.coursework.berth.service.converters.impl.UserInfoConverter;
+import ru.hse.coursework.berth.service.file.dto.FileInfoDto;
 
 import java.util.List;
 import java.util.Map;
@@ -88,7 +89,7 @@ public class ChatService {
                         .ifPresent(userInfo -> participant
                                 .setFirstName(userInfo.getFirstName())
                                 .setLastName(userInfo.getLastName())
-                                .setPhotoLink(userInfo.getPhoto().getFileLink())
+                                .setPhotoLink(ofNullable(userInfo.getPhoto()).map(FileInfoDto::getFileLink).orElse(null))
                         )
                 );
 

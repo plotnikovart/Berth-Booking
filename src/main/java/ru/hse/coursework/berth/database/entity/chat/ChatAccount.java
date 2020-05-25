@@ -14,7 +14,7 @@ import java.io.Serializable;
 public class ChatAccount {
 
     @EmbeddedId
-    private PK pk;
+    private PK pk = new PK();
 
     @MapsId("chatId")
     @ManyToOne(fetch = FetchType.EAGER)
@@ -24,7 +24,7 @@ public class ChatAccount {
     @ManyToOne(fetch = FetchType.LAZY)
     private Account account;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "offset_")
     private Long offset;
 
     @Data

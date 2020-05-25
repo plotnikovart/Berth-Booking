@@ -2,7 +2,9 @@ package ru.hse.coursework.berth.service.chat;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.hse.coursework.berth.config.exception.impl.AccessException;
 import ru.hse.coursework.berth.config.exception.impl.NotFoundException;
+import ru.hse.coursework.berth.config.security.OperationContext;
 import ru.hse.coursework.berth.service.chat.dto.ChatDto;
 import ru.hse.coursework.berth.service.chat.dto.MessageDto;
 import ru.hse.coursework.berth.service.chat.dto.OffsetDto;
@@ -33,6 +35,7 @@ public class ChatFacade {
     }
 
     public ChatDto getChat(Long chatId) {
+        checkChatAssess(chatId);
         return chatService.getChatById(chatId).orElseThrow(NotFoundException::new);
     }
 
@@ -41,12 +44,12 @@ public class ChatFacade {
     }
 
     public void updateAccountChatOffset(Long chatId, Long offset) {
-        chatPermissionService.checkAccess(chatId);
+        checkChatAssess(chatId);
         chatOffsetService.updateAccountOffset(chatId, offset);
     }
 
     public Long sendMessage(Long chatId, MessageDto messageDto) {
-        chatPermissionService.checkAccess(chatId);
+        checkChatAssess(chatId);
         MessageDto.Resp dto = chatMessageService.sendMessage(chatId, messageDto);
 
         eventPublisher.sendMessage(chatId, dto);
@@ -54,7 +57,15 @@ public class ChatFacade {
     }
 
     public List<MessageDto.Resp> getMessages(Long chatId, OffsetDto offsetDto) {
-        chatPermissionService.checkAccess(chatId);
+        checkChatAssess(chatId);
         return chatMessageService.getMessages(chatId, offsetDto);
+    }
+
+
+    private void checkChatAssess(Long chatId){
+        boolean hasAccess = chatPermissionService.hasChatAccess(chatId, OperationContext.accountId());
+        if (!hasAccess){
+            throw new AccessException();
+        }
     }
 }

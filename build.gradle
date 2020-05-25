@@ -40,6 +40,9 @@ dependencies {
             'com.google.apis:google-api-services-oauth2:v2-rev157-1.25.0',
             'com.fasterxml.uuid:java-uuid-generator:3.2.0',
             'one.util:streamex:0.7.2',
+            'de.jkeylockmanager:jkeylockmanager:2.1.0',
+
+            "com.github.ben-manes.caffeine:caffeine:2.7.0",
 
 //            SWAGGER
             'io.springfox:springfox-swagger2:2.9.2',
