@@ -3,6 +3,7 @@ package ru.hse.coursework.berth.service.chat;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
+import ru.hse.coursework.berth.config.exception.impl.NotFoundException;
 import ru.hse.coursework.berth.config.security.OperationContext;
 import ru.hse.coursework.berth.database.entity.Account;
 import ru.hse.coursework.berth.database.entity.chat.Chat;
@@ -21,6 +22,7 @@ public class ChatOffsetService {
     private final ChatRepository chatRepository;
     private final ChatAccountRepository chatAccountRepository;
 
+
     @EventListener
     public void newMessageSend(MessageSendEvent event) {
         Chat chat = em.getReference(Chat.class, event.getChatId());
@@ -32,7 +34,12 @@ public class ChatOffsetService {
     }
 
     void updateAccountOffset(Long chatId, Long offset) {
-        Chat chat = em.getReference(Chat.class, chatId);
+        Chat chat = chatRepository.findById(chatId).orElseThrow(NotFoundException::new);
+        if (offset > chat.getOffset()){
+            // произошла ошибка на фронте, присали смещениие, которое привышает смещение чата
+            return;
+        }
+
         Account account = em.getReference(Account.class, OperationContext.accountId());
 
         // обновит только в случае, если offset свежий

@@ -8,11 +8,10 @@ import ru.hse.coursework.berth.config.security.OperationContext;
 import ru.hse.coursework.berth.database.entity.Account;
 import ru.hse.coursework.berth.database.entity.chat.Chat;
 import ru.hse.coursework.berth.database.entity.chat.ChatMessage;
-import ru.hse.coursework.berth.database.repository.UserInfoRepository;
 import ru.hse.coursework.berth.database.repository.chat.ChatMessageRepository;
 import ru.hse.coursework.berth.service.chat.dto.MessageDto;
 import ru.hse.coursework.berth.service.chat.dto.OffsetDto;
-import ru.hse.coursework.berth.service.converters.impl.UserInfoConverter;
+import ru.hse.coursework.berth.service.converters.impl.ChatMessageConverter;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -28,8 +27,7 @@ public class ChatMessageService {
     private final EntityManager em;
     private final KeyLockManager lockManager = new StripedKeyLockManager(1, TimeUnit.MINUTES, 1000);
     private final ChatMessageRepository chatMessageRepository;
-    private final UserInfoRepository userInfoRepository;
-    private final UserInfoConverter userInfoConverter;
+    private final ChatMessageConverter chatMessageConverter;
 
     MessageDto.Resp sendMessage(Long chatId, MessageDto messageDto) {
         Chat chat = em.getReference(Chat.class, chatId);
@@ -46,15 +44,15 @@ public class ChatMessageService {
                     .setSender(account);
 
             chatMessageRepository.save(message);
-            return toDto(message);
+            return chatMessageConverter.toDto(message);
         });
     }
 
 
     List<MessageDto.Resp> getMessages(Long chatId, OffsetDto offsetDto) {
         Chat chat = em.getReference(Chat.class, chatId);
-        List<MessageDto.Resp> messages = chatMessageRepository.findAllByChat(chat, offsetDto.getOffsetStart(), offsetDto.getOffsetStart()).stream()
-                .map(this::toDto)
+        List<MessageDto.Resp> messages = chatMessageRepository.findAllByChat(chat, offsetDto.getOffsetStart(), offsetDto.getOffsetEnd()).stream()
+                .map(chatMessageConverter::toDto)
                 .collect(Collectors.toList());
 
         if (messages.size() < offsetDto.getTargetNum()) {
@@ -62,15 +60,5 @@ public class ChatMessageService {
         }
 
         return messages;
-    }
-
-    private MessageDto.Resp toDto(ChatMessage message) {
-        return (MessageDto.Resp) new MessageDto.Resp()
-                .setId(message.getId())
-                .setOffset(message.getOffset())
-                .setSendDateTime(message.getSendDateTime())
-                .setParticipantId(message.getSender().getId())
-                .setText(message.getMessageText())
-                .setType(message.getMessageType());
     }
 }

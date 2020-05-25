@@ -18,7 +18,7 @@ public class ChatDto {
     private Long accountOffset;
 
     @ApiModelProperty(required = true, position = 4)
-    private MessageDto lastMessage;
+    private MessageDto.Resp lastMessage;
 
     @ApiModelProperty(required = true, position = 5)
     private List<ParticipantDto> participants;

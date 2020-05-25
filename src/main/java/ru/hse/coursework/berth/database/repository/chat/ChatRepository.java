@@ -25,12 +25,13 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
             "where chat_id in (select chat_id from chat_account group by chat_id having count(*) = 2)", nativeQuery = true)
     List<Long> findAllByParticipants(Long accountId1, Long accountId2);
 
-    @Query("select c from Chat c " +
-            "left join fetch ChatAccount ca on ca.chat = c " +
-            "left join fetch ChatMessage cm on cm.chat = c " +
-            "where ca.account = ?1 and c.lastMessage is not null " +
-            "order by cm.sendDateTime desc")
-    List<Chat> findAllByAccount(Account account);
+    @Query("select distinct c from Chat c " +
+            "left join fetch c.accounts " +
+            "left join fetch c.lastMessage " +
+            "where c.lastMessage is not null " +
+            "and c.id in (select ca.pk.chatId from ChatAccount ca where ca.account = ?1) " +
+            "order by c.lastMessage.sendDateTime desc")
+    List<Chat> findAllByAccountWithLoad(Account account);
 
     @Modifying
     @Transactional

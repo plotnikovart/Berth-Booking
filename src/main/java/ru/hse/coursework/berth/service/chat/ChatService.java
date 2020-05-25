@@ -16,6 +16,7 @@ import ru.hse.coursework.berth.database.repository.chat.ChatRepository;
 import ru.hse.coursework.berth.service.account.dto.UserInfoDto;
 import ru.hse.coursework.berth.service.chat.dto.ChatDto;
 import ru.hse.coursework.berth.service.chat.dto.ParticipantDto;
+import ru.hse.coursework.berth.service.converters.impl.ChatMessageConverter;
 import ru.hse.coursework.berth.service.converters.impl.UserInfoConverter;
 import ru.hse.coursework.berth.service.file.dto.FileInfoDto;
 
@@ -37,6 +38,7 @@ public class ChatService {
     private final UserInfoRepository userInfoRepository;
     private final ChatRepository chatRepository;
     private final AccountRepository accountRepository;
+    private final ChatMessageConverter chatMessageConverter;
 
 
     @Transactional(readOnly = true)
@@ -50,7 +52,7 @@ public class ChatService {
 
     public List<ChatDto> getChats() {
         Account account = accountRepository.getOne(OperationContext.accountId());
-        List<Chat> chats = chatRepository.findAllByAccount(account);
+        List<Chat> chats = chatRepository.findAllByAccountWithLoad(account);
 
         List<ChatDto> dtos = chats.stream().map(this::toDto).collect(Collectors.toList());
         return fillParticipantsFullInfo(dtos);
@@ -70,7 +72,7 @@ public class ChatService {
         return new ChatDto()
                 .setId(chat.getId())
                 .setTotalOffset(chat.getOffset())
-                .setLastMessage(null)   // todo
+                .setLastMessage(ofNullable(chat.getLastMessage()).map(chatMessageConverter::toDto).orElse(null))
                 .setAccountOffset(accountOffset)
                 .setParticipants(participants);
     }
