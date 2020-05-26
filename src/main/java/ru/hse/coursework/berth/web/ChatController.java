@@ -12,8 +12,6 @@ import ru.hse.coursework.berth.service.chat.dto.OffsetDto;
 import ru.hse.coursework.berth.web.dto.resp.EmptyResp;
 import ru.hse.coursework.berth.web.dto.resp.ListResp;
 import ru.hse.coursework.berth.web.dto.resp.ObjectResp;
-import ru.hse.coursework.berth.web.socket.dto.ChatMessageSocketDto;
-import ru.hse.coursework.berth.web.socket.dto.ChatOffsetSocketDto;
 
 import javax.validation.constraints.NotNull;
 
@@ -66,10 +64,6 @@ public class ChatController {
         return new EmptyResp();
     }
 
-    @DeleteMapping("socket-model")
-    SocketModel socketModel() {
-        return new SocketModel();
-    }
 
     @Data
     public static class StartChatReq {
@@ -77,11 +71,5 @@ public class ChatController {
         @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
         @ApiModelProperty(required = true)
         private Long accountId;
-    }
-
-    public static class SocketModel {
-
-        private ChatMessageSocketDto CHAT_MESSAGE;
-        private ChatOffsetSocketDto CHAT_OFFSET;
     }
 }

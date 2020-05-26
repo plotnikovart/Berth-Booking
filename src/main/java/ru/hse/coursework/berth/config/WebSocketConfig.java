@@ -6,7 +6,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 import ru.hse.coursework.berth.config.security.SocketHandshakeHandler;
-import ru.hse.coursework.berth.web.socket.SocketHandler;
+import ru.hse.coursework.berth.websocket.SocketEntryPoint;
 
 
 @Configuration
@@ -14,13 +14,13 @@ import ru.hse.coursework.berth.web.socket.SocketHandler;
 @RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketConfigurer {
 
-    private final SocketHandler socketHandler;
+    private final SocketEntryPoint socketEntryPoint;
     private final SocketHandshakeHandler socketHandshakeHandler;
 
 
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry
-                .addHandler(socketHandler, "/socket")
+                .addHandler(socketEntryPoint, "/socket")
                 .setAllowedOrigins("*")
                 .setHandshakeHandler(socketHandshakeHandler);
     }

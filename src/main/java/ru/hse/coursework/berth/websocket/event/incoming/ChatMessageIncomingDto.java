@@ -1,4 +1,4 @@
-package ru.hse.coursework.berth.web.socket.dto;
+package ru.hse.coursework.berth.websocket.event.incoming;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -10,7 +10,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class ChatMessageSocketDto extends SocketMessage {
+public class ChatMessageIncomingDto extends IncomingMessage {
 
     @Valid
     @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
@@ -18,7 +18,7 @@ public class ChatMessageSocketDto extends SocketMessage {
     private D data;
 
     @Data
-    @ApiModel("ChatMessageSocketDtoData")
+    @ApiModel("ChatMessageIncomingDtoData")
     public static class D {
 
         @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)

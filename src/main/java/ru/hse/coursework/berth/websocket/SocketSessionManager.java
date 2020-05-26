@@ -1,4 +1,4 @@
-package ru.hse.coursework.berth.service.websocket;
+package ru.hse.coursework.berth.websocket;
 
 import de.jkeylockmanager.manager.KeyLockManager;
 import de.jkeylockmanager.manager.implementation.lockstripe.StripedKeyLockManager;
@@ -44,7 +44,7 @@ public class SocketSessionManager {
         });
     }
 
-    public Set<WebSocketSession> getAllByAccount(Long accountId) {
+    public Set<WebSocketSession> getSessionsByAccount(Long accountId) {
         return sessions.getOrDefault(accountId, new HashSet<>());
     }
 
