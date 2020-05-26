@@ -17,6 +17,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     Page<Review> findAllByBerth(Berth berth, Pageable pageable);
 
     @Nullable
-    @Query("select avg(r.rating) from Review r where r.berth = ?1 and r.createdAt between ?1 and ?2")
+    @Query("select avg(r.rating) from Review r where r.berth = ?1 and r.createdAt between ?2 and ?3")
     Double calcRating(Berth berth, LocalDateTime from, LocalDateTime to);
 }

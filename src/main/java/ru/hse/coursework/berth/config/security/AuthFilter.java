@@ -26,9 +26,10 @@ public class AuthFilter extends HttpFilter {
 
     private final static String AUTH_TOKEN_HEADER = "Authorization";
     private final static List<String> OPEN_URI = List.of(
-            "/api/auth/.*",                 // authentication
-            "/", "/berth", "/berth/.*",     // static
-            "/api/files/.*",                // files get
+            "/api/auth/.*",                         // authentication
+            "/api/payments/tinkoff/notifications",  // tinkoff
+            "/", "/berth", "/berth/.*",             // static
+            "/api/files/.*",                        // files get
             "/v2/api-docs", "/configuration/ui", "/swagger-resources.*", "/configuration/security", "/swagger-ui.html", "/webjars/.*"
     );
 
@@ -42,6 +43,9 @@ public class AuthFilter extends HttpFilter {
                 String token = extractToken(req);
                 Long accountId = tokenService.verifyAccessToken(token);
                 OperationContext.accountId(accountId);
+            } else {
+                // system account
+                OperationContext.accountId(-1L);
             }
 
             chain.doFilter(req, resp);

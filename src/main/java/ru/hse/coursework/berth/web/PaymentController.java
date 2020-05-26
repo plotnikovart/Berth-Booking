@@ -12,7 +12,7 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
-    @PostMapping(value = "tinkoff/notification", produces = {"text/html; charset=utf-8"})
+    @PostMapping(value = "tinkoff/notifications", produces = {"text/html; charset=utf-8"})
     @ResponseBody
     String tinkoffNotification(@RequestBody NotificationReq req) {
         paymentService.completePayment(req);
