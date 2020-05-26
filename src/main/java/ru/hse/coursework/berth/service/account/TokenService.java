@@ -82,7 +82,7 @@ public class TokenService {
             }
 
             var accountId = ofNullable(jwt.getClaim(ACCOUNT_ID_CLAIM).asLong())
-                    .orElseThrow(AccessException::new);
+                    .orElseThrow(UnauthorizedException::new);
 
             return accountId;
         } catch (UnsupportedEncodingException | JWTVerificationException ex) {

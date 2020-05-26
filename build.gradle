@@ -22,6 +22,8 @@ dependencies {
             'org.springframework.boot:spring-boot-starter-mail',
             'org.springframework.boot:spring-boot-starter-logging',
             'org.springframework.statemachine:spring-statemachine-core:2.2.0.RELEASE',
+            'org.springframework.boot:spring-boot-starter-websocket',
+            'com.google.code.gson:gson',
 
 //            DATABASE
             'org.hibernate:hibernate-search-orm:5.11.2.Final',

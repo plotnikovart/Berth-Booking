@@ -9,8 +9,11 @@ import ru.hse.coursework.berth.service.chat.ChatFacade;
 import ru.hse.coursework.berth.service.chat.dto.ChatDto;
 import ru.hse.coursework.berth.service.chat.dto.MessageDto;
 import ru.hse.coursework.berth.service.chat.dto.OffsetDto;
+import ru.hse.coursework.berth.web.dto.resp.EmptyResp;
 import ru.hse.coursework.berth.web.dto.resp.ListResp;
 import ru.hse.coursework.berth.web.dto.resp.ObjectResp;
+import ru.hse.coursework.berth.web.socket.dto.ChatMessageSocketDto;
+import ru.hse.coursework.berth.web.socket.dto.ChatOffsetSocketDto;
 
 import javax.validation.constraints.NotNull;
 
@@ -51,6 +54,22 @@ public class ChatController {
         return new ListResp<>(resp);
     }
 
+    @PostMapping("{chatId}/messages")
+    ObjectResp<Long> sendMessage(@PathVariable Long chatId, @RequestBody MessageDto messageDto) {
+        var resp = chatFacade.sendMessage(chatId, messageDto);
+        return new ObjectResp<>(resp);
+    }
+
+    @PostMapping("{chatId}/offset/{offset}")
+    EmptyResp updateChatOffset(@PathVariable Long chatId, @PathVariable Long offset) {
+        chatFacade.updateAccountChatOffset(chatId, offset);
+        return new EmptyResp();
+    }
+
+    @DeleteMapping("socket-model")
+    SocketModel socketModel() {
+        return new SocketModel();
+    }
 
     @Data
     public static class StartChatReq {
@@ -58,5 +77,11 @@ public class ChatController {
         @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
         @ApiModelProperty(required = true)
         private Long accountId;
+    }
+
+    public static class SocketModel {
+
+        private ChatMessageSocketDto CHAT_MESSAGE;
+        private ChatOffsetSocketDto CHAT_OFFSET;
     }
 }

@@ -26,6 +26,7 @@ public class AuthFilter extends HttpFilter {
 
     private final static String AUTH_TOKEN_HEADER = "Authorization";
     private final static List<String> OPEN_URI = List.of(
+            "/socket",
             "/api/auth/.*",                         // authentication
             "/api/payments/tinkoff/notifications",  // tinkoff
             "/", "/berth", "/berth/.*",             // static
