@@ -2,7 +2,6 @@ package ru.hse.coursework.berth.service.chat;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.hse.coursework.berth.config.exception.impl.AccessException;
@@ -235,8 +234,9 @@ class ChatFacadeTest extends AbstractAccountTest {
     }
 
     @Test
-    @Disabled
     void offsetStressTest() throws Exception {
+        final long userMessageNum = 100L;
+
         OperationContext.accountId(user1Account.getId());
 
         ChatDto chat = chatFacade.startChat(user2Account.getId());
@@ -244,10 +244,10 @@ class ChatFacadeTest extends AbstractAccountTest {
         var user1Message = new MessageDto().setType(MessageType.TEXT).setText("1");
         var user2Message = new MessageDto().setType(MessageType.TEXT).setText("2");
 
-        ExecutorService executor1 = Executors.newFixedThreadPool(5);
-        ExecutorService executor2 = Executors.newFixedThreadPool(5);
+        ExecutorService executor1 = Executors.newFixedThreadPool(8);
+        ExecutorService executor2 = Executors.newFixedThreadPool(8);
 
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < userMessageNum; i++) {
             executor1.submit(() -> {
                 OperationContext.accountId(user1Account.getId());
                 chatFacade.sendMessage(chat.getId(), user1Message);
@@ -265,11 +265,11 @@ class ChatFacadeTest extends AbstractAccountTest {
         executor2.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
 
         ChatDto chat2 = chatFacade.getChat(chat.getId());
-        Assertions.assertEquals(2000, (long) chat2.getTotalOffset());
-        Assertions.assertEquals(2000, (long) chat2.getLastMessage().getOffset());
+        Assertions.assertEquals(userMessageNum * 2, (long) chat2.getTotalOffset());
+        Assertions.assertEquals(userMessageNum * 2, (long) chat2.getLastMessage().getOffset());
 
-        List<MessageDto.Resp> messages = chatFacade.getMessages(chat.getId(), new OffsetDto().setOffsetStart(1L).setOffsetEnd(2000L));
+        List<MessageDto.Resp> messages = chatFacade.getMessages(chat.getId(), new OffsetDto().setOffsetStart(1L).setOffsetEnd(userMessageNum * 2));
         Set<Long> offsets = messages.stream().map(MessageDto.Resp::getOffset).collect(Collectors.toSet());
-        Assertions.assertEquals(2000, offsets.size());
+        Assertions.assertEquals(userMessageNum * 2, offsets.size());
     }
 }
