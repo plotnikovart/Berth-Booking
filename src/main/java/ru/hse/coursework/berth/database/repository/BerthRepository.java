@@ -28,7 +28,7 @@ public interface BerthRepository extends JpaRepository<Berth, Long>, BerthReposi
 
     @Modifying
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    @Query("update Berth set avgRating = (select avg(r.rating) from Review r WHERE r.berth = ?1)")
+    @Query("update Berth b set b.avgRating = (select avg(r.rating) from Review r WHERE r.berth = ?1) where b = ?1")
     void updateRating(Berth berth);
 
 
