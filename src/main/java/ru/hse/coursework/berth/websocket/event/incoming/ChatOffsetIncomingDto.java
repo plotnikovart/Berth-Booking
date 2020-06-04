@@ -5,16 +5,10 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import ru.hse.coursework.berth.config.validation.ValidationUtils;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class ChatOffsetIncomingDto extends IncomingMessage {
-
-    @Valid
-    @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
-    @ApiModelProperty(required = true, position = 10)
-    private D data;
+public class ChatOffsetIncomingDto extends IncomingMessage<ChatOffsetIncomingDto.D> {
 
     @Data
     @ApiModel("ChatOffsetIncomingDtoData")

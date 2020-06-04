@@ -4,12 +4,13 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import ru.hse.coursework.berth.service.chat.dto.MessageDto;
+import ru.hse.coursework.berth.websocket.event.OutgoingEventEnum;
 
-@Data
-public class ChatMessageOutgoingDto extends OutgoingMessage {
+public class ChatMessageOutgoingDto extends OutgoingMessage<ChatMessageOutgoingDto.D> {
 
-    @ApiModelProperty(required = true, position = 10)
-    private D data;
+    public ChatMessageOutgoingDto(D data) {
+        super(OutgoingEventEnum.CHAT_MESSAGE, data);
+    }
 
     @Data
     @ApiModel("ChatMessageOutgoingDtoData")

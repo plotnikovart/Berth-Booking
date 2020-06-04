@@ -1,4 +1,4 @@
-package ru.hse.coursework.berth.service;
+package ru.hse.coursework.berth.service.email;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

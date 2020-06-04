@@ -15,8 +15,8 @@ import ru.hse.coursework.berth.web.dto.resp.ObjectResp;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static ru.hse.coursework.berth.service.EmailService.CONFIRM_CODE_PARAM;
-import static ru.hse.coursework.berth.service.EmailService.EMAIL_PARAM;
+import static ru.hse.coursework.berth.service.email.EmailService.CONFIRM_CODE_PARAM;
+import static ru.hse.coursework.berth.service.email.EmailService.EMAIL_PARAM;
 
 @RestController
 @RequestMapping("/api/auth")

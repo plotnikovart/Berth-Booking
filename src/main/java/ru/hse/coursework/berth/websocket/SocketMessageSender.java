@@ -18,7 +18,7 @@ public class SocketMessageSender {
     private final SocketSessionManager socketSessionManager;
 
     @SneakyThrows
-    public <T extends OutgoingMessage> void sendMessage(Long accountId, T message) {
+    public <T extends OutgoingMessage<?>> void sendMessage(Long accountId, T message) {
         String json = mapper.writeValueAsString(message);
 
         Set<WebSocketSession> sessions = socketSessionManager.getSessionsByAccount(accountId);

@@ -13,8 +13,8 @@ import ru.hse.coursework.berth.config.exception.impl.ServiceException;
 import ru.hse.coursework.berth.database.entity.AccountConfirmation;
 import ru.hse.coursework.berth.database.repository.AccountConfirmationRepository;
 import ru.hse.coursework.berth.database.repository.AccountRepository;
-import ru.hse.coursework.berth.service.EmailService;
 import ru.hse.coursework.berth.service.account.dto.EmailCredential;
+import ru.hse.coursework.berth.service.email.EmailService;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

@@ -8,7 +8,6 @@ import ru.hse.coursework.berth.database.entity.chat.ChatAccount;
 import ru.hse.coursework.berth.database.repository.chat.ChatAccountRepository;
 import ru.hse.coursework.berth.service.event.chat.MessageSendEvent;
 import ru.hse.coursework.berth.websocket.SocketMessageSender;
-import ru.hse.coursework.berth.websocket.event.OutgoingEventEnum;
 import ru.hse.coursework.berth.websocket.event.outgoing.ChatMessageOutgoingDto;
 
 import javax.persistence.EntityManager;
@@ -31,9 +30,7 @@ public class ChatMessageNotifier {
                 .setChatId(event.getChatId())
                 .setMessage(event.getMessageDto());
 
-        var message = new ChatMessageOutgoingDto()
-                .setData(data)
-                .setEvent(OutgoingEventEnum.CHAT_MESSAGE);
+        var message = new ChatMessageOutgoingDto(data);
 
         chatParticipants.stream()
                 .filter(it -> !it.getPk().getAccountId().equals(event.getMessageDto().getParticipantId()))
