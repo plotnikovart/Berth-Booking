@@ -4,8 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.hse.coursework.berth.common.SMessageSource;
 import ru.hse.coursework.berth.database.entity.Booking;
+
+import static ru.hse.coursework.berth.common.SMessageSource.message;
 
 @Slf4j
 @Service
@@ -25,11 +26,18 @@ public class EmailService {
         String url = backUrl + "/api/auth/registration/confirm" +
                 "?" + CONFIRM_CODE_PARAM + "=" + code +
                 "&" + EMAIL_PARAM + "=" + to;
-        String text = SMessageSource.message("account.confirm")
+        String text = message("account.confirm")
                 .replaceAll("\\{0}", url)
                 .replaceAll("\\{1}", to);
 
         emailSender.sendMessage(to, "Account Confirmation", text);
+    }
+
+    public void sendPasswordRecovery(String to, String recoveryCode) {
+        String text = message("account.password.recovery")
+                .replaceAll("\\{0}", recoveryCode);
+
+        emailSender.sendMessage(to, "Password recovery", text);
     }
 
     public void sendBookingApprove(Booking booking) {

@@ -11,6 +11,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.transaction.TestTransaction;
 import org.springframework.transaction.support.TransactionTemplate;
 import ru.hse.coursework.berth.service.account.facebook.FacebookAuthClient;
+import ru.hse.coursework.berth.service.email.EmailSender;
 
 import java.time.Clock;
 import java.time.LocalDate;
@@ -34,6 +35,8 @@ public abstract class ApplicationTest {
 
     @MockBean
     protected FacebookAuthClient facebookAuthClientMock;
+    @MockBean
+    protected EmailSender emailSenderMock;
 
     @BeforeEach
     public void setUp() {
