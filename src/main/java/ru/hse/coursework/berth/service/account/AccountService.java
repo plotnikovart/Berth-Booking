@@ -14,6 +14,7 @@ import ru.hse.coursework.berth.service.account.dto.AccountInfo;
 import ru.hse.coursework.berth.service.account.dto.UserInfoDto;
 import ru.hse.coursework.berth.service.converters.impl.UserInfoConverter;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -37,6 +38,9 @@ public class AccountService {
                 break;
             case GOOGLE:
                 email = a.getGoogleMail();
+                break;
+            case FACEBOOK:
+                email = a.getFacebookMail();
                 break;
         }
 
@@ -80,13 +84,7 @@ public class AccountService {
                 .setRoles(Set.of(roles));
 
         account = accountRepository.saveAndFlush(account);
-
-        if (account.getRoles().contains(USER)) {
-            var userInfo = new UserInfo()
-                    .setAccount(account);
-
-            userInfoRepository.save(userInfo);
-        }
+        createInfoEntities(account);
 
         return account;
     }
@@ -99,14 +97,32 @@ public class AccountService {
                 .setRoles(Set.of(roles));
 
         account = accountRepository.saveAndFlush(account);
+        createInfoEntities(account);
 
+        return account;
+    }
+
+    @Transactional
+    public Account createFacebookAccount(Long facebookId, @Nullable String facebookMail, AccountRole... roles) {
+        var account = new Account()
+                .setKind(AccountKind.FACEBOOK)
+                .setFacebookId(facebookId)
+                .setFacebookMail(facebookMail)
+                .setRoles(Set.of(roles));
+
+        account = accountRepository.saveAndFlush(account);
+        createInfoEntities(account);
+
+        return account;
+    }
+
+
+    private void createInfoEntities(Account account) {
         if (account.getRoles().contains(USER)) {
             var userInfo = new UserInfo()
                     .setAccount(account);
 
             userInfoRepository.save(userInfo);
         }
-
-        return account;
     }
 }

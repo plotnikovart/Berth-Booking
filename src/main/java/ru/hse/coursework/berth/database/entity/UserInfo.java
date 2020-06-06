@@ -31,7 +31,7 @@ public class UserInfo {
 
     private UUID photo;
 
-    private String photoLink;
+    private UUID photoExternal;
 
     @UpdateTimestamp
     private LocalDateTime changeDate = LocalDateTime.now();

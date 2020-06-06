@@ -1,4 +1,4 @@
-package ru.hse.coursework.berth.service.account.dto;
+package ru.hse.coursework.berth.service.account.google;
 
 import lombok.Data;
 

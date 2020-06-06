@@ -1,0 +1,28 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="2020.06.06_1_1" author="aplotnikov">
+        <addColumn tableName="account">
+            <column name="facebook_id" type="bigint"/>
+            <column name="facebook_mail" type="varchar(256)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="2020.06.06_1_2" author="aplotnikov">
+        <addUniqueConstraint tableName="account" columnNames="facebook_id"/>
+    </changeSet>
+
+    <changeSet id="2020.06.06_1_3" author="aplotnikov">
+        <dropColumn tableName="user_info" columnName="photo_link"/>
+    </changeSet>
+
+    <changeSet id="2020.06.06_1_4" author="aplotnikov">
+        <addColumn tableName="user_info">
+            <column name="photo_external" type="uuid"/>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

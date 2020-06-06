@@ -7,8 +7,9 @@ import ru.hse.coursework.berth.service.account.RegisterService;
 import ru.hse.coursework.berth.service.account.TokenService;
 import ru.hse.coursework.berth.service.account.dto.AuthToken;
 import ru.hse.coursework.berth.service.account.dto.EmailCredential;
-import ru.hse.coursework.berth.service.account.dto.GoogleCredential;
 import ru.hse.coursework.berth.service.account.dto.RefreshTokenReq;
+import ru.hse.coursework.berth.service.account.facebook.FacebookCredential;
+import ru.hse.coursework.berth.service.account.google.GoogleCredential;
 import ru.hse.coursework.berth.web.dto.resp.EmptyResp;
 import ru.hse.coursework.berth.web.dto.resp.ObjectResp;
 
@@ -54,6 +55,13 @@ public class AuthController {
     public ObjectResp<AuthToken> loginGoogle(@RequestBody GoogleCredential googleCredential,
                                              @RequestHeader(name = DEVICE_ID_HEADER) String deviceId) {
         AuthToken token = loginService.loginGoogle(googleCredential, deviceId);
+        return new ObjectResp<>(token);
+    }
+
+    @PostMapping("/login/facebook")
+    public ObjectResp<AuthToken> loginFacebook(@RequestBody FacebookCredential facebookCredential,
+                                               @RequestHeader(name = DEVICE_ID_HEADER) String deviceId) {
+        AuthToken token = loginService.loginFacebook(facebookCredential, deviceId);
         return new ObjectResp<>(token);
     }
 

@@ -21,8 +21,8 @@ public class UserInfoConverter extends AbstractConverter<UserInfo, UserInfoDto.R
         FileInfoDto photo = null;
         if (e.getPhoto() != null) {
             photo = fileInfoService.get(e.getPhoto());
-        } else if (e.getPhotoLink() != null) {
-            photo = new FileInfoDto().setFileLink(e.getPhotoLink());
+        } else if (e.getPhotoExternal() != null) {
+            photo = fileInfoService.get(e.getPhotoExternal());
         }
 
         return (UserInfoDto.Resp) dto

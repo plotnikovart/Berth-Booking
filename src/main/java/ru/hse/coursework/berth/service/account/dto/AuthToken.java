@@ -1,8 +1,10 @@
 package ru.hse.coursework.berth.service.account.dto;
 
+import lombok.Getter;
 import lombok.Setter;
 
 @Setter
+@Getter
 public class AuthToken {
 
     private String tokenType = "bearer";

@@ -10,6 +10,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.transaction.TestTransaction;
 import org.springframework.transaction.support.TransactionTemplate;
+import ru.hse.coursework.berth.service.account.facebook.FacebookAuthClient;
 
 import java.time.Clock;
 import java.time.LocalDate;
@@ -30,6 +31,9 @@ public abstract class ApplicationTest {
 
     @MockBean
     private Clock clock;
+
+    @MockBean
+    protected FacebookAuthClient facebookAuthClientMock;
 
     @BeforeEach
     public void setUp() {
