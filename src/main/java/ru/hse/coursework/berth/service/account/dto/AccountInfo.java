@@ -12,7 +12,6 @@ public class AccountInfo {
 
     @ApiModelProperty(required = true)
     private Long id;
-    @ApiModelProperty(required = true)
     private AccountKind kind;
     private String email;
 

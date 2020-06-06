@@ -6,7 +6,6 @@ import ru.hse.coursework.berth.database.entity.enums.AccountKind;
 import ru.hse.coursework.berth.database.entity.enums.AccountRole;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,7 +19,7 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @Column(nullable = false)
     @Convert(converter = AccountKind.Converter.class)
     private AccountKind kind;
 
@@ -30,7 +29,10 @@ public class Account {
 
     private String googleMail;
 
-    @NotNull
+    private Long facebookId;
+    private String facebookMail;
+
+    @Column(nullable = false)
     private LocalDateTime joinDateTime = LocalDateTime.now();
 
     @ElementCollection(targetClass = AccountRole.class)

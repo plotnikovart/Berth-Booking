@@ -60,7 +60,7 @@ public class ReviewControllerTest extends AbstractAccountTest {
                 .setAccountId(user1Info.getId())
                 .setFirstName(user1Info.getFirstName())
                 .setLastName(user1Info.getLastName())
-                .setPhotoLink(user1Info.getPhotoLink());    // todo
+                .setPhotoLink(null);    // todo
 
         ReviewDto.Resp expected = (ReviewDto.Resp) new ReviewDto.Resp()
                 .setId(actual.getId())

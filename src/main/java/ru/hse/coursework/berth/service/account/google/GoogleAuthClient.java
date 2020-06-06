@@ -1,4 +1,4 @@
-package ru.hse.coursework.berth.service.account;
+package ru.hse.coursework.berth.service.account.google;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.hse.coursework.berth.config.exception.impl.UnauthorizedException;
-import ru.hse.coursework.berth.service.account.dto.GoogleUserInfo;
 
 import java.io.FileReader;
 
@@ -24,9 +23,6 @@ public class GoogleAuthClient {
     private final HttpTransport transport;
     private final JsonFactory jsonFactory;
     private final GoogleClientSecrets clientSecrets;
-
-    @Value("${google.secret_path}")
-    private String secretPath;
 
     public GoogleAuthClient(@Value("${google.secret_path}") String secretPath) throws Exception {
         transport = new NetHttpTransport();
