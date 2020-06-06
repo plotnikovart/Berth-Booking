@@ -69,4 +69,10 @@
         <addNotNullConstraint tableName="berth" columnName="avg_rating" columnDataType="double"/>
     </changeSet>
 
+    <changeSet id="2019.08.17_1_4" author="aplotnikov">
+        <createIndex tableName="review" indexName="idx_review_berth">
+            <column name="berth_id"/>
+        </createIndex>
+    </changeSet>
+
 </databaseChangeLog>

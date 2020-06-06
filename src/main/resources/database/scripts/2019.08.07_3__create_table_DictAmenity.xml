@@ -33,8 +33,6 @@
                                  onDelete="CASCADE"/>
     </changeSet>
 
-
-
     <changeSet id="2019.08.07_3_3" author="aplotnikov">
         <sql>
             delete from dict_amenity;
@@ -54,6 +52,21 @@
             INSERT INTO dict_amenity (key, value) VALUES ('bicycle_rental', 'Bicycle rental');
             INSERT INTO dict_amenity (key, value) VALUES ('parking', 'Parking');
         </sql>
+    </changeSet>
+
+    <changeSet id="2019.08.07_3_4" author="aplotnikov">
+        <createIndex tableName="berth_to_amenity" indexName="idx_berth_to_amenity_berth">
+            <column name="berth_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="2019.08.07_3_5" author="aplotnikov">
+        <addForeignKeyConstraint baseTableName="berth_to_amenity"
+                                 baseColumnNames="amenity_key"
+                                 constraintName="fk_berth_to_amenity_amenity"
+                                 referencedTableName="dict_amenity"
+                                 referencedColumnNames="key"
+                                 onDelete="CASCADE"/>
     </changeSet>
 
 </databaseChangeLog>

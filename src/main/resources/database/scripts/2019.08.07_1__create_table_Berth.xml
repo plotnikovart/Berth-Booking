@@ -62,4 +62,10 @@
                                  onDelete="CASCADE"/>
     </changeSet>
 
+    <changeSet id="2019.08.07_1_3" author="aplotnikov">
+        <createIndex tableName="berth" indexName="idx_berth_account">
+            <column name="owner_id"/>
+        </createIndex>
+    </changeSet>
+
 </databaseChangeLog>

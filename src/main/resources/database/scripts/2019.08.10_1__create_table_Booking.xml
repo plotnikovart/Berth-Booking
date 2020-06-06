@@ -78,4 +78,16 @@
                                  onDelete="CASCADE"/>
     </changeSet>
 
+    <changeSet id="2019.08.10_1_3" author="aplotnikov">
+        <createIndex tableName="booking" indexName="idx_booking_renter">
+            <column name="renter_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="2019.08.10_1_4" author="aplotnikov">
+        <createIndex tableName="booking" indexName="idx_booking_berth_place">
+            <column name="berth_place_id"/>
+        </createIndex>
+    </changeSet>
+
 </databaseChangeLog>

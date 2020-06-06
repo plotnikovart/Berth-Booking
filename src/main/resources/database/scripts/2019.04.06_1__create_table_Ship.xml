@@ -69,4 +69,10 @@
                           incrementBy="1"/>
     </changeSet>
 
+    <changeSet id="2019.04.06_1_2" author="aplotnikov">
+        <createIndex tableName="ship" indexName="idx_ship_account">
+            <column name="owner_id"/>
+        </createIndex>
+    </changeSet>
+
 </databaseChangeLog>

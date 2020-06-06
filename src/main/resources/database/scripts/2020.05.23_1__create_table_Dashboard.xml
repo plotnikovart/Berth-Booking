@@ -65,4 +65,10 @@
         </sql>
     </changeSet>
 
+    <changeSet id="2020.05.23_1_4" author="aplotnikov">
+        <createIndex tableName="widget_settings_berth" indexName="idx_widget_settings_berth_berth">
+            <column name="berth_id"/>
+        </createIndex>
+    </changeSet>
+
 </databaseChangeLog>
