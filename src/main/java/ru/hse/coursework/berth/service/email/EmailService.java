@@ -4,9 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.hse.coursework.berth.database.entity.Booking;
-import ru.hse.coursework.berth.service.booking.dto.BookingDto;
+import ru.hse.coursework.berth.service.email.dto.BookingInfo;
 import ru.hse.coursework.berth.service.email.dto.ReviewInfo;
+
+import java.time.format.DateTimeFormatter;
 
 import static ru.hse.coursework.berth.common.SMessageSource.message;
 
@@ -17,6 +18,7 @@ public class EmailService {
 
     public final static String CONFIRM_CODE_PARAM = "code";
     public final static String EMAIL_PARAM = "email";
+    private final static DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     @Value("${back.url}")
     private String backUrl;
@@ -44,18 +46,6 @@ public class EmailService {
         emailSender.sendMessage(to, "Password recovery", text);
     }
 
-    public void sendBookingOpen(String to, BookingDto.RespOwner booking) {
-
-    }
-
-    public void sendBookingApprove(String to, BookingDto.RespRenter booking) {
-
-    }
-
-    public void sendBookingCancel(String to, BookingDto.RespOwner booking) {
-
-    }
-
     public void sendNewReview(String to, ReviewInfo reviewInfo) {
         String berthUri = frontUrl + "/marina/" + reviewInfo.getBerthId();
 
@@ -69,22 +59,78 @@ public class EmailService {
         emailSender.sendMessage(to, "New Review to your Marina", text);
     }
 
-    public void sendBookingApprove(Booking booking) {
-//        UserInfo owner = booking.getOwner();
-//        UserInfo renter = booking.getRenter();
-//        String text = SMessageSource.message("booking.approve", booking.getId(), booking.getBerthPlace().getBerth().getName(),
-//                owner.getFirstName(), owner.getLastName());
-//
-//        emailSender.sendMessage(renter.getAccount().getEmail(), "Бронирование подтверждено", text);
+
+    public void sendBookingOpen(String to, BookingInfo booking) {
+        String bookingUri = frontUrl + "/bookings";
+
+        String text = message("booking.open")
+                .replaceAll("\\{0}", booking.getOwner())
+                .replaceAll("\\{1}", booking.getPlaceName())
+                .replaceAll("\\{2}", booking.getBerthName())
+                .replaceAll("\\{3}", booking.getRenter())
+                .replaceAll("\\{4}", booking.getFromDate().format(DATE_FORMATTER))
+                .replaceAll("\\{5}", booking.getToDate().format(DATE_FORMATTER))
+                .replaceAll("\\{6}", bookingUri);
+
+        emailSender.sendMessage(to, "New booking", text);
     }
 
-    public void sendBookingCreate(Booking booking) {
-//        UserInfo renter = booking.getRenter();
-//        UserInfo owner = booking.getOwner();
-//
-//        String text = SMessageSource.message("booking.create", renter.getFirstName(), renter.getLastName(),
-//                booking.getBerthPlace().getBerth().getName());
-//
-//        emailSender.sendMessage(owner.getAccount().getEmail(), "Новая заявка на бронирование", text);
+    public void sendBookingCancel(String to, BookingInfo booking) {
+        String bookingUri = frontUrl + "/bookings";
+
+        String text = message("booking.cancel")
+                .replaceAll("\\{0}", booking.getOwner())
+                .replaceAll("\\{1}", booking.getPlaceName())
+                .replaceAll("\\{2}", booking.getBerthName())
+                .replaceAll("\\{3}", booking.getRenter())
+                .replaceAll("\\{4}", booking.getFromDate().format(DATE_FORMATTER))
+                .replaceAll("\\{5}", booking.getToDate().format(DATE_FORMATTER))
+                .replaceAll("\\{6}", bookingUri);
+
+        emailSender.sendMessage(to, "Booking was cancelled", text);
+    }
+
+    public void sendBookingPay(String to, BookingInfo booking) {
+        String bookingUri = frontUrl + "/bookings";
+
+        String text = message("booking.pay")
+                .replaceAll("\\{0}", booking.getOwner())
+                .replaceAll("\\{1}", booking.getPlaceName())
+                .replaceAll("\\{2}", booking.getBerthName())
+                .replaceAll("\\{3}", booking.getRenter())
+                .replaceAll("\\{4}", booking.getFromDate().format(DATE_FORMATTER))
+                .replaceAll("\\{5}", booking.getToDate().format(DATE_FORMATTER))
+                .replaceAll("\\{6}", bookingUri);
+
+        emailSender.sendMessage(to, "Booking was paid", text);
+    }
+
+
+    public void sendBookingApprove(String to, BookingInfo booking) {
+        String bookingUri = frontUrl + "/trips";
+
+        String text = message("booking.approve")
+                .replaceAll("\\{0}", booking.getRenter())
+                .replaceAll("\\{1}", booking.getBerthName())
+                .replaceAll("\\{2}", booking.getFromDate().format(DATE_FORMATTER))
+                .replaceAll("\\{3}", booking.getToDate().format(DATE_FORMATTER))
+                .replaceAll("\\{4}", String.format("%.2f", booking.getPrice() + booking.getServiceFee()))
+                .replaceAll("\\{5}", String.format("%.2f", booking.getServiceFee()))
+                .replaceAll("\\{6}", bookingUri);
+
+        emailSender.sendMessage(to, "Booking was confirmed", text);
+    }
+
+    public void sendBookingReject(String to, BookingInfo booking) {
+        String bookingUri = frontUrl + "/trips";
+
+        String text = message("booking.reject")
+                .replaceAll("\\{0}", booking.getRenter())
+                .replaceAll("\\{1}", booking.getBerthName())
+                .replaceAll("\\{2}", booking.getFromDate().format(DATE_FORMATTER))
+                .replaceAll("\\{3}", booking.getToDate().format(DATE_FORMATTER))
+                .replaceAll("\\{4}", bookingUri);
+
+        emailSender.sendMessage(to, "Booking was rejected", text);
     }
 }

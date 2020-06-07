@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.hse.coursework.berth.config.exception.impl.NotFoundException;
 import ru.hse.coursework.berth.database.entity.Order;
 import ru.hse.coursework.berth.database.repository.OrderRepository;
-import ru.hse.coursework.berth.service.event.EventPublisher;
+import ru.hse.coursework.berth.service.booking.BookingPaymentService;
 import ru.hse.coursework.berth.service.payment.tinkoff.NotificationReq;
 import ru.hse.coursework.berth.service.payment.tinkoff.PaymentStatus;
 import ru.hse.coursework.berth.service.payment.tinkoff.TinkoffClient;
@@ -20,7 +20,7 @@ public class PaymentService {
 
     private final OrderRepository orderRepository;
     private final TinkoffClient tinkoffClient;
-    private final EventPublisher eventPublisher;
+    private final BookingPaymentService bookingPaymentService;
 
     @Transactional
     public void completePayment(NotificationReq notification) {
@@ -31,7 +31,9 @@ public class PaymentService {
                     .setCompleted(true)
                     .setDateTime(LocalDateTime.now());
 
-            eventPublisher.payBooking(order.getPayload().getBookingId());
+            if (order.getOrderKind() == OrderKind.BOOKING_SERVICE_FEE) {
+                bookingPaymentService.completePayment(order.getPayload().getBookingId());
+            }
         }
     }
 }

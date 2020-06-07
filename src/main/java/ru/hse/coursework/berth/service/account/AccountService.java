@@ -62,13 +62,13 @@ public class AccountService {
     public String getAccountFullName(Account a) {
         String result = getAccountEmail(a);
         if (result == null) {
-            result = a.getId().toString();
+            result = "Account(" + a.getId() + ")";
         }
 
         if (a.getRoles().contains(USER)) {
             UserInfo info = userInfoRepository.findById(a.getId()).orElseThrow();
-            String fullName = ofNullable(info.getFirstName()).orElse("") + ofNullable(info.getLastName()).orElse("");
-            result = fullName.isEmpty() ? result : fullName;
+            String fullName = ofNullable(info.getFirstName()).orElse("") + " " + ofNullable(info.getLastName()).orElse("");
+            result = fullName.isBlank() ? result : fullName;
         }
 
         return result;

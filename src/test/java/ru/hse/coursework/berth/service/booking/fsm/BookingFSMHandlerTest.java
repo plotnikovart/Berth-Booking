@@ -17,7 +17,8 @@ class BookingFSMHandlerTest extends ApplicationTest {
     @Test
     @SuppressWarnings("deprecation")
     void test() {
-        var booking = new Booking();
+        var booking = new Booking()
+                .setId(1L);
 
         bookingFSMHandler.sendEvent(booking, BookingEvent.REJECT);
 
@@ -31,6 +32,7 @@ class BookingFSMHandlerTest extends ApplicationTest {
 
 
         var booking2 = new Booking()
+                .setId(2L)
                 .setStatus(BookingStatus.APPROVED)
                 .setBerthPlace(new BerthPlace());
 
@@ -44,6 +46,7 @@ class BookingFSMHandlerTest extends ApplicationTest {
 
 
         var booking3 = new Booking()
+                .setId(3L)
                 .setStatus(BookingStatus.APPROVED);
 
         bookingFSMHandler.sendEvent(booking3, BookingEvent.CANCEL);

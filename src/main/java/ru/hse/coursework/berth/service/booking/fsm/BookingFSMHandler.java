@@ -1,5 +1,6 @@
 package ru.hse.coursework.berth.service.booking.fsm;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.statemachine.StateMachine;
@@ -12,6 +13,7 @@ import ru.hse.coursework.berth.common.DateHelper;
 import ru.hse.coursework.berth.common.fsm.EntityFSMHandler;
 import ru.hse.coursework.berth.database.entity.Booking;
 import ru.hse.coursework.berth.database.entity.enums.BookingStatus;
+import ru.hse.coursework.berth.service.event.EventPublisher;
 
 import java.util.EnumSet;
 
@@ -20,7 +22,10 @@ import static ru.hse.coursework.berth.service.booking.fsm.BookingEvent.*;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class BookingFSMHandler extends EntityFSMHandler<Booking, BookingStatus, BookingEvent> {
+
+    private final EventPublisher eventPublisher;
 
     @Override
     @SneakyThrows
@@ -34,33 +39,33 @@ public class BookingFSMHandler extends EntityFSMHandler<Booking, BookingStatus, 
 
         builder.configureTransitions()
                 .withExternal()
-                .source(NEW).target(REJECTED).event(REJECT)
+                .source(NEW).target(REJECTED).event(REJECT).action(bookingReject())
                 .and()
                 .withExternal()
-                .source(NEW).target(APPROVED).event(APPROVE).guard(checkOtherNotApproved())
+                .source(NEW).target(APPROVED).event(APPROVE).guard(checkOtherNotApproved()).action(bookingApprove())
                 .and()
                 .withExternal()
-                .source(NEW).target(CANCELLED).event(CANCEL)
+                .source(NEW).target(CANCELLED).event(CANCEL).action(bookingCancel())
                 .and()
                 .withExternal()
-                .source(APPROVED).target(REJECTED).event(REJECT)
+                .source(APPROVED).target(REJECTED).event(REJECT).action(bookingReject())
                 .and()
                 .withExternal()
                 .source(APPROVED).target(APPROVED).event(PAY_PREPARE)
                 .and()
                 .withExternal()
-                .source(APPROVED).target(PAYED).event(PAY).action(rejectOtherApplications())
+                .source(APPROVED).target(PAYED).event(PAY).action(rejectOtherApplications()).action(bookingPay())
                 .and()
                 .withExternal()
-                .source(APPROVED).target(CANCELLED).event(CANCEL)
+                .source(APPROVED).target(CANCELLED).event(CANCEL).action(bookingCancel())
                 .and()
                 .withExternal()
-                .source(PAYED).target(CANCELLED).event(CANCEL)
+                .source(PAYED).target(CANCELLED).event(CANCEL).action(bookingCancel())
 
                 // other booking was payed
                 .and()
                 .withExternal()
-                .source(NEW).target(REJECTED).event(OTHER_PAY)
+                .source(NEW).target(REJECTED).event(OTHER_PAY).action(bookingReject())
                 .and()
                 .withExternal()
                 .source(REJECTED).target(REJECTED).event(OTHER_PAY)
@@ -91,5 +96,21 @@ public class BookingFSMHandler extends EntityFSMHandler<Booking, BookingStatus, 
                     .filter(b -> DateHelper.isIntersect(b.getStartDate(), b.getEndDate(), booking.getStartDate(), booking.getEndDate()))
                     .noneMatch(b -> b.getStatus() == APPROVED);
         });
+    }
+
+    private Action<BookingStatus, BookingEvent> bookingApprove() {
+        return createAction((booking, ctx) -> eventPublisher.approveBooking(booking.getId()));
+    }
+
+    private Action<BookingStatus, BookingEvent> bookingReject() {
+        return createAction((booking, ctx) -> eventPublisher.rejectBooking(booking.getId()));
+    }
+
+    private Action<BookingStatus, BookingEvent> bookingPay() {
+        return createAction((booking, ctx) -> eventPublisher.payBooking(booking.getId()));
+    }
+
+    private Action<BookingStatus, BookingEvent> bookingCancel() {
+        return createAction((booking, ctx) -> eventPublisher.cancelBooking(booking.getId()));
     }
 }

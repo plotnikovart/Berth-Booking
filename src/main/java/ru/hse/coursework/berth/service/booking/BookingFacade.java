@@ -35,7 +35,6 @@ public class BookingFacade {
 
     public BookingStatusResp cancelBooking(Long bookingId) {
         BookingStatus status = renterBookingService.cancelBooking(bookingId);
-        eventPublisher.cancelBooking(bookingId);
         return BookingStatusResp.of(status);
     }
 
@@ -47,13 +46,11 @@ public class BookingFacade {
 
     public BookingStatusResp approveBooking(Long bookingId) {
         BookingStatus status = ownerBookingService.approveBooking(bookingId);
-        eventPublisher.approveBooking(bookingId);
         return BookingStatusResp.of(status);
     }
 
     public BookingStatusResp rejectBooking(Long bookingId) {
         BookingStatus status = ownerBookingService.rejectBooking(bookingId);
-        eventPublisher.rejectBooking(bookingId);
         return BookingStatusResp.of(status);
     }
 }

@@ -30,6 +30,11 @@ import ru.hse.coursework.berth.service.payment.tinkoff.PaymentStatus;
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 public class BookingControllerTest extends AbstractAccountTest {
 
     @Autowired
@@ -207,7 +212,7 @@ public class BookingControllerTest extends AbstractAccountTest {
     }
 
     @Test
-    void rejectScenario() {
+    void rejectScenario() throws InterruptedException {
         OperationContext.accountId(user2Account.getId());
 
         // open booking
@@ -266,10 +271,14 @@ public class BookingControllerTest extends AbstractAccountTest {
         BookingStatusResp actual4 = bookingController.rejectBooking(actual.getId()).getData();
         Assertions.assertEquals(BookingStatus.REJECTED, actual4.getNewStatus());
         Assertions.assertEquals(BookingStatus.REJECTED, bookingRepository.findById(actual.getId()).get().getStatus());
+
+        Thread.sleep(100);
+        verify(emailSenderMock, times(1)).sendMessage(eq(user1Account.getGoogleMail()), eq("New booking"), any());
+        verify(emailSenderMock, times(1)).sendMessage(eq(user2Account.getGoogleMail()), eq("Booking was rejected"), any());
     }
 
     @Test
-    void approveScenario() {
+    void approveScenario() throws InterruptedException {
         OperationContext.accountId(user2Account.getId());
 
         // open bookings
@@ -336,6 +345,13 @@ public class BookingControllerTest extends AbstractAccountTest {
         BookingStatus status3 = bookingController.cancelBooking(booking3).getData().getNewStatus();
         Assertions.assertEquals(BookingStatus.CANCELLED, status3);
         Assertions.assertEquals(BookingStatus.CANCELLED, bookingRepository.findById(booking3).get().getStatus());
+
+        Thread.sleep(100);
+        verify(emailSenderMock, times(3)).sendMessage(eq(user1Account.getGoogleMail()), eq("New booking"), any());
+        verify(emailSenderMock, times(1)).sendMessage(eq(user2Account.getGoogleMail()), eq("Booking was rejected"), any());
+        verify(emailSenderMock, times(1)).sendMessage(eq(user2Account.getGoogleMail()), eq("Booking was confirmed"), any());
+        verify(emailSenderMock, times(1)).sendMessage(eq(user1Account.getGoogleMail()), eq("Booking was paid"), any());
+        verify(emailSenderMock, times(2)).sendMessage(eq(user1Account.getGoogleMail()), eq("Booking was cancelled"), any());
     }
 
 
