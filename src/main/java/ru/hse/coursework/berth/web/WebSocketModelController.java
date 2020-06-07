@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.hse.coursework.berth.websocket.event.incoming.ChatMessageIncomingDto;
 import ru.hse.coursework.berth.websocket.event.incoming.ChatOffsetIncomingDto;
 import ru.hse.coursework.berth.websocket.event.outgoing.ChatMessageOutgoingDto;
+import ru.hse.coursework.berth.websocket.event.outgoing.ReviewPublishOutgoingDto;
 
 
 @Api(value = "Описание моделей событий для web socket")
@@ -34,5 +35,6 @@ public class WebSocketModelController {
     public static class OutgoingModel {
 
         private ChatMessageOutgoingDto CHAT_MESSAGE;
+        private ReviewPublishOutgoingDto REVIEW_PUBLISH;
     }
 }

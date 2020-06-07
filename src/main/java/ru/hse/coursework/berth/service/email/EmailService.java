@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.hse.coursework.berth.database.entity.Booking;
+import ru.hse.coursework.berth.service.booking.dto.BookingDto;
+import ru.hse.coursework.berth.service.email.dto.ReviewInfo;
 
 import static ru.hse.coursework.berth.common.SMessageSource.message;
 
@@ -18,6 +20,8 @@ public class EmailService {
 
     @Value("${back.url}")
     private String backUrl;
+    @Value("${front.url}")
+    private String frontUrl;
 
     private final EmailSender emailSender;
 
@@ -38,6 +42,31 @@ public class EmailService {
                 .replaceAll("\\{0}", recoveryCode);
 
         emailSender.sendMessage(to, "Password recovery", text);
+    }
+
+    public void sendBookingOpen(String to, BookingDto.RespOwner booking) {
+
+    }
+
+    public void sendBookingApprove(String to, BookingDto.RespRenter booking) {
+
+    }
+
+    public void sendBookingCancel(String to, BookingDto.RespOwner booking) {
+
+    }
+
+    public void sendNewReview(String to, ReviewInfo reviewInfo) {
+        String berthUri = frontUrl + "/marina/" + reviewInfo.getBerthId();
+
+        String text = message("review.publish")
+                .replaceAll("\\{0}", reviewInfo.getTo())
+                .replaceAll("\\{1}", reviewInfo.getStars().toString())
+                .replaceAll("\\{2}", reviewInfo.getBerthName())
+                .replaceAll("\\{3}", reviewInfo.getFrom())
+                .replaceAll("\\{4}", berthUri);
+
+        emailSender.sendMessage(to, "New Review to your Marina", text);
     }
 
     public void sendBookingApprove(Booking booking) {

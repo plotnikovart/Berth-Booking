@@ -18,6 +18,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Set;
 
+import static java.util.Optional.ofNullable;
 import static ru.hse.coursework.berth.database.entity.enums.AccountRole.USER;
 
 @Service
@@ -31,6 +32,17 @@ public class AccountService {
     @Transactional(readOnly = true)
     public AccountInfo getAccountInfo() {
         Account a = accountRepository.findCurrent();
+        String email = getAccountEmail(a);
+
+        return new AccountInfo()
+                .setId(a.getId())
+                .setKind(a.getKind())
+                .setRoles(new ArrayList<>(a.getRoles()))
+                .setEmail(email);
+    }
+
+    @Nullable
+    public String getAccountEmail(Account a) {
         String email = null;
         switch (a.getKind()) {
             case EMAIL:
@@ -44,15 +56,26 @@ public class AccountService {
                 break;
         }
 
-        return new AccountInfo()
-                .setId(a.getId())
-                .setKind(a.getKind())
-                .setRoles(new ArrayList<>(a.getRoles()))
-                .setEmail(email);
+        return email;
+    }
+
+    public String getAccountFullName(Account a) {
+        String result = getAccountEmail(a);
+        if (result == null) {
+            result = a.getId().toString();
+        }
+
+        if (a.getRoles().contains(USER)) {
+            UserInfo info = userInfoRepository.findById(a.getId()).orElseThrow();
+            String fullName = ofNullable(info.getFirstName()).orElse("") + ofNullable(info.getLastName()).orElse("");
+            result = fullName.isEmpty() ? result : fullName;
+        }
+
+        return result;
     }
 
     @Transactional(readOnly = true)
-    public UserInfoDto.Resp getUserInfo() {
+    public UserInfoDto.Resp getUserInfo() throws NotFoundException {
         Account a = accountRepository.findCurrent();
         if (!a.getRoles().contains(USER)) {
             throw new NotFoundException();

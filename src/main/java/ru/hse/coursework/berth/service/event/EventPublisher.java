@@ -56,7 +56,7 @@ public class EventPublisher {
     }
 
     public void payBooking(long bookingId) {
-        var event = new PayedBookingEvent(this)
+        var event = new PayBookingEvent(this)
                 .setBookingId(bookingId);
         actionAfterTransaction(() -> eventPublisher.publishEvent(event));
     }

@@ -16,7 +16,7 @@ import ru.hse.coursework.berth.service.account.AccountService;
 import ru.hse.coursework.berth.service.booking.dto.BookingPayLinkResp;
 import ru.hse.coursework.berth.service.booking.fsm.BookingEvent;
 import ru.hse.coursework.berth.service.booking.fsm.BookingFSMHandler;
-import ru.hse.coursework.berth.service.event.booking.PayedBookingEvent;
+import ru.hse.coursework.berth.service.event.booking.PayBookingEvent;
 import ru.hse.coursework.berth.service.payment.ExchangeRateService;
 import ru.hse.coursework.berth.service.payment.OrderDto;
 import ru.hse.coursework.berth.service.payment.OrderKind;
@@ -56,8 +56,8 @@ public class BookingPaymentService {
 
     @EventListener
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void bookingPayed(PayedBookingEvent payedBookingEvent) {
-        Booking booking = bookingRepository.findById(payedBookingEvent.getBookingId()).orElseThrow(NotFoundException::new);
+    public void bookingPayed(PayBookingEvent payBookingEvent) {
+        Booking booking = bookingRepository.findById(payBookingEvent.getBookingId()).orElseThrow(NotFoundException::new);
         bookingFSMHandler.sendEvent(booking, BookingEvent.PAY);
     }
 

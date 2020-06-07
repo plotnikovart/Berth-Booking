@@ -6,11 +6,11 @@ import org.springframework.context.ApplicationEvent;
 
 @Getter
 @Setter
-public class PayedBookingEvent extends ApplicationEvent {
+public class PayBookingEvent extends ApplicationEvent {
 
     private Long bookingId;
 
-    public PayedBookingEvent(Object source) {
+    public PayBookingEvent(Object source) {
         super(source);
     }
 }
