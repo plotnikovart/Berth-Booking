@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -37,7 +38,7 @@ public class FileDeleteTask {
     @Scheduled(cron = "0 0 2 * * ?")    // каждый день в 2 ночи
     public void run() {
         try {
-            Stream<UUID> userInfoPhotos = userInfoRepository.findAll().stream().map(UserInfo::getPhoto);
+            Stream<UUID> userInfoPhotos = userInfoRepository.findAll().stream().map(UserInfo::getPhoto).filter(Objects::nonNull);
             Stream<UUID> shipFiles = shipRepository.findAll().stream().flatMap(it -> {
                 var files = new LinkedList<>(it.getPhotos());
                 ofNullable(it.getInsuranceFile()).ifPresent(files::add);
