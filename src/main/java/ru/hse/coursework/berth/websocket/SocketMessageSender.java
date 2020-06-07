@@ -6,7 +6,7 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
-import ru.hse.coursework.berth.websocket.event.outgoing.OutgoingMessage;
+import ru.hse.coursework.berth.websocket.event.OutgoingMessage;
 
 import java.util.Set;
 

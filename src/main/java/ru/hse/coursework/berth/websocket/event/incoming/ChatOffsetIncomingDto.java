@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import ru.hse.coursework.berth.config.validation.ValidationUtils;
+import ru.hse.coursework.berth.websocket.event.IncomingMessage;
 
 import javax.validation.constraints.NotNull;
 

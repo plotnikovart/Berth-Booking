@@ -275,6 +275,9 @@ public class BookingControllerTest extends AbstractAccountTest {
         Thread.sleep(100);
         verify(emailSenderMock, times(1)).sendMessage(eq(user1Account.getGoogleMail()), eq("New booking"), any());
         verify(emailSenderMock, times(1)).sendMessage(eq(user2Account.getGoogleMail()), eq("Booking was rejected"), any());
+
+        verify(socketMessageSenderMock, times(1)).sendMessage(eq(user1Account.getId()), any());
+        verify(socketMessageSenderMock, times(1)).sendMessage(eq(user2Account.getId()), any());
     }
 
     @Test
@@ -352,6 +355,9 @@ public class BookingControllerTest extends AbstractAccountTest {
         verify(emailSenderMock, times(1)).sendMessage(eq(user2Account.getGoogleMail()), eq("Booking was confirmed"), any());
         verify(emailSenderMock, times(1)).sendMessage(eq(user1Account.getGoogleMail()), eq("Booking was paid"), any());
         verify(emailSenderMock, times(2)).sendMessage(eq(user1Account.getGoogleMail()), eq("Booking was cancelled"), any());
+
+        verify(socketMessageSenderMock, times(6)).sendMessage(eq(user1Account.getId()), any());
+        verify(socketMessageSenderMock, times(2)).sendMessage(eq(user2Account.getId()), any());
     }
 
 

@@ -6,12 +6,15 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hse.coursework.berth.config.exception.impl.NotFoundException;
+import ru.hse.coursework.berth.database.entity.Account;
 import ru.hse.coursework.berth.database.entity.Booking;
 import ru.hse.coursework.berth.database.repository.BookingRepository;
 import ru.hse.coursework.berth.service.account.AccountService;
 import ru.hse.coursework.berth.service.email.EmailService;
 import ru.hse.coursework.berth.service.email.dto.BookingInfo;
 import ru.hse.coursework.berth.service.event.booking.*;
+import ru.hse.coursework.berth.websocket.SocketMessageSender;
+import ru.hse.coursework.berth.websocket.event.outgoing.*;
 
 @Component
 @RequiredArgsConstructor
@@ -20,6 +23,7 @@ public class BookingNotifier {
     private final BookingRepository bookingRepository;
     private final EmailService emailService;
     private final AccountService accountService;
+    private final SocketMessageSender socketMessageSender;
 
     @Async
     @EventListener
@@ -28,12 +32,18 @@ public class BookingNotifier {
         Booking booking = bookingRepository.findById(event.getBookingId()).orElseThrow(NotFoundException::new);
 
         BookingInfo bookingInfo = formBookingInfo(booking);
-        String email = accountService.getAccountEmail(booking.getBerthPlace().getBerth().getOwner());
+        Account receiver = booking.getBerthPlace().getBerth().getOwner();
 
-        if (email == null) {
-            return;
+        String email = accountService.getAccountEmail(receiver);
+        if (email != null) {
+            emailService.sendBookingOpen(email, bookingInfo);
         }
-        emailService.sendBookingOpen(email, bookingInfo);
+
+        var message = new BookingOpenOutgoingDto(
+                new BookingOpenOutgoingDto.D()
+                        .setBookingId(event.getBookingId())
+        );
+        socketMessageSender.sendMessage(receiver.getId(), message);
     }
 
     @Async
@@ -43,12 +53,19 @@ public class BookingNotifier {
         Booking booking = bookingRepository.findById(event.getBookingId()).orElseThrow(NotFoundException::new);
 
         BookingInfo bookingInfo = formBookingInfo(booking);
-        String email = accountService.getAccountEmail(booking.getRenter());
+        Account receiver = booking.getRenter();
 
-        if (email == null) {
-            return;
+        String email = accountService.getAccountEmail(receiver);
+
+        if (email != null) {
+            emailService.sendBookingApprove(email, bookingInfo);
         }
-        emailService.sendBookingApprove(email, bookingInfo);
+
+        var message = new BookingApproveOutgoingDto(
+                new BookingApproveOutgoingDto.D()
+                        .setBookingId(event.getBookingId())
+        );
+        socketMessageSender.sendMessage(receiver.getId(), message);
     }
 
     @Async
@@ -58,12 +75,18 @@ public class BookingNotifier {
         Booking booking = bookingRepository.findById(event.getBookingId()).orElseThrow(NotFoundException::new);
 
         BookingInfo bookingInfo = formBookingInfo(booking);
-        String email = accountService.getAccountEmail(booking.getRenter());
+        Account receiver = booking.getRenter();
 
-        if (email == null) {
-            return;
+        String email = accountService.getAccountEmail(receiver);
+        if (email != null) {
+            emailService.sendBookingReject(email, bookingInfo);
         }
-        emailService.sendBookingReject(email, bookingInfo);
+
+        var message = new BookingRejectOutgoingDto(
+                new BookingRejectOutgoingDto.D()
+                        .setBookingId(event.getBookingId())
+        );
+        socketMessageSender.sendMessage(receiver.getId(), message);
     }
 
     @Async
@@ -73,12 +96,18 @@ public class BookingNotifier {
         Booking booking = bookingRepository.findById(event.getBookingId()).orElseThrow(NotFoundException::new);
 
         BookingInfo bookingInfo = formBookingInfo(booking);
-        String email = accountService.getAccountEmail(booking.getBerthPlace().getBerth().getOwner());
+        Account receiver = booking.getBerthPlace().getBerth().getOwner();
 
-        if (email == null) {
-            return;
+        String email = accountService.getAccountEmail(receiver);
+        if (email != null) {
+            emailService.sendBookingPay(email, bookingInfo);
         }
-        emailService.sendBookingPay(email, bookingInfo);
+
+        var message = new BookingPayOutgoingDto(
+                new BookingPayOutgoingDto.D()
+                        .setBookingId(event.getBookingId())
+        );
+        socketMessageSender.sendMessage(receiver.getId(), message);
     }
 
     @Async
@@ -88,13 +117,20 @@ public class BookingNotifier {
         Booking booking = bookingRepository.findById(event.getBookingId()).orElseThrow(NotFoundException::new);
 
         BookingInfo bookingInfo = formBookingInfo(booking);
-        String email = accountService.getAccountEmail(booking.getBerthPlace().getBerth().getOwner());
+        Account receiver = booking.getBerthPlace().getBerth().getOwner();
 
-        if (email == null) {
-            return;
+        String email = accountService.getAccountEmail(receiver);
+        if (email != null) {
+            emailService.sendBookingCancel(email, bookingInfo);
         }
-        emailService.sendBookingCancel(email, bookingInfo);
+
+        var message = new BookingCancelOutgoingDto(
+                new BookingCancelOutgoingDto.D()
+                        .setBookingId(event.getBookingId())
+        );
+        socketMessageSender.sendMessage(receiver.getId(), message);
     }
+
 
     private BookingInfo formBookingInfo(Booking booking) {
         return new BookingInfo()

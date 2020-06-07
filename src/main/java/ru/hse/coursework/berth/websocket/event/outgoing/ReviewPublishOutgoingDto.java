@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import ru.hse.coursework.berth.service.review.dto.ReviewDto;
 import ru.hse.coursework.berth.websocket.event.OutgoingEventEnum;
+import ru.hse.coursework.berth.websocket.event.OutgoingMessage;
 
 public class ReviewPublishOutgoingDto extends OutgoingMessage<ReviewPublishOutgoingDto.D> {
 

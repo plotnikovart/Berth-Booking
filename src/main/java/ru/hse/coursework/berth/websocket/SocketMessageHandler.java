@@ -7,9 +7,9 @@ import ru.hse.coursework.berth.config.exception.impl.ServiceException;
 import ru.hse.coursework.berth.config.validation.ValidationUtils;
 import ru.hse.coursework.berth.service.chat.ChatFacade;
 import ru.hse.coursework.berth.websocket.event.IncomingEventEnum;
+import ru.hse.coursework.berth.websocket.event.IncomingMessage;
 import ru.hse.coursework.berth.websocket.event.incoming.ChatMessageIncomingDto;
 import ru.hse.coursework.berth.websocket.event.incoming.ChatOffsetIncomingDto;
-import ru.hse.coursework.berth.websocket.event.incoming.IncomingMessage;
 
 import java.io.IOException;
 

@@ -1,9 +1,8 @@
-package ru.hse.coursework.berth.websocket.event.incoming;
+package ru.hse.coursework.berth.websocket.event;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import ru.hse.coursework.berth.config.validation.ValidationUtils;
-import ru.hse.coursework.berth.websocket.event.IncomingEventEnum;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
