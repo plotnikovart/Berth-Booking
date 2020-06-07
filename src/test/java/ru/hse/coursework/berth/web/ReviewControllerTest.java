@@ -16,6 +16,8 @@ import ru.hse.coursework.berth.service.review.dto.ReviewerDto;
 
 import java.time.LocalDate;
 
+import static org.mockito.Mockito.*;
+
 public class ReviewControllerTest extends AbstractAccountTest {
 
     @Autowired
@@ -98,5 +100,8 @@ public class ReviewControllerTest extends AbstractAccountTest {
         Thread.sleep(100);
         berth = berthRepository.findById(berth.getId()).orElseThrow();
         Assertions.assertEquals((actual.getRating() + actual2.getRating()) / 2.0, berth.getAvgRating(), 0.1);
+
+        verify(emailSenderMock , times(3)).sendMessage(eq(user1Account.getGoogleMail()), any(), any());
+        verify(socketMessageSenderMock, times(3)).sendMessage(eq(user1Account.getId()), any());
     }
 }

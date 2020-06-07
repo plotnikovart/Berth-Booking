@@ -1,10 +1,9 @@
-package ru.hse.coursework.berth.websocket.event.outgoing;
+package ru.hse.coursework.berth.websocket.event;
 
 import io.swagger.annotations.ApiModelProperty;
-import ru.hse.coursework.berth.websocket.event.OutgoingEventEnum;
 
 
-public class OutgoingMessage<D> {
+public abstract class OutgoingMessage<D> {
 
     @ApiModelProperty(required = true, position = 1)
     private final OutgoingEventEnum event;

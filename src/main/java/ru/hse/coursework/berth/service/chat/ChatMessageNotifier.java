@@ -22,7 +22,7 @@ public class ChatMessageNotifier {
     private final SocketMessageSender socketMessageSender;
 
     @EventListener
-    public void newMessageSend(MessageSendEvent event) {
+    public void onNewMessageSend(MessageSendEvent event) {
         Chat chat = em.getReference(Chat.class, event.getChatId());
         List<ChatAccount> chatParticipants = chatAccountRepository.findAllByChat(chat);
 

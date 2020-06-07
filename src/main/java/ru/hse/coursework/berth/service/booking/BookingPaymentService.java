@@ -1,9 +1,7 @@
 package ru.hse.coursework.berth.service.booking;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.hse.coursework.berth.config.exception.impl.AccessException;
 import ru.hse.coursework.berth.config.exception.impl.NotFoundException;
@@ -16,7 +14,6 @@ import ru.hse.coursework.berth.service.account.AccountService;
 import ru.hse.coursework.berth.service.booking.dto.BookingPayLinkResp;
 import ru.hse.coursework.berth.service.booking.fsm.BookingEvent;
 import ru.hse.coursework.berth.service.booking.fsm.BookingFSMHandler;
-import ru.hse.coursework.berth.service.event.booking.PayedBookingEvent;
 import ru.hse.coursework.berth.service.payment.ExchangeRateService;
 import ru.hse.coursework.berth.service.payment.OrderDto;
 import ru.hse.coursework.berth.service.payment.OrderKind;
@@ -54,10 +51,9 @@ public class BookingPaymentService {
     }
 
 
-    @EventListener
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void bookingPayed(PayedBookingEvent payedBookingEvent) {
-        Booking booking = bookingRepository.findById(payedBookingEvent.getBookingId()).orElseThrow(NotFoundException::new);
+    @Transactional
+    public void completePayment(Long bookingId) {
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow(NotFoundException::new);
         bookingFSMHandler.sendEvent(booking, BookingEvent.PAY);
     }
 

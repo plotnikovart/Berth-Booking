@@ -12,12 +12,14 @@ import org.springframework.test.context.transaction.TestTransaction;
 import org.springframework.transaction.support.TransactionTemplate;
 import ru.hse.coursework.berth.service.account.facebook.FacebookAuthClient;
 import ru.hse.coursework.berth.service.email.EmailSender;
+import ru.hse.coursework.berth.websocket.SocketMessageSender;
 
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.ZoneId;
 
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.reset;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = Application.class)
@@ -37,9 +39,15 @@ public abstract class ApplicationTest {
     protected FacebookAuthClient facebookAuthClientMock;
     @MockBean
     protected EmailSender emailSenderMock;
+    @MockBean
+    protected SocketMessageSender socketMessageSenderMock;
 
     @BeforeEach
     public void setUp() {
+        reset(emailSenderMock);
+        reset(socketMessageSenderMock);
+        reset(facebookAuthClientMock);
+
         LocalDate today = LocalDate.of(2020, 6, 21);
         Clock fixedClock = Clock.fixed(today.atStartOfDay(ZoneId.systemDefault()).toInstant(), ZoneId.systemDefault());
 
