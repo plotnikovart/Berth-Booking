@@ -20,7 +20,7 @@ public class BookingSearchReq {
 
     @ApiModelProperty(required = true, position = 2)
     @NotNull(message = ValidationUtils.NOT_NULL_MESSAGE)
-    @Range(min = 0, max = 180, message = ValidationUtils.RANGE_MESSAGE)
+    @Range(min = -180, max = 180, message = ValidationUtils.RANGE_MESSAGE)
     private Double lng;     // долгота
 
     @ApiModelProperty(required = true, position = 3)
