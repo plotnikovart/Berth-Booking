@@ -100,7 +100,7 @@ public class LoginService {
         return userInfo
                 .setFirstName(facebookUserInfo.getFirstName())
                 .setLastName(facebookUserInfo.getLastName())
-                .setPhotoExternal(linkToFileId(facebookUserInfo.getPhotoUri()));
+                .setPhotoExternal(linkToFileId(facebookUserInfo.getPicture().getData().getUrl()));
     }
 
     @SneakyThrows

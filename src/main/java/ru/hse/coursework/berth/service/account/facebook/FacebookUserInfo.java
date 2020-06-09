@@ -15,9 +15,23 @@ public class FacebookUserInfo {
     @JsonProperty("last_name")
     private String lastName;
 
-    @JsonProperty("profile_pic")
-    private String photoUri;
-
     @JsonProperty("email")
     private String email;
+
+    @JsonProperty("picture")
+    private Picture picture;
+
+    @Data
+    public static class Picture {
+
+        private Data data;
+
+        @lombok.Data
+        public static class Data {
+
+            private Integer height;
+            private Integer width;
+            private String url;
+        }
+    }
 }

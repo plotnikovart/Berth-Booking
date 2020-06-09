@@ -43,7 +43,7 @@ public class FacebookAuthClient extends AbstractHttpClient {
             GetAccessTokenResp accessToken = sendRequest(accessTokenUri, HttpMethod.GET, null, GetAccessTokenResp.class);
 
             var userInfoUri = "https://graph.facebook.com/me" +
-                    "?fields=id,first_name,last_name,profile_pic,email" +
+                    "?fields=id,first_name,last_name,email,picture.width(320).height(320)" +
                     "&access_token=" + accessToken.getAccessToken();
 
             return sendRequest(userInfoUri, HttpMethod.GET, null, FacebookUserInfo.class);

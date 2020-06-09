@@ -48,7 +48,13 @@ class AuthControllerTest extends ApplicationTest {
             .setEmail("facebook@mail.ru")
             .setFirstName("Artem")
             .setLastName("Plotnikov")
-            .setPhotoUri("https://s.hi-news.ru/wp-content/uploads/2020/06/vegan_meat_health_image_two-750x499.jpg");
+            .setPicture(new FacebookUserInfo.Picture()
+                    .setData(new FacebookUserInfo.Picture.Data()
+                            .setHeight(320)
+                            .setWidth(320)
+                            .setUrl("https://s.hi-news.ru/wp-content/uploads/2020/06/vegan_meat_health_image_two-750x499.jpg")
+                    )
+            );
 
     @Override
     @BeforeEach
