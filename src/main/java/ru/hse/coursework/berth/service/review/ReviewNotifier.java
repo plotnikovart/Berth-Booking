@@ -44,7 +44,7 @@ public class ReviewNotifier {
         var reviewInfo = new ReviewInfo()
                 .setBerthId(review.getBerth().getId())
                 .setBerthName(review.getBerth().getName())
-                .setStars(review.getRating() / 5)
+                .setStars(review.getRating())
                 .setFrom(accountService.getAccountFullName(review.getReviewer()))
                 .setTo(accountService.getAccountFullName(review.getBerth().getOwner()));
 
