@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import ru.hse.coursework.berth.common.SMessageSource;
-import ru.hse.coursework.berth.database.entity.UserInfo;
 import ru.hse.coursework.berth.database.repository.*;
 
 import java.io.File;
@@ -38,7 +37,7 @@ public class FileDeleteTask {
     @Scheduled(cron = "0 0 2 * * ?")    // каждый день в 2 ночи
     public void run() {
         try {
-            Stream<UUID> userInfoPhotos = userInfoRepository.findAll().stream().map(UserInfo::getPhoto).filter(Objects::nonNull);
+            Stream<UUID> userInfoPhotos = userInfoRepository.findAll().stream().flatMap(it -> Stream.of(it.getPhoto(), it.getPhotoExternal()));
             Stream<UUID> shipFiles = shipRepository.findAll().stream().flatMap(it -> {
                 var files = new LinkedList<>(it.getPhotos());
                 ofNullable(it.getInsuranceFile()).ifPresent(files::add);
@@ -50,6 +49,7 @@ public class FileDeleteTask {
 
             var usedFiles = Stream.of(userInfoPhotos, shipFiles, berthFiles, berthApplicationFiles)
                     .flatMap(s -> s)
+                    .filter(Objects::nonNull)
                     .map(UUID::toString)
                     .collect(Collectors.toSet());
 
